@@ -10,6 +10,10 @@ public class WiseSayingEntity {
 		this.writer = writer;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public String getWiseSaying() {
 		return wiseSaying;
 	}

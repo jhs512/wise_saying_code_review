@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import entity.WiseSayingEntity;
 
@@ -18,6 +19,10 @@ public class WiseSayingRepository {
 
 	public WiseSayingEntity findById(Long id) {
 		return wiseSayingEntityLinkedHashMap.get(id);
+	}
+
+	public LinkedList<WiseSayingEntity> findAll() {
+		return new LinkedList<>(wiseSayingEntityLinkedHashMap.values());
 	}
 
 }

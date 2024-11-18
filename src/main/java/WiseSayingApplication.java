@@ -19,6 +19,9 @@ public class WiseSayingApplication {
 				case "등록":
 					wiseSayingService.add(sc);
 					break;
+				case "목록":
+					wiseSayingService.findAll();
+					break;
 				default:
 					System.out.println("잘못된 명령입니다.");
 			}
