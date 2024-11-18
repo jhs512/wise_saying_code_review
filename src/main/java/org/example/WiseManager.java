@@ -80,6 +80,18 @@ public class WiseManager {
         }
     }
 
+    public boolean buildWise() {
+        String jsonArrayString = getJsonArrayString();
+        String path = BASE_PATH + "data.json";
+        try (FileOutputStream output = new FileOutputStream(path)) {
+            output.write(jsonArrayString.getBytes());
+            return true;
+        } catch (IOException e) {
+            System.out.println("파일 출력 에러");
+            return false;
+        }
+    }
+
     private void saveWise(Wise wise) {
         String path = BASE_PATH + index + ".json";
         try (FileOutputStream output = new FileOutputStream(path)) {
@@ -100,8 +112,13 @@ public class WiseManager {
 
     private void loadWises() {
         try (Stream<Path> stream = Files.walk(Paths.get(BASE_PATH))) {
-            stream.filter(file -> file.getFileName().toString().endsWith("json"))
-                    .forEach(file -> { readFile(file); });
+            stream.filter(file -> {
+                        String name = file.getFileName().toString();
+                        return !name.startsWith("data") && name.endsWith("json");
+                    })
+                    .forEach(file -> {
+                        readFile(file);
+                    });
         } catch (IOException e) {
             System.out.println("파일 입력 에러");
         }
@@ -123,7 +140,7 @@ public class WiseManager {
             HashMap<String, String> jsonMap = new HashMap<>();
             String line = reader.readLine();
 
-            while(line != null) {
+            while (line != null) {
                 if (!(line.contains("{") || line.contains("}"))) {
                     String[] temp = line.trim()
                             .replaceAll("[ \",]", "")
@@ -149,7 +166,7 @@ public class WiseManager {
     }
 
     private String editJson(String data, String key, String value, boolean last) {
-        Pattern pattern = Pattern.compile("\"" + key +"\":\\s.*");
+        Pattern pattern = Pattern.compile("\"" + key + "\":\\s.*");
         Matcher matcher = pattern.matcher(data);
 
         if (matcher.find()) {
@@ -173,5 +190,29 @@ public class WiseManager {
                 """;
 
         return String.format(json, wise.index, wise.content, wise.author);
+    }
+
+    private String getJsonStringWithIndent(Wise wise) {
+        String json = """
+                  {
+                    "id": %d,
+                    "content": "%s",
+                    "author": "%s"
+                  },
+                """;
+
+        return String.format(json, wise.index, wise.content, wise.author);
+    }
+
+    private String getJsonArrayString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[\n");
+        wises.forEach(wise -> {
+            builder.append(getJsonStringWithIndent(wise));
+        });
+        builder.deleteCharAt(builder.length() - 2);
+        builder.append("]");
+
+        return builder.toString();
     }
 }

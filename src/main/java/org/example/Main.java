@@ -52,6 +52,12 @@ public class Main {
                 } else {
                     System.out.println(id + "번 명언은 존재하지 않습니다.");
                 }
+            } else if (command.equals("빌드")) {
+                boolean result = manager.buildWise();
+
+                if (result) {
+                    System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+                }
             }
         }
     }
