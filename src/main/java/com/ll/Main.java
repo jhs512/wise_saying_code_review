@@ -74,6 +74,33 @@ public class Main {
                     System.out.println("올바른 삭제 명령을 입력하세요. 예: 삭제?id=1");
                 }
                 System.out.println();
+            } else if (order.startsWith("수정?id=")) {
+                try {
+                    int idToEdit = Integer.parseInt(order.split("=")[1]);
+                    int indexToEdit = ids.indexOf(idToEdit);
+
+                    if (indexToEdit != -1) {
+                        // 기존 데이터 출력
+                        System.out.println("명언(기존) : " + wiseSayings.get(indexToEdit));
+                        System.out.print("명언 : ");
+                        String newWiseSaying = scanner.nextLine();
+
+                        System.out.println("작가(기존) : " + writers.get(indexToEdit));
+                        System.out.print("작가 : ");
+                        String newWriter = scanner.nextLine();
+
+                        // 데이터 업데이트
+                        wiseSayings.set(indexToEdit, newWiseSaying);
+                        writers.set(indexToEdit, newWriter);
+
+                        System.out.println(idToEdit + "번 명언이 수정되었습니다.");
+                    } else {
+                        System.out.println(idToEdit + "번 명언은 존재하지 않습니다.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("올바른 수정 명령을 입력하세요. 예: 수정?id=1");
+                }
+                System.out.println();
             } else if (order.equals("종료")) {
                 System.out.println("프로그램을 종료합니다.");
                 break;
