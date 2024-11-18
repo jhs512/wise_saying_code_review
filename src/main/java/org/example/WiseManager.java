@@ -172,6 +172,6 @@ public class WiseManager {
                 }
                 """;
 
-        return String.format(json, wise.index, wise.wise, wise.author);
+        return String.format(json, wise.index, wise.content, wise.author);
     }
 }

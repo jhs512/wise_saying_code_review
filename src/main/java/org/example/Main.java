@@ -38,16 +38,16 @@ public class Main {
                 Wise previous = manager.findWise(id);
 
                 if (previous != null) {
-                    System.out.println("명언(기존) : " + previous.wise);
+                    System.out.println("명언(기존) : " + previous.content);
                     System.out.print("명언 : ");
-                    String newWise = scanner.nextLine();
+                    String newContent = scanner.nextLine();
 
                     System.out.println("작가(기존) : " + previous.author);
                     System.out.print("작가 : ");
                     String newAuthor = scanner.nextLine();
 
-                    manager.editWise(id, newWise, newAuthor);
-                    previous.wise = newWise;
+                    manager.editWise(id, newContent, newAuthor);
+                    previous.content = newContent;
                     previous.author = newAuthor;
                 } else {
                     System.out.println(id + "번 명언은 존재하지 않습니다.");

@@ -3,16 +3,16 @@ package org.example;
 class Wise {
     int index;
     String author;
-    String wise;
+    String content;
 
-    public Wise(int index, String author, String wise) {
+    public Wise(int index, String author, String content) {
         this.index = index;
         this.author = author;
-        this.wise = wise;
+        this.content = content;
     }
 
     @Override
     public String toString() {
-        return index + " / " + author + " / " + wise;
+        return index + " / " + author + " / " + content;
     }
 }
