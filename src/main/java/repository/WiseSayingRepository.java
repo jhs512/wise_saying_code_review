@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entity.WiseSayingEntity;
@@ -24,18 +25,27 @@ public class WiseSayingRepository {
 		File wiseSayingFile = new File(FILE_PATH + "data.json");
 
 		try {
-			Long id = objectMapper.readValue(lastIdFile, Long.class);
-			idGeneration = new IdGeneration(id);
+			if (lastIdFile.exists()) {
+				Long id = objectMapper.readValue(lastIdFile, Long.class);
+				idGeneration = new IdGeneration(id);
+			} else {
+				idGeneration = new IdGeneration(1L);
+			}
 
-			LinkedList<WiseSayingEntity> wiseSayingEntities = objectMapper.readValue(wiseSayingFile, LinkedList.class);
+			if (wiseSayingFile.exists()) {
+				LinkedList<WiseSayingEntity> wiseSayingEntities = objectMapper.readValue(wiseSayingFile,
+					new TypeReference<LinkedList<WiseSayingEntity>>() {});
 
-			wiseSayingEntityLinkedHashMap = wiseSayingEntities.stream()
-                .collect(Collectors.toMap(
-                    WiseSayingEntity::getId,
-                    entity -> entity,
-                    (oldValue, newValue) -> oldValue,
-                    LinkedHashMap::new
-                ));
+				wiseSayingEntityLinkedHashMap = wiseSayingEntities.stream()
+					.collect(Collectors.toMap(
+						WiseSayingEntity::getId,
+						entity -> entity,
+						(oldValue, newValue) -> oldValue,
+						LinkedHashMap::new
+					));
+			} else {
+				wiseSayingEntityLinkedHashMap = new LinkedHashMap<>();
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
