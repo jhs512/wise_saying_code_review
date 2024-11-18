@@ -2,8 +2,10 @@ package repository;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import entity.WiseSayingEntity;
+import exception.WiseSayingException;
 
 public class WiseSayingRepository {
 	private final IdGeneration idGeneration = new IdGeneration();
@@ -25,4 +27,13 @@ public class WiseSayingRepository {
 		return new LinkedList<>(wiseSayingEntityLinkedHashMap.values());
 	}
 
+	public Long delete(Long id) {
+		WiseSayingEntity remove = wiseSayingEntityLinkedHashMap.remove(id);
+
+		if (Objects.isNull(remove)) {
+			throw new WiseSayingException(id + "번 명언은 존재하지 않습니다.");
+		}
+
+		return id;
+	}
 }

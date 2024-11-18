@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import entity.WiseSayingEntity;
+import exception.WiseSayingException;
 import repository.WiseSayingRepository;
 
 public class WiseSayingService {
@@ -25,6 +26,22 @@ public class WiseSayingService {
 		for (WiseSayingEntity wiseSayingEntity : all) {
 			System.out.printf("%d / %s / %s \n",
 				wiseSayingEntity.getId(), wiseSayingEntity.getWriter(), wiseSayingEntity.getWiseSaying());
+		}
+	}
+
+	public void delete(Scanner sc) {
+		try {
+			System.out.print("삭제?id = ");
+
+			Long targetId = sc.nextLong();
+			sc.nextLine();
+			Long deletedId = wiseSayingRepository.delete(targetId);
+
+			System.out.println(deletedId + "번 명언이 삭제되었습니다.");
+		} catch (WiseSayingException e) {
+			System.out.println(e.getMessage());
+		} catch (NumberFormatException e) {
+			System.out.println("숫자만 입력하세요.");
 		}
 	}
 }
