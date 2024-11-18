@@ -71,6 +71,7 @@ public class WiseSayingService {
 			String updateWiseSaying = sc.nextLine();
 
 			System.out.println("작가 (기존) : " + targetEntity.getWriter());
+			System.out.print("작가 : ");
 			String updateWriter = sc.nextLine();
 
 			if (!updateWiseSaying.equals(targetEntity.getWiseSaying())) {
