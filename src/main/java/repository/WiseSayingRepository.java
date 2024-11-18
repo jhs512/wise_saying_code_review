@@ -16,7 +16,8 @@ public class WiseSayingRepository {
 		return id;
 	}
 
-	public WiseSayingEntity get(Long id) {
+	public WiseSayingEntity findById(Long id) {
 		return wiseSayingEntityLinkedHashMap.get(id);
 	}
+
 }
