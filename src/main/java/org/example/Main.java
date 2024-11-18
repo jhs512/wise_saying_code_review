@@ -16,13 +16,13 @@ public class Main {
     public static class WiseSaying {
 
         int id;
-        String author;
         String content;
+        String author;
 
-        public WiseSaying(int id, String author, String content) {
+        public WiseSaying(int id, String content, String author) {
             this.id = id;
-            this.author = author;
             this.content = content;
+            this.author = author;
         }
     }
 
@@ -67,7 +67,6 @@ public class Main {
                     int cnt = 0;
 
                     try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
-                        StringBuilder fileContent = new StringBuilder();
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (line.length() > 1) {
@@ -86,13 +85,6 @@ public class Main {
             }
         }
 
-//        for (int key : wiseSayings.keySet()) {
-//            System.out.println(
-//                wiseSayings.get(key).id + " / " + wiseSayings.get(key).author + " / " + wiseSayings.get(
-//                    key).content);
-//        }
-
-
         while (true) {
             System.out.print("명령) ");
             if ((cmd = br.readLine()).equals("종료")) break;  // 종료
@@ -102,7 +94,7 @@ public class Main {
 
                 System.out.print("작가 : ");
                 author = br.readLine();
-                wiseSayings.put(id, new WiseSaying(id, author, content));
+                wiseSayings.put(id, new WiseSaying(id, content, author));
 
                 System.out.println(id + "번 명언이 등록되었습니다.");
 
@@ -110,8 +102,8 @@ public class Main {
                 // 파일 저장 로직
                 String jsonData = "{\n"
                     + "\t\"id\": \"" + id + "\",\n"
-                    + "\t\"author\": \"" + author + "\",\n"
-                    + "\t\"content\": \"" + content + "\"\n"
+                    + "\t\"content\": \"" + content + "\",\n"
+                    + "\t\"author\": \"" + author + "\"\n"
                     + "}";
 
                 jsonFilePath =
@@ -122,7 +114,6 @@ public class Main {
                 // json 파일 생성
                 try(FileWriter fileWriter = new FileWriter(file)) {
                     fileWriter.write(jsonData);
-//                    System.out.println("JSON 데이터가 파일에 저장 되었습니다." + jsonFilePath);
                 } catch (IOException e) {
                     System.out.println("파일 저장 에러" + e.getMessage());
                 }
@@ -131,7 +122,6 @@ public class Main {
                 file = new File(lastIdPath);
                 try(FileWriter fileWriter = new FileWriter(file)) {
                     fileWriter.write(String.valueOf(id));
-//                    System.out.println("마지막 아이디가 텍스트 파일에 저장 되었습니다." + idFilePath);
                 } catch (IOException e) {
                     System.out.println("파일 저장 에러" + e.getMessage());
                 }
@@ -199,9 +189,9 @@ public class Main {
                     jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + tempId + ".json";
 
                     String jsonData = "{\n"
-                        + "\t\"id\": \"" + id + "\",\n"
-                        + "\t\"author\": \"" + author + "\",\n"
-                        + "\t\"content\": \"" + content + "\"\n"
+                        + "\t\"id\": \"" + tempId + "\",\n"
+                        + "\t\"content\": \"" + content + "\",\n"
+                        + "\t\"author\": \"" + author + "\"\n"
                         + "}";
 
                     try(BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFilePath))) {
@@ -213,6 +203,44 @@ public class Main {
 
                 } else {
                     System.out.println(tempId + "번 명언은 존재하지 않습니다.");
+                }
+
+            } else if (cmd.equals("빌드")) {
+                jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
+                jsonFiles = new File(jsonFilePath);
+                StringBuilder jsonContents = new StringBuilder();
+
+                if (jsonFiles.exists() && jsonFiles.isDirectory()) {
+                    File[] fileArr = jsonFiles.listFiles(
+                        (dir, name) -> (name.endsWith(".json") && !name.equals("data.json")));
+
+                    if(fileArr != null) {
+                        jsonContents.append("[\n");
+                        for (File f : fileArr) {
+                            try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
+
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    if (line.equals("}")) {
+                                        jsonContents.append("\t").append(line).append(",\n");
+                                    } else jsonContents.append("\t").append(line).append("\n");
+                                }
+
+                            } catch (Exception e) {
+                                System.out.println("파일 읽기 에러" + e.getMessage());
+                            }
+                        }
+                        jsonContents.delete(jsonContents.length() - 2, jsonContents.length() - 1);
+                        jsonContents.append("]");
+                    }
+                }
+
+                try (BufferedWriter writer = new BufferedWriter(
+                    new FileWriter(jsonFilePath + "/data.json"))) {
+                    writer.write(jsonContents.toString());
+                    System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+                } catch (IOException e) {
+                    System.out.println("빌드 에러" + e.getMessage());
                 }
 
             } else {
