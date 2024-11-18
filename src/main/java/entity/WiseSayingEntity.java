@@ -18,6 +18,14 @@ public class WiseSayingEntity {
 		return wiseSaying;
 	}
 
+	public void setWiseSaying(String wiseSaying) {
+		this.wiseSaying = wiseSaying;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
 	public String getWriter() {
 		return writer;
 	}

@@ -44,4 +44,28 @@ public class WiseSayingService {
 			System.out.println("숫자만 입력하세요.");
 		}
 	}
+
+	public void update(Scanner sc) {
+		System.out.print("수정?id = ");
+		Long target = sc.nextLong();
+		sc.nextLine();
+		WiseSayingEntity targetEntity = wiseSayingRepository.findById(target);
+
+		System.out.println("명언 (기존) : " + targetEntity.getWiseSaying());
+		System.out.print("명언 : ");
+		String updateWiseSaying = sc.nextLine();
+
+		System.out.println("작가 (기존) : " + targetEntity.getWriter());
+		String updateWriter = sc.nextLine();
+
+		if (!updateWiseSaying.equals(targetEntity.getWiseSaying())) {
+			targetEntity.setWiseSaying(updateWiseSaying);
+		}
+
+		if (!updateWriter.equals(targetEntity.getWriter())) {
+			targetEntity.setWriter(updateWriter);
+		}
+
+		wiseSayingRepository.update(targetEntity);
+	}
 }

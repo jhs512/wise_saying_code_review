@@ -29,6 +29,9 @@ public class WiseSayingApplication {
 				case "삭제":
 					wiseSayingService.delete(sc);
 					break;
+				case "수정":
+					wiseSayingService.update(sc);
+					break;
 				default:
 					System.out.println("잘못된 명령입니다.");
 			}

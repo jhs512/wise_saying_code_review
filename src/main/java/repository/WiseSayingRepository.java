@@ -36,4 +36,8 @@ public class WiseSayingRepository {
 
 		return id;
 	}
+
+	public void update(WiseSayingEntity wiseSayingEntity) {
+		wiseSayingEntityLinkedHashMap.replace(wiseSayingEntity.getId(), wiseSayingEntity);
+	}
 }
