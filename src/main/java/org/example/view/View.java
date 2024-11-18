@@ -4,6 +4,7 @@ import org.example.model.WiseSayingItem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class View {
@@ -49,8 +50,15 @@ public class View {
         } else if (input.startsWith("삭제?id=")) {
             String id = input.substring(6);
             long parsedId = Long.parseLong(id);
-            System.out.println(parsedId + "번 명언이 삭제되었습니다.");
-            store.remove(parsedId);
+
+            try {
+                if (store.remove(parsedId) == null) {
+                    throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(parsedId + "번 명언은 존재하지 않습니다.");
+            }
+
         }
         return true;
     }
