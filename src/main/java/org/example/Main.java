@@ -43,6 +43,9 @@ public class Main {
 
                 // 등록시 생성된 명언번호 출력
                 System.out.println(Id + "번 명언이 등록되었습니다.");
+
+                // 등록할 때 마다 생성되는 명언번호가 증가
+                Id++;
             } else {
                 System.out.println("올바르지 않은 명령어 입니다.");
             }
