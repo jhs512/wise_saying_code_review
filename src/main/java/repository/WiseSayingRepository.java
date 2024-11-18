@@ -10,6 +10,7 @@ public class WiseSayingRepository {
 
 	public Long add(WiseSayingEntity wiseSayingEntity) {
 		Long id = idGeneration.generationId();
+		wiseSayingEntity.setId(id);
 		wiseSayingEntityLinkedHashMap.put(id, wiseSayingEntity);
 
 		return id;

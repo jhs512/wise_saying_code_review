@@ -1,6 +1,7 @@
 package entity;
 
 public class WiseSayingEntity {
+	private Long id;
 	private String wiseSaying;
 	private String writer;
 
@@ -15,5 +16,9 @@ public class WiseSayingEntity {
 
 	public String getWriter() {
 		return writer;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }
