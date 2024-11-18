@@ -1,14 +1,25 @@
 package org.example;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class WiseManager {
     private ArrayList<Wise> wises = new ArrayList<>();
     private int index = 1;
     private final String BASE_PATH = "db/wiseSaying/";
+
+    public WiseManager() {
+        loadWises();
+        getLastId();
+    }
 
     public void applyWise(String wise, String author) {
         Wise w = new Wise(index, author, wise);
@@ -27,7 +38,36 @@ public class WiseManager {
     }
 
     public boolean deleteWise(int id) {
-        return wises.removeIf(wise -> wise.index == id);
+        Wise wise = findWise(id);
+        if (wise != null) {
+            wises.remove(wise);
+
+            File file = new File(BASE_PATH + id + ".json");
+            if (file.exists()) {
+                file.delete();
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void editWise(int id, String newWise, String newAuthor) {
+        String path = BASE_PATH + id + ".json";
+
+        try {
+            String data = new String(Files.readAllBytes(Paths.get(path)));
+
+            data = editJson(data, "content", newWise, false);
+            data = editJson(data, "author", newAuthor, true);
+
+            try (FileOutputStream output = new FileOutputStream(path)) {
+                output.write(data.getBytes());
+            }
+        } catch (IOException e) {
+            System.out.println("파일 출력 에러");
+        }
     }
 
     public Wise findWise(int id) {
@@ -49,13 +89,78 @@ public class WiseManager {
         }
     }
 
-    public void saveLastId() {
+    private void saveLastId() {
         String path = BASE_PATH + "lastId.txt";
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(String.valueOf(index).getBytes());
         } catch (IOException e) {
             System.out.println("파일 출력 에러");
         }
+    }
+
+    private void loadWises() {
+        try (Stream<Path> stream = Files.walk(Paths.get(BASE_PATH))) {
+            stream.filter(file -> file.getFileName().toString().endsWith("json"))
+                    .forEach(file -> { readFile(file); });
+        } catch (IOException e) {
+            System.out.println("파일 입력 에러");
+        }
+    }
+
+    private void getLastId() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(BASE_PATH + "lastId.txt"))) {
+            int lastId = Integer.parseInt(reader.readLine());
+            index = lastId + 1;
+        } catch (FileNotFoundException e) {
+            return;
+        } catch (IOException e) {
+            System.out.println("파일 입력 에러");
+        }
+    }
+
+    private void readFile(Path file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.toString()))) {
+            HashMap<String, String> jsonMap = new HashMap<>();
+            String line = reader.readLine();
+
+            while(line != null) {
+                if (!(line.contains("{") || line.contains("}"))) {
+                    String[] temp = line.trim()
+                            .replaceAll("[ \",]", "")
+                            .split(":");
+                    String key = temp[0];
+                    String value = temp[1];
+
+                    jsonMap.put(key, value);
+                }
+                line = reader.readLine();
+            }
+
+            String id = jsonMap.get("id");
+            String author = jsonMap.get("author");
+            String content = jsonMap.get("content");
+
+            wises.add(new Wise(Integer.parseInt(id), author, content));
+        } catch (FileNotFoundException e) {
+            return;
+        } catch (IOException e) {
+            System.out.println("파일 입력 에러");
+        }
+    }
+
+    private String editJson(String data, String key, String value, boolean last) {
+        Pattern pattern = Pattern.compile("\"" + key +"\":\\s.*");
+        Matcher matcher = pattern.matcher(data);
+
+        if (matcher.find()) {
+            if (last) {
+                data = matcher.replaceFirst("\"" + key + "\": " + "\"" + value + "\"");
+            } else {
+                data = matcher.replaceFirst("\"" + key + "\": " + "\"" + value + "\",");
+            }
+        }
+
+        return data;
     }
 
     private String getJsonString(Wise wise) {

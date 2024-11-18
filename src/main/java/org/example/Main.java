@@ -46,6 +46,7 @@ public class Main {
                     System.out.print("작가 : ");
                     String newAuthor = scanner.nextLine();
 
+                    manager.editWise(id, newWise, newAuthor);
                     previous.wise = newWise;
                     previous.author = newAuthor;
                 } else {
