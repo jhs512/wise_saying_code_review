@@ -46,6 +46,11 @@ public class View {
                         + entry.getValue().getAuthor() + " / "
                         + entry.getValue().getWiseSaying());
             }
+        } else if (input.startsWith("삭제?id=")) {
+            String id = input.substring(6);
+            long parsedId = Long.parseLong(id);
+            System.out.println(parsedId + "번 명언이 삭제되었습니다.");
+            store.remove(parsedId);
         }
         return true;
     }
