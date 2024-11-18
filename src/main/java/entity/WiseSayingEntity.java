@@ -5,6 +5,10 @@ public class WiseSayingEntity {
 	private String wiseSaying;
 	private String writer;
 
+	public WiseSayingEntity() {
+	}
+
+
 	public WiseSayingEntity(String wiseSaying, String writer) {
 		this.wiseSaying = wiseSaying;
 		this.writer = writer;
