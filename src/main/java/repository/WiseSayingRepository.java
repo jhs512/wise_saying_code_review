@@ -20,6 +20,10 @@ public class WiseSayingRepository {
 	}
 
 	public WiseSayingEntity findById(Long id) {
+		WiseSayingEntity wiseSayingEntity = wiseSayingEntityLinkedHashMap.get(id);
+		if (Objects.isNull(wiseSayingEntity)) {
+			throw new WiseSayingException(id + "번 명언은 존재하지 않습니다.");
+		}
 		return wiseSayingEntityLinkedHashMap.get(id);
 	}
 
