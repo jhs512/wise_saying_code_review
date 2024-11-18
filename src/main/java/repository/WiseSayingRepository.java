@@ -26,7 +26,9 @@ public class WiseSayingRepository {
 		try {
 			Long id = objectMapper.readValue(lastIdFile, Long.class);
 			idGeneration = new IdGeneration(id);
+
 			LinkedList<WiseSayingEntity> wiseSayingEntities = objectMapper.readValue(wiseSayingFile, LinkedList.class);
+
 			wiseSayingEntityLinkedHashMap = wiseSayingEntities.stream()
                 .collect(Collectors.toMap(
                     WiseSayingEntity::getId,
