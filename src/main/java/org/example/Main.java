@@ -30,6 +30,11 @@ public class Main {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("---------------");
                 wises.forEach(wise -> System.out.println(wise));
+            } else if (command.startsWith("삭제?id=")) {
+                int id = Integer.parseInt(command.split("\\?id=")[1]);
+                wises.removeIf(wise -> wise.index == id);
+
+                System.out.println(id + "번 명언이 삭제되었습니다.");
             }
         }
     }
