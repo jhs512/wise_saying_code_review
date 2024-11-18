@@ -37,7 +37,14 @@ public class Main {
 
                 // 최신 순서대로 출력
                 for (int i = wiseSayings.size() - 1; i >= 0; i--) {
+                    // 리스트 데이터는 0부터 시작 하지만 명언의 번호는 1부터 시작 해야 한다
+                    // wiseSayings.size()는 리스트에 저장된 총 데이터 개수
+                    // 가장 마지막 데이터는 size() - 1 번째 인덱스에 저장
+                    // *wiseSayings.size() - 1 을 초기값으로 설정한 이유는 리스트의 마지막 데이터를 먼저 처리하기 위해서
                     System.out.println((i + 1) + " / " + writers.get(i) + " / " + wiseSayings.get(i));
+                    // i + 1  :  명언의 번호를 1부터 출력하기 위해
+                    // 첫 번째 명언: 리스트의 인덱스 0 → 사용자에게는 "1번 명언"으로 출력.
+                    // 두 번째 명언: 리스트의 인덱스 1 → 사용자에게는 "2번 명언"으로 출력
                 }
                 System.out.println();
             } else if (order.equals("종료")) {
