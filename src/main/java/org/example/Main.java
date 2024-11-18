@@ -40,6 +40,9 @@ public class Main {
                 System.out.print("작가 : ");
                 String content = br.readLine();
                 al.add(new WiseSaying(Id, autor, content));
+
+                // 등록시 생성된 명언번호 출력
+                System.out.println(Id + "번 명언이 등록되었습니다.");
             } else {
                 System.out.println("올바르지 않은 명령어 입니다.");
             }
