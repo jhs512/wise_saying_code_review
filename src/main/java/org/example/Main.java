@@ -52,6 +52,10 @@ public class Main {
                 for(WiseSaying ws : al) {
                     System.out.println(ws.id + " / " + ws.author + " / " + ws.content);
                 }
+            } else if (cmd.substring(0, 2).equals("삭제")) {  // 삭제
+                int tempId = cmd.charAt(6) - '0';
+                System.out.println(tempId + "번 명언이 삭제되었습니다.");
+                al.remove(tempId - 1);
             } else {
                 System.out.println("올바르지 않은 명령어 입니다.");
             }
