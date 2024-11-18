@@ -11,6 +11,7 @@ public class Main {
 
 
     public static ArrayList<String[]> wise = new ArrayList<String[]>();
+    public static String url = ".\\db\\wiseSaying\\data.json";
 
     public static void StrPrint(String str, boolean IsLineBreak){
         if(IsLineBreak)
@@ -28,12 +29,12 @@ public class Main {
         return Integer.parseInt(str.substring(str.indexOf("?id=")+4));
     }
     public static int CheckInputContent(String str){
-        if(str.equals("등록")) WiseInert();
-        else if (str.equals("종료")) WiseExit();
-        else if (str.equals("목록")) WiseList();
-        else if (str.contains("삭제")) WiseDelete(str);
-        else if (str.contains("수정")) WiseChange(str);
-        else if (str.equals("빌드")) WiseBuild();
+        if(str.equals("등록")) return WiseInert();
+        if (str.equals("종료")) return WiseExit();
+        if (str.equals("목록")) return WiseList();
+        if (str.contains("삭제")) return WiseDelete(str);
+        if (str.contains("수정")) return WiseChange(str);
+        if (str.equals("빌드")) return WiseBuild();
         return 0;
     }
     public static int WiseInert(){
@@ -93,7 +94,7 @@ public class Main {
             personArray.add(json);
         }
         try {
-            FileWriter file = new FileWriter(".\\db\\wiseSaying\\data.json");
+            FileWriter file = new FileWriter(url);
             file.write(personArray.toJSONString());
             file.flush();
             file.close();
