@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -39,6 +40,24 @@ public class Main {
                 } else {
                     System.out.println(id + "번 명언은 존재하지 않습니다.");
                 }
+            } else if (command.startsWith("수정?id=")) {
+                int id = Integer.parseInt(command.split("\\?id=")[1]);
+                Optional<Wise> target = wises.stream().filter(wise -> wise.index == id).findFirst();
+
+                target.ifPresentOrElse(wise -> {
+                    System.out.println("명언(기존) : " + wise.wise);
+                    System.out.print("명언 : ");
+                    String newWise = scanner.nextLine();
+
+                    System.out.println("작가(기존) : " + wise.author);
+                    System.out.print("작가 : ");
+                    String newAuthor = scanner.nextLine();
+
+                    wise.author = newAuthor;
+                    wise.wise = newWise;
+                }, () -> {
+                    System.out.println(id + "번 명언은 존재하지 않습니다.");
+                });
             }
         }
     }
