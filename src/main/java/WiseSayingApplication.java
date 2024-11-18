@@ -33,6 +33,9 @@ public class WiseSayingApplication {
 				case "수정":
 					wiseSayingService.update(sc);
 					break;
+				case "빌드":
+					wiseSayingService.build();
+					break;
 				default:
 					System.out.println("잘못된 명령입니다.");
 			}
