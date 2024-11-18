@@ -1,11 +1,17 @@
 package org.example.view;
 
+import org.example.model.WiseSayingItem;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class View {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private static long sequence = 0L;
+    private static long id = 0L;
+    private static final Map<Long, WiseSayingItem> store = new HashMap<>();
+
 
     public static void start() {
         System.out.println("== 명언 앱 ==");
@@ -21,14 +27,25 @@ public class View {
     private static boolean register(String input) {
         if (input.equals("등록")) {
             System.out.print("명언 : ");
-            scanner.nextLine();
+            String wiseSaying = scanner.nextLine();
             System.out.print("작가 : ");
-            scanner.nextLine();
-            System.out.println(++sequence + "번 명언이 등록되었습니다.");
-            return true;
+            String author = scanner.nextLine();
+
+            WiseSayingItem item = new WiseSayingItem(++id, author, wiseSaying);
+            store.put(item.getId(), item);
+            System.out.println(id + "번 명언이 등록되었습니다.");
         } else if (input.equals("종료")) {
             scanner.close();
             return false;
+        } else if (input.equals("목록")) {
+            System.out.println("번호 / 작가 / 명언");
+            System.out.println("---------------");
+
+            for (Map.Entry<Long, WiseSayingItem> entry : store.entrySet()) {
+                System.out.println(entry.getKey() + " / "
+                        + entry.getValue().getAuthor() + " / "
+                        + entry.getValue().getWiseSaying());
+            }
         }
         return true;
     }
