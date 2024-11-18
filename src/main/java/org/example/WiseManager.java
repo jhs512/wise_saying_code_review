@@ -39,6 +39,7 @@ public class WiseManager {
 
     public boolean deleteWise(int id) {
         Wise wise = findWise(id);
+
         if (wise != null) {
             wises.remove(wise);
 
@@ -46,7 +47,6 @@ public class WiseManager {
             if (file.exists()) {
                 file.delete();
             }
-
             return true;
         } else {
             return false;
@@ -83,6 +83,7 @@ public class WiseManager {
     public boolean buildWise() {
         String jsonArrayString = getJsonArrayString();
         String path = BASE_PATH + "data.json";
+
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(jsonArrayString.getBytes());
             return true;
@@ -94,6 +95,7 @@ public class WiseManager {
 
     private void saveWise(Wise wise) {
         String path = BASE_PATH + index + ".json";
+
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(getJsonString(wise).getBytes());
         } catch (IOException e) {
@@ -103,6 +105,7 @@ public class WiseManager {
 
     private void saveLastId() {
         String path = BASE_PATH + "lastId.txt";
+
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(String.valueOf(index).getBytes());
         } catch (IOException e) {
