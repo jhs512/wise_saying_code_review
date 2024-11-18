@@ -32,9 +32,13 @@ public class Main {
                 wises.forEach(wise -> System.out.println(wise));
             } else if (command.startsWith("삭제?id=")) {
                 int id = Integer.parseInt(command.split("\\?id=")[1]);
-                wises.removeIf(wise -> wise.index == id);
+                boolean exist = wises.removeIf(wise -> wise.index == id);
 
-                System.out.println(id + "번 명언이 삭제되었습니다.");
+                if (exist) {
+                    System.out.println(id + "번 명언이 삭제되었습니다.");
+                } else {
+                    System.out.println(id + "번 명언은 존재하지 않습니다.");
+                }
             }
         }
     }
