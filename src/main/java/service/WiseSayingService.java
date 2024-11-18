@@ -1,5 +1,6 @@
 package service;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -11,13 +12,17 @@ public class WiseSayingService {
 	private static final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
 
 	public void add(Scanner sc) {
-		System.out.print("명언 : ");
-		String wiseSaying = sc.nextLine();
-		System.out.print("작가 : ");
-		String writer = sc.nextLine();
-		WiseSayingEntity wiseSayingEntity = new WiseSayingEntity(wiseSaying, writer);
-		Long savedId = wiseSayingRepository.add(wiseSayingEntity);
-		System.out.println(savedId + "번 명언이 등록되었습니다.");
+		try {
+			System.out.print("명언 : ");
+			String wiseSaying = sc.nextLine();
+			System.out.print("작가 : ");
+			String writer = sc.nextLine();
+			WiseSayingEntity wiseSayingEntity = new WiseSayingEntity(wiseSaying, writer);
+			Long savedId = wiseSayingRepository.add(wiseSayingEntity);
+			System.out.println(savedId + "번 명언이 등록되었습니다.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void findAll() {
@@ -70,6 +75,17 @@ public class WiseSayingService {
 			wiseSayingRepository.update(targetEntity);
 		} catch (WiseSayingException e) {
 			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void build() {
+		try {
+			wiseSayingRepository.build();
+			System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

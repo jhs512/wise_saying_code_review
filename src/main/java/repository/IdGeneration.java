@@ -3,8 +3,8 @@ package repository;
 public class IdGeneration {
 	private Long id;
 
-	public IdGeneration() {
-		this.id = 1L;
+	public IdGeneration(Long id) {
+		this.id = id;
 	}
 
 	public Long generationId() {

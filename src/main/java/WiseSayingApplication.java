@@ -16,6 +16,7 @@ public class WiseSayingApplication {
 
 			if (select.equals("종료")) {
 				sc.close();
+				wiseSayingService.build();
 				break;
 			}
 
