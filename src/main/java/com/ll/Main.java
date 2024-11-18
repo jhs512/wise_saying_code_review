@@ -1,17 +1,43 @@
 package com.ll;
 
+import java.util.*;
+
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
 public class Main {
-    public static void main(String[] args) {
-        //TIP 캐럿을 강조 표시된 텍스트에 놓고 <shortcut actionId="ShowIntentionActions"/>을(를) 누르면
-        // IntelliJ IDEA이(가) 수정을 제안하는 것을 확인할 수 있습니다.
-        System.out.printf("Hello and welcome!");
+    static final String EXIT = "종료";
+    static final String INSERT = "등록";
+    static final String LIST = "목록";
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP <shortcut actionId="Debug"/>을(를) 눌러 코드 디버그를 시작하세요. 1개의 <icon src="AllIcons.Debugger.Db_set_breakpoint"/> 중단점을 설정해 드렸습니다
-            // 언제든 <shortcut actionId="ToggleLineBreakpoint"/>을(를) 눌러 중단점을 더 추가할 수 있습니다.
-            System.out.println("i = " + i);
+    public static void main(String[] args) {
+        System.out.println("== 명언 앱 ==");
+        Scanner sc = new Scanner(System.in);
+
+        Map<Integer,Info> map = new HashMap<>();
+
+        String command = "";
+        String saying = "";
+        String writer = "";
+        int id = 0;
+
+        while (!command.equals(EXIT)) {
+            System.out.print("명령) ");
+            command = sc.nextLine();;
+            if (command.equals(INSERT)) {
+                Info info = new Info();
+                System.out.print("명언 : ");
+                saying = sc.nextLine();
+                System.out.print("작가 : ");
+                writer = sc.nextLine();
+                info.setId(++id);
+                info.setSaying(saying);
+                info.setWriter(writer);
+                map.put(id, info);
+                System.out.println(id+"번 명언이 등록되었습니다.");
+            }
+            else if (command.equals(LIST)) {
+
+            }
         }
     }
 }
