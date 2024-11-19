@@ -41,4 +41,8 @@ public class WiseSayingController {
 
 		wiseSayingService.delete(targetId);
 	}
+
+	public void build() {
+		wiseSayingService.build();
+	}
 }
