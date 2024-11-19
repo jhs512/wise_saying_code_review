@@ -12,7 +12,32 @@ import org.example.repository.WiseSayingRepository;
 
 public class WiseSayingService {
 
-    public static List<WiseSaying> createListofWiseSaying() throws IOException {
+    public static int createJsonFile(int id, String content, String author) {
+
+        String data = "{\n"
+            + "\t\"id\": \"" + id + "\",\n"
+            + "\t\"content\": \"" + content + "\",\n"
+            + "\t\"author\": \"" + author + "\"\n"
+            + "}";
+
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        if (WiseSayingRepository.save(data, path)) {
+            return id;
+        }
+        return -1;
+    }
+
+    public static int createWiseSaying(String content, String author) {
+        int id = WiseSayingRepository.findLastId();
+        return createJsonFile(id, content, author);
+    }
+
+    public static boolean createTxtFile(int id) {
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
+        return WiseSayingRepository.save(String.valueOf(id), path);
+    }
+
+    public static List<WiseSaying> createListOfWiseSaying() {
         List<WiseSaying> list = new ArrayList<>();
         Optional<File[]> files = WiseSayingRepository.findAll();
 
@@ -41,31 +66,9 @@ public class WiseSayingService {
         return list;
     }
 
-    public static void createJsonFile(int id, String content, String author) {
-
-        String data = "{\n"
-            + "\t\"id\": \"" + id + "\",\n"
-            + "\t\"content\": \"" + content + "\",\n"
-            + "\t\"author\": \"" + author + "\"\n"
-            + "}";
-
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-        WiseSayingRepository.save(data, path);
-    }
-
-    public static void createTxtFile(int id) {
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
-        WiseSayingRepository.save(String.valueOf(id), path);
-    }
-
-    public static void removeJsonFile(int id) throws IOException {
-
-        if (WiseSayingRepository.delete(id)) {
-            System.out.println(id + "번 명언이 삭제 되었습니다.");
-        } else {
-            System.out.println(id + "번 명언 존재하지 않습니다.");
-        }
-
+    public static int removeJsonFile(String cmd) throws IOException {
+        int id = cmd.charAt(6) - '0';
+        return WiseSayingRepository.delete(id);
     }
 
     public static void updateJsonFile(int id, String content, String author) {
@@ -102,7 +105,7 @@ public class WiseSayingService {
         return Optional.empty();
     }
 
-    public static void createBuildFile() {
+    public static boolean createDataJsonFile() {
         String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/";
         File jsonFiles = new File(jsonFilePath);
         StringBuilder jsonContents = new StringBuilder();
@@ -132,7 +135,7 @@ public class WiseSayingService {
             }
         }
 
-        WiseSayingRepository.save(jsonContents.toString(), jsonFilePath + "data.json");
+        return WiseSayingRepository.save(jsonContents.toString(), jsonFilePath + "data.json");
     }
 
 }

@@ -25,6 +25,20 @@ public class WiseSayingRepository {
         return 1;
     }
 
+    public static boolean save(String data, String path) {
+
+        File file = new File(path);
+        file.getParentFile().mkdirs();
+
+        try(FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(data);
+            return true;
+        } catch (IOException e) {
+            System.out.println("파일 저장 에러" + e.getMessage());
+            return false;
+        }
+    }
+
     public static Optional<File[]> findAll() {
 
         String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
@@ -39,6 +53,18 @@ public class WiseSayingRepository {
         return Optional.empty();
     }
 
+    public static int delete(int id) throws IOException {
+
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        File file = new File(path);
+
+        if (file.exists()) {
+            file.delete();
+            return id;
+        }
+        return -1;
+    }
+
     public static Optional<File> findById(int id) {
 
         String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
@@ -48,30 +74,6 @@ public class WiseSayingRepository {
             return Optional.of(jsonFile);
         }
         return Optional.empty();
-    }
-
-    public static void save(String data, String path) {
-
-        File file = new File(path);
-        file.getParentFile().mkdirs();
-
-        try(FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(data);
-        } catch (IOException e) {
-            System.out.println("파일 저장 에러" + e.getMessage());
-        }
-    }
-
-    public static boolean delete(int id) throws IOException {
-
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-        File file = new File(path);
-
-        if (file.exists()) {
-            file.delete();
-            return true;
-        }
-        return false;
     }
 
 }
