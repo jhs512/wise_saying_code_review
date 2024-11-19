@@ -36,7 +36,7 @@ public class WiseController {
         }
     }
 
-    public void applyWise(){
+    public void applyWise() {
         System.out.print("명언 : ");
         String wise = scanner.nextLine();
 
@@ -54,7 +54,7 @@ public class WiseController {
         service.getWises().forEach(wise -> System.out.println(wise));
     }
 
-    public void editWise(int id){
+    public void editWise(int id) {
         Wise previous = service.getWise(id);
 
         if (previous != null) {
@@ -74,7 +74,7 @@ public class WiseController {
         }
     }
 
-    public void deleteWise(int id){
+    public void deleteWise(int id) {
         boolean exist = service.deleteWise(id);
 
         if (exist) {
@@ -84,7 +84,7 @@ public class WiseController {
         }
     }
 
-    public void buildWise(){
+    public void buildWise() {
         boolean result = service.buildWise();
 
         if (result) {
