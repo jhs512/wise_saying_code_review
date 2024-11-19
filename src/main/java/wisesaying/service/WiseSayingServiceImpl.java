@@ -50,7 +50,7 @@ public class WiseSayingServiceImpl implements WiseSayingService{
 			Long deletedId = wiseSayingRepository.delete(targetId);
 
 			System.out.println(deletedId + "번 명언이 삭제되었습니다.");
-		} catch (WiseSayingException e) {
+		} catch (WiseSayingException | IOException e) {
 			System.out.println(e.getMessage());
 		} catch (NumberFormatException e) {
 			System.out.println("숫자만 입력하세요.");

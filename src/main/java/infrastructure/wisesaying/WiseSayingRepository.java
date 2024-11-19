@@ -10,7 +10,7 @@ public interface WiseSayingRepository {
 	Long add(WiseSaying wiseSaying) throws IOException;
 	Optional<WiseSaying> findById(Long id) throws IOException;
 	Optional<LinkedList<WiseSaying>> findAll() throws IOException;
-	Long delete(Long id);
+	Long delete(Long id) throws IOException;
 	void update(WiseSaying wiseSaying) throws IOException;
 	void build() throws IOException;
 }

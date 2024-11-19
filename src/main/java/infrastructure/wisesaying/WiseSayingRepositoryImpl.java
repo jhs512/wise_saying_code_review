@@ -1,49 +1,39 @@
 package infrastructure.wisesaying;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
 
-public class WiseSayingRepositoryImpl implements WiseSayingRepository{
+public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 	private final IdGeneration idGeneration;
 	private final LinkedHashMap<Long, WiseSayingEntity> wiseSayingEntityLinkedHashMap;
-	private final ObjectMapper objectMapper = new ObjectMapper();
-	private static final String FILE_PATH="db/wiseSaying/";
-	private static final String LAST_ID_PATH="db/wiseSaying/lastId.txt";
+	private static final String FILE_PATH = "db/wiseSaying/";
+	private static final String LAST_ID_PATH = FILE_PATH + "lastId.txt";
 
 	public WiseSayingRepositoryImpl() {
-		File lastIdFile = new File(LAST_ID_PATH);
-		File wiseSayingFile = new File(FILE_PATH + "data.json");
+		Path lastIdPath = Paths.get(LAST_ID_PATH);
+		Path wiseSayingPath = Paths.get(FILE_PATH + "data.json");
 
 		try {
-			if (lastIdFile.exists()) {
-				Long id = objectMapper.readValue(lastIdFile, Long.class);
+			if (Files.exists(lastIdPath)) {
+				long id = Long.parseLong(Files.readString(lastIdPath));
 				idGeneration = new IdGeneration(id);
 			} else {
 				idGeneration = new IdGeneration(0L);
 			}
 
-			if (wiseSayingFile.exists()) {
-				LinkedList<WiseSayingEntity> wiseSayingEntities = objectMapper.readValue(wiseSayingFile,
-					new TypeReference<LinkedList<WiseSayingEntity>>() {});
-
-				wiseSayingEntityLinkedHashMap = wiseSayingEntities.stream()
-					.collect(Collectors.toMap(
-						WiseSayingEntity::getId,
-						entity -> entity,
-						(oldValue, newValue) -> oldValue,
-						LinkedHashMap::new
-					));
+			if (Files.exists(wiseSayingPath)) {
+				String json = Files.readString(wiseSayingPath);
+				wiseSayingEntityLinkedHashMap = WiseSayingEntity.fromJsonList(json);
 			} else {
 				wiseSayingEntityLinkedHashMap = new LinkedHashMap<>();
 			}
@@ -58,28 +48,32 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
 		wiseSayingEntity.setId(id);
 		wiseSayingEntityLinkedHashMap.put(id, wiseSayingEntity);
 
-		File wiseSayingFile = new File(FILE_PATH + wiseSayingEntity.getId() + ".json");
-		File lastIdFile = new File(LAST_ID_PATH);
+		Path wiseSayingPath = Paths.get(FILE_PATH + wiseSayingEntity.getId() + ".json");
+		Path lastIdPath = Paths.get(LAST_ID_PATH);
 
-		if (!wiseSayingFile.exists()) {
-			wiseSayingFile.getParentFile().mkdirs();
-			wiseSayingFile.createNewFile();
+		if (!Files.exists(wiseSayingPath)) {
+			Files.createDirectories(wiseSayingPath.getParent());
+			Files.createFile(wiseSayingPath);
 		}
 
-		if (!lastIdFile.exists()) {
-			lastIdFile.getParentFile().mkdirs();
-			lastIdFile.createNewFile();
+		if (!Files.exists(lastIdPath)) {
+			Files.createFile(lastIdPath);
 		}
 
-		objectMapper.writeValue(wiseSayingFile, wiseSayingEntity);
-		objectMapper.writeValue(lastIdFile, id);
+		String wiseSayingEntityJson = wiseSayingEntity.toJson();
+
+		Files.write(wiseSayingPath, wiseSayingEntityJson.getBytes());
+		Files.write(lastIdPath, String.valueOf(id).getBytes());
 
 		return id;
 	}
 
 	public Optional<WiseSaying> findById(Long id) throws IOException {
-		File wiseSayingFile = new File(FILE_PATH + id + ".json");
-		WiseSayingEntity wiseSayingEntity = objectMapper.readValue(wiseSayingFile, WiseSayingEntity.class);
+		Path wiseSayingPath = Paths.get(FILE_PATH + id + ".json");
+
+		String json = Files.readString(wiseSayingPath);
+
+		WiseSayingEntity wiseSayingEntity = WiseSayingEntity.fromJson(json);
 
 		if (Objects.isNull(wiseSayingEntity)) {
 			return Optional.empty();
@@ -104,35 +98,35 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
 			.collect(Collectors.toCollection(LinkedList::new)));
 	}
 
-	public Long delete(Long id) {
-		File wiseSayingFile = new File(FILE_PATH + id + ".json");
+	public Long delete(Long id) throws IOException {
+		Path wiseSayingPash = Paths.get(FILE_PATH + id + ".json");
 		WiseSayingEntity remove = wiseSayingEntityLinkedHashMap.remove(id);
 
-		if (Objects.isNull(remove) || !wiseSayingFile.exists()) {
+		if (Objects.isNull(remove) || !Files.exists(wiseSayingPash)) {
 			throw new WiseSayingException(id + "번 명언은 존재하지 않습니다.");
 		}
 
-		wiseSayingFile.delete();
+		Files.delete(wiseSayingPash);
 		return id;
 	}
 
 	public void update(WiseSaying wiseSaying) throws IOException {
 		WiseSayingEntity wiseSayingEntity = WiseSayingEntity.from(wiseSaying);
-		File wiseSayingFile = new File(FILE_PATH + wiseSayingEntity.getId() + ".json");
+		Path wiseSayingPath = Paths.get(FILE_PATH + wiseSayingEntity.getId() + ".json");
 		wiseSayingEntityLinkedHashMap.replace(wiseSayingEntity.getId(), wiseSayingEntity);
-		objectMapper.writeValue(wiseSayingFile, wiseSayingEntity);
+		Files.write(wiseSayingPath, wiseSayingEntity.toJson().getBytes());
 	}
 
 	public void build() throws IOException {
-		LinkedList<WiseSayingEntity> wiseSayingEntities = new LinkedList<>(wiseSayingEntityLinkedHashMap.values());
+		Path wiseSayingPath = Paths.get(FILE_PATH + "data.json");
 
-		File wiseSayingFile = new File(FILE_PATH + "data.json");
-
-		if (!wiseSayingFile.exists()) {
-			wiseSayingFile.getParentFile().mkdirs();
-			wiseSayingFile.createNewFile();
+		if (!Files.exists(wiseSayingPath)) {
+			Files.createDirectories(wiseSayingPath.getParent());
+			Files.createFile(wiseSayingPath);
 		}
 
-		objectMapper.writeValue(wiseSayingFile, wiseSayingEntities);
+		if (!wiseSayingEntityLinkedHashMap.isEmpty()) {
+			Files.write(wiseSayingPath, WiseSayingEntity.toJsonList(wiseSayingEntityLinkedHashMap).getBytes());
+		}
 	}
 }

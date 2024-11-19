@@ -13,6 +13,22 @@ public class WiseSayingApplication {
 		= (WiseSayingController)container.get(WiseSayingController.class.getSimpleName());
 
 	public static void main(String[] args) {
+		new WiseSayingApplication().run();
+	}
+
+	public static ConcurrentHashMap<String, Object> init() {
+		ConcurrentHashMap<String, Object> container = new ConcurrentHashMap<>();
+		WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
+		WiseSayingService wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
+		WiseSayingController wiseSayingController = new WiseSayingController(wiseSayingService);
+
+		container.put(WiseSayingRepositoryImpl.class.getSimpleName(), wiseSayingRepository);
+		container.put(WiseSayingServiceImpl.class.getSimpleName(), wiseSayingService);
+		container.put(WiseSayingController.class.getSimpleName(), wiseSayingController);
+		return container;
+	}
+
+	public void run() {
 		while(true) {
 			System.out.println("== 명언 앱 ==");
 			System.out.print("명령) ");
@@ -47,17 +63,5 @@ public class WiseSayingApplication {
 					System.out.println("잘못된 명령입니다.");
 			}
 		}
-	}
-
-	public static ConcurrentHashMap<String, Object> init() {
-		ConcurrentHashMap<String, Object> container = new ConcurrentHashMap<>();
-		WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
-		WiseSayingService wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
-		WiseSayingController wiseSayingController = new WiseSayingController(wiseSayingService);
-
-		container.put(WiseSayingRepositoryImpl.class.getSimpleName(), wiseSayingRepository);
-		container.put(WiseSayingServiceImpl.class.getSimpleName(), wiseSayingService);
-		container.put(WiseSayingController.class.getSimpleName(), wiseSayingController);
-		return container;
 	}
 }
