@@ -5,27 +5,24 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import infrastructure.wisesaying.WiseSayingEntity;
+import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
 import infrastructure.wisesaying.WiseSayingRepository;
 
 public class WiseSayingService {
 	private static final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
 
-	public void add(Scanner sc) {
+	public Long add(String wiseSaying, String writer) {
+		Long savedId = 0L;
 		try {
-			System.out.print("명언 : ");
-			String wiseSaying = sc.nextLine();
+			WiseSaying createWiseSaying = WiseSaying.createWiseSaying(wiseSaying, writer);
+			savedId = wiseSayingRepository.add(createWiseSaying);
 
-			System.out.print("작가 : ");
-			String writer = sc.nextLine();
-
-			WiseSayingEntity wiseSayingEntity = new WiseSayingEntity(wiseSaying, writer);
-			Long savedId = wiseSayingRepository.add(wiseSayingEntity);
-
-			System.out.println(savedId + "번 명언이 등록되었습니다.");
+			return savedId;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return savedId;
 	}
 
 	public void findAll() {
