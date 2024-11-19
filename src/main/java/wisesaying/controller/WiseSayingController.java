@@ -32,4 +32,13 @@ public class WiseSayingController {
 	public void update(Scanner sc) {
 		wiseSayingService.update(sc);
 	}
+
+	public void delete(Scanner sc) {
+		System.out.print("삭제?id = ");
+
+		Long targetId = sc.nextLong();
+		sc.nextLine();
+
+		wiseSayingService.delete(targetId);
+	}
 }
