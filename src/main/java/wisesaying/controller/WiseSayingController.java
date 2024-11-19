@@ -24,4 +24,8 @@ public class WiseSayingController {
 
 		System.out.println(message);
 	}
+
+	public void findAll() {
+		wiseSayingService.findAll();
+	}
 }
