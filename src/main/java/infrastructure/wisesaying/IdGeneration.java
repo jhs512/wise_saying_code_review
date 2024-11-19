@@ -8,6 +8,6 @@ public class IdGeneration {
 	}
 
 	public Long generationId() {
-		return id++;
+		return ++id;
 	}
 }
