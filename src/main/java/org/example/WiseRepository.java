@@ -5,10 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WiseRepository {
@@ -140,17 +142,15 @@ public class WiseRepository {
             HashMap<String, String> jsonMap = new HashMap<>();
             String line = reader.readLine();
 
-            while (line != null) {
-                if (!(line.contains("{") || line.contains("}"))) {
-                    String[] temp = line.trim()
-                            .replaceAll("[ \",]", "")
-                            .split(":");
-                    String key = temp[0];
-                    String value = temp[1];
+            String[] data = line.replaceAll("[{}\"]", "")
+                    .split(",");
 
-                    jsonMap.put(key, value);
-                }
-                line = reader.readLine();
+            for (String d : data) {
+                String[] temp = d.split(":");
+                String key = temp[0];
+                String value = temp[1];
+
+                jsonMap.put(key, value);
             }
 
             String id = jsonMap.get("id");
@@ -165,51 +165,29 @@ public class WiseRepository {
     }
 
     private String editJson(String data, String key, String value, boolean last) {
-        Pattern pattern = Pattern.compile("\"" + key + "\":\\s.*");
+        Pattern pattern = Pattern.compile("(\"" + key + "\":[^,}]*)");
         Matcher matcher = pattern.matcher(data);
 
         if (matcher.find()) {
-            if (last) {
-                data = matcher.replaceFirst("\"" + key + "\": " + "\"" + value + "\"");
-            } else {
-                data = matcher.replaceFirst("\"" + key + "\": " + "\"" + value + "\",");
-            }
+            data = matcher.replaceFirst("\"" + key + "\":" + "\"" + value + "\"");
         }
 
         return data;
     }
 
     private String getJsonString(Wise wise) {
-        String json = """
-                {
-                  "id": %d,
-                  "content": "%s",
-                  "author": "%s"
-                }
-                """;
-
-        return String.format(json, wise.index, wise.content, wise.author);
-    }
-
-    private String getJsonStringWithIndent(Wise wise) {
-        String json = """
-                  {
-                    "id": %d,
-                    "content": "%s",
-                    "author": "%s"
-                  },
-                """;
+        String json = "{\"id\":%d,\"content\":\"%s\",\"author\":\"%s\"}";
 
         return String.format(json, wise.index, wise.content, wise.author);
     }
 
     private String getJsonArrayString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("[\n");
-        wises.forEach(wise -> {
-            builder.append(getJsonStringWithIndent(wise));
-        });
-        builder.deleteCharAt(builder.length() - 2);
+        builder.append("[");
+        builder.append(wises.stream()
+                .map(wise -> getJsonString(wise))
+                .collect(Collectors.joining(","))
+        );
         builder.append("]");
 
         return builder.toString();
