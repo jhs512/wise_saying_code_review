@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
 
 public class WiseSayingRepository {
@@ -28,7 +29,7 @@ public class WiseSayingRepository {
 				Long id = objectMapper.readValue(lastIdFile, Long.class);
 				idGeneration = new IdGeneration(id);
 			} else {
-				idGeneration = new IdGeneration(1L);
+				idGeneration = new IdGeneration(0L);
 			}
 
 			if (wiseSayingFile.exists()) {
@@ -50,8 +51,9 @@ public class WiseSayingRepository {
 		}
 	}
 
-	public Long add(WiseSayingEntity wiseSayingEntity) throws IOException {
+	public Long add(WiseSaying wiseSaying) throws IOException {
 		Long id = idGeneration.generationId();
+		WiseSayingEntity wiseSayingEntity = new WiseSayingEntity(wiseSaying.getWiseSaying(), wiseSaying.getWriter());
 		wiseSayingEntity.setId(id);
 		wiseSayingEntityLinkedHashMap.put(id, wiseSayingEntity);
 
