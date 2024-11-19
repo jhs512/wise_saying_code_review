@@ -30,7 +30,7 @@ public class WiseSayingRepository {
 				Long id = objectMapper.readValue(lastIdFile, Long.class);
 				idGeneration = new IdGeneration(id);
 			} else {
-				idGeneration = new IdGeneration(1L);
+				idGeneration = new IdGeneration(0L);
 			}
 
 			if (wiseSayingFile.exists()) {
