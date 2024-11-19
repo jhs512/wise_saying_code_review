@@ -2,8 +2,10 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import infrastructure.wisesaying.WiseSayingRepository;
+import infrastructure.wisesaying.WiseSayingRepositoryImpl;
 import wisesaying.controller.WiseSayingController;
 import wisesaying.service.WiseSayingService;
+import wisesaying.service.WiseSayingServiceImpl;
 
 public class WiseSayingApplication {
 	private static final ConcurrentHashMap<String, Object> container = init();
@@ -49,12 +51,12 @@ public class WiseSayingApplication {
 
 	public static ConcurrentHashMap<String, Object> init() {
 		ConcurrentHashMap<String, Object> container = new ConcurrentHashMap<>();
-		WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
-		WiseSayingService wiseSayingService = new WiseSayingService(wiseSayingRepository);
+		WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
+		WiseSayingService wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
 		WiseSayingController wiseSayingController = new WiseSayingController(wiseSayingService);
 
-		container.put(WiseSayingRepository.class.getSimpleName(), wiseSayingRepository);
-		container.put(WiseSayingService.class.getSimpleName(), wiseSayingService);
+		container.put(WiseSayingRepositoryImpl.class.getSimpleName(), wiseSayingRepository);
+		container.put(WiseSayingServiceImpl.class.getSimpleName(), wiseSayingService);
 		container.put(WiseSayingController.class.getSimpleName(), wiseSayingController);
 		return container;
 	}
