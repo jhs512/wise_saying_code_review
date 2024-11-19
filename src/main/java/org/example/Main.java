@@ -1,10 +1,6 @@
 package org.example;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -72,48 +68,12 @@ public class Main {
                     String author = br.readLine();
 
                     WiseSayingService.updateJsonFile(tempId, content, author);
+                } else {
+                    System.out.println(tempId + "번 명언은 존재하지 않습니다.");
                 }
 
             } else if (cmd.equals("빌드")) {
-                String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
-                File jsonFiles = new File(jsonFilePath);
-                StringBuilder jsonContents = new StringBuilder();
-
-                if (jsonFiles.exists() && jsonFiles.isDirectory()) {
-                    File[] fileArr = jsonFiles.listFiles(
-                        (dir, name) -> (name.endsWith(".json") && !name.equals("data.json")));
-
-                    if(fileArr != null) {
-                        jsonContents.append("[\n");
-                        for (File f : fileArr) {
-                            try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
-
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    if (line.equals("}")) {
-                                        jsonContents.append("\t").append(line).append(",\n");
-                                    } else jsonContents.append("\t").append(line).append("\n");
-                                }
-
-                            } catch (Exception e) {
-                                System.out.println("파일 읽기 에러" + e.getMessage());
-                            }
-                        }
-                        jsonContents.delete(jsonContents.length() - 2, jsonContents.length() - 1);
-                        jsonContents.append("]");
-                    }
-                }
-
-                try (BufferedWriter writer = new BufferedWriter(
-                    new FileWriter(jsonFilePath + "/data.json"))) {
-                    writer.write(jsonContents.toString());
-                    System.out.println("data.json 파일의 내용이 갱신되었습니다.");
-                } catch (IOException e) {
-                    System.out.println("빌드 에러" + e.getMessage());
-                }
-
-            } else {
-                System.out.println("올바르지 않은 명령어 입니다.");
+                WiseSayingService.createBuildFile();
             }
         }
 

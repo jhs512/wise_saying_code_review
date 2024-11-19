@@ -93,7 +93,6 @@ public class WiseSayingService {
                     }
                 }
 
-//                return new WiseSaying(Integer.parseInt(values[0]), values[1], values[2]);
                 return Optional.of(new WiseSaying(Integer.parseInt(values[0]), values[1], values[2]));
             } catch (IOException e) {
                 System.out.println("파일 읽기 에러: " + e.getMessage());
@@ -101,6 +100,39 @@ public class WiseSayingService {
         }
 
         return Optional.empty();
+    }
+
+    public static void createBuildFile() {
+        String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/";
+        File jsonFiles = new File(jsonFilePath);
+        StringBuilder jsonContents = new StringBuilder();
+
+        if (jsonFiles.exists() && jsonFiles.isDirectory()) {
+            File[] fileArr = jsonFiles.listFiles(
+                (dir, name) -> (name.endsWith(".json") && !name.equals("data.json")));
+
+            if(fileArr != null) {
+                jsonContents.append("[\n");
+                for (File f : fileArr) {
+                    try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            if (line.equals("}")) {
+                                jsonContents.append("\t").append(line).append(",\n");
+                            } else jsonContents.append("\t").append(line).append("\n");
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("파일 읽기 에러" + e.getMessage());
+                    }
+                }
+                jsonContents.delete(jsonContents.length() - 2, jsonContents.length() - 1);
+                jsonContents.append("]");
+            }
+        }
+
+        WiseSayingRepository.save(jsonContents.toString(), jsonFilePath + "data.json");
     }
 
 }
