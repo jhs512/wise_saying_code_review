@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class WiseController {
@@ -43,8 +44,12 @@ public class WiseController {
         System.out.print("작가 : ");
         String author = scanner.nextLine();
 
-        int index = service.applyWise(wise, author);
-        System.out.println(index + "번 명언이 등록되었습니다.");
+        try {
+            int index = service.applyWise(wise, author);
+            System.out.println(index + "번 명언이 등록되었습니다.");
+        } catch (IOException e) {
+            System.out.println("명언을 등록하지 못했습니다.");
+        }
     }
 
     public void printWise() {
@@ -66,9 +71,13 @@ public class WiseController {
             System.out.print("작가 : ");
             String newAuthor = scanner.nextLine();
 
-            service.editWise(id, newContent, newAuthor);
-            previous.content = newContent;
-            previous.author = newAuthor;
+            try {
+                service.editWise(id, newContent, newAuthor);
+                previous.content = newContent;
+                previous.author = newAuthor;
+            } catch (IOException e) {
+                System.out.println("명언을 수정하지 못했습니다.");
+            }
         } else {
             System.out.println(id + "번 명언은 존재하지 않습니다.");
         }

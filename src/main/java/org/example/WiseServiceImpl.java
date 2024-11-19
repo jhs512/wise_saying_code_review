@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class WiseServiceImpl implements WiseService {
@@ -10,7 +11,7 @@ public class WiseServiceImpl implements WiseService {
     }
 
     @Override
-    public int applyWise(String content, String author) {
+    public int applyWise(String content, String author) throws IOException {
         return repository.applyWise(content, author);
     }
 
@@ -25,7 +26,7 @@ public class WiseServiceImpl implements WiseService {
     }
 
     @Override
-    public void editWise(int id, String newContent, String newAuthor) {
+    public void editWise(int id, String newContent, String newAuthor) throws IOException {
         repository.editWise(id, newContent, newAuthor);
     }
 

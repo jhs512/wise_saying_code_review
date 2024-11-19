@@ -19,11 +19,13 @@ public class WiseRepository {
     private final String BASE_PATH = "db/wiseSaying/";
 
     public WiseRepository() {
-        loadWises();
-        loadLastId();
+        try {
+            loadWises();
+            loadLastId();
+        } catch (IOException e) {}
     }
 
-    public int applyWise(String content, String author) {
+    public int applyWise(String content, String author) throws IOException {
         Wise wise = new Wise(index, author, content);
         wises.add(wise);
         saveWise(wise);
@@ -36,20 +38,16 @@ public class WiseRepository {
         return wises;
     }
 
-    public void editWise(int id, String newWise, String newAuthor) {
+    public void editWise(int id, String newWise, String newAuthor) throws IOException {
         String path = BASE_PATH + id + ".json";
 
-        try {
-            String data = new String(Files.readAllBytes(Paths.get(path)));
+        String data = new String(Files.readAllBytes(Paths.get(path)));
 
-            data = editJson(data, "content", newWise, false);
-            data = editJson(data, "author", newAuthor, true);
+        data = editJson(data, "content", newWise, false);
+        data = editJson(data, "author", newAuthor, true);
 
-            try (FileOutputStream output = new FileOutputStream(path)) {
-                output.write(data.getBytes());
-            }
-        } catch (IOException e) {
-            System.out.println("파일 출력 에러");
+        try (FileOutputStream output = new FileOutputStream(path)) {
+            output.write(data.getBytes());
         }
     }
 
@@ -77,7 +75,6 @@ public class WiseRepository {
             output.write(jsonArrayString.getBytes());
             return true;
         } catch (IOException e) {
-            System.out.println("파일 출력 에러");
             return false;
         }
     }
@@ -92,52 +89,46 @@ public class WiseRepository {
         }
     }
 
-    private void saveWise(Wise wise) {
+    private void saveWise(Wise wise) throws IOException {
         String path = BASE_PATH + index + ".json";
 
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(getJsonString(wise).getBytes());
-        } catch (IOException e) {
-            System.out.println("파일 출력 에러");
         }
     }
 
-    private void saveLastId() {
+    private void saveLastId() throws IOException {
         String path = BASE_PATH + "lastId.txt";
 
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(String.valueOf(index).getBytes());
-        } catch (IOException e) {
-            System.out.println("파일 출력 에러");
         }
     }
 
-    private void loadWises() {
+    private void loadWises() throws IOException {
         try (Stream<Path> stream = Files.walk(Paths.get(BASE_PATH))) {
             stream.filter(file -> {
                         String name = file.getFileName().toString();
                         return !name.startsWith("data") && name.endsWith("json");
                     })
                     .forEach(file -> {
-                        wises.add(jsonToWise(file));
+                        try {
+                            wises.add(jsonToWise(file));
+                        } catch (IOException e) {
+                            //읽어들이지 않고 일단 스킵
+                        }
                     });
-        } catch (IOException e) {
-            System.out.println("파일 입력 에러");
         }
     }
 
-    private void loadLastId() {
+    private void loadLastId() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(BASE_PATH + "lastId.txt"))) {
             int lastId = Integer.parseInt(reader.readLine());
             index = lastId + 1;
-        } catch (FileNotFoundException e) {
-            return;
-        } catch (IOException e) {
-            System.out.println("파일 입력 에러");
         }
     }
 
-    private Wise jsonToWise(Path file) {
+    private Wise jsonToWise(Path file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toString()))) {
             HashMap<String, String> jsonMap = new HashMap<>();
             String line = reader.readLine();
@@ -158,9 +149,6 @@ public class WiseRepository {
             String content = jsonMap.get("content");
 
             return new Wise(Integer.parseInt(id), author, content);
-        } catch (IOException e) {
-            System.out.println("파일 입력 에러");
-            return null;
         }
     }
 
