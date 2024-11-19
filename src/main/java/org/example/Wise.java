@@ -1,6 +1,6 @@
 package org.example;
 
-class Wise {
+public class Wise {
     int index;
     String author;
     String content;

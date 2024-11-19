@@ -11,46 +11,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class WiseManager {
+public class WiseRepository {
     private ArrayList<Wise> wises = new ArrayList<>();
     private int index = 1;
     private final String BASE_PATH = "db/wiseSaying/";
 
-    public WiseManager() {
+    public WiseRepository() {
         loadWises();
-        getLastId();
+        loadLastId();
     }
 
-    public void applyWise(String wise, String author) {
-        Wise w = new Wise(index, author, wise);
-        wises.add(w);
-        saveWise(w);
+    public int applyWise(String content, String author) {
+        Wise wise = new Wise(index, author, content);
+        wises.add(wise);
+        saveWise(wise);
         saveLastId();
 
-        System.out.println(index++ + "번 명언이 등록되었습니다.");
+        return index++;
     }
 
-    public void printWises() {
-        System.out.println("번호 / 작가 / 명언");
-        System.out.println("---------------");
-
-        wises.forEach(wise -> System.out.println(wise));
-    }
-
-    public boolean deleteWise(int id) {
-        Wise wise = findWise(id);
-
-        if (wise != null) {
-            wises.remove(wise);
-
-            File file = new File(BASE_PATH + id + ".json");
-            if (file.exists()) {
-                file.delete();
-            }
-            return true;
-        } else {
-            return false;
-        }
+    public ArrayList<Wise> getWises() {
+        return wises;
     }
 
     public void editWise(int id, String newWise, String newAuthor) {
@@ -70,17 +51,23 @@ public class WiseManager {
         }
     }
 
-    public Wise findWise(int id) {
-        Optional<Wise> result = wises.stream().filter(wise -> wise.index == id).findFirst();
+    public boolean deleteWise(int id) {
+        Wise wise = findWise(id);
 
-        if (result.isPresent()) {
-            return result.get();
+        if (wise != null) {
+            wises.remove(wise);
+
+            File file = new File(BASE_PATH + id + ".json");
+            if (file.exists()) {
+                file.delete();
+            }
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 
-    public boolean buildWise() {
+    public boolean saveWises() {
         String jsonArrayString = getJsonArrayString();
         String path = BASE_PATH + "data.json";
 
@@ -90,6 +77,16 @@ public class WiseManager {
         } catch (IOException e) {
             System.out.println("파일 출력 에러");
             return false;
+        }
+    }
+
+    public Wise findWise(int id) {
+        Optional<Wise> result = wises.stream().filter(wise -> wise.index == id).findFirst();
+
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            return null;
         }
     }
 
@@ -127,7 +124,7 @@ public class WiseManager {
         }
     }
 
-    private void getLastId() {
+    private void loadLastId() {
         try (BufferedReader reader = new BufferedReader(new FileReader(BASE_PATH + "lastId.txt"))) {
             int lastId = Integer.parseInt(reader.readLine());
             index = lastId + 1;
