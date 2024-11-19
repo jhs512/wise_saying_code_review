@@ -117,7 +117,7 @@ public class WiseRepository {
                         return !name.startsWith("data") && name.endsWith("json");
                     })
                     .forEach(file -> {
-                        readFile(file);
+                        wises.add(jsonToWise(file));
                     });
         } catch (IOException e) {
             System.out.println("파일 입력 에러");
@@ -135,7 +135,7 @@ public class WiseRepository {
         }
     }
 
-    private void readFile(Path file) {
+    private Wise jsonToWise(Path file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toString()))) {
             HashMap<String, String> jsonMap = new HashMap<>();
             String line = reader.readLine();
@@ -157,11 +157,10 @@ public class WiseRepository {
             String author = jsonMap.get("author");
             String content = jsonMap.get("content");
 
-            wises.add(new Wise(Integer.parseInt(id), author, content));
-        } catch (FileNotFoundException e) {
-            return;
+            return new Wise(Integer.parseInt(id), author, content);
         } catch (IOException e) {
             System.out.println("파일 입력 에러");
+            return null;
         }
     }
 
