@@ -7,10 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import org.example.dto.WiseSaying;
+import org.example.repository.WiseSayingRepository;
+import org.example.service.WiseSayingService;
 
 public class Main {
 
@@ -20,58 +21,9 @@ public class Main {
         String cmd;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         HashMap<Integer, WiseSaying> wiseSayings = new HashMap<>();
-        int id = 1;
+        int id = WiseSayingRepository.findLastId();
         String author = "";
         String content = "";
-
-
-        // 프로그램 메인 로직 전에 마지막으로 저장된 명언 아이디 확인
-        // 마지막 아이디가 저장된 파일 경로
-        String lastIdPath = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
-
-        // 파일 객체 생성
-        File file = new File(lastIdPath);
-
-        // 파일이 존재하면 마지막 생성된 id + 1, 존재하지 않으면 위에서 초기화 한대로 1
-        if (file.exists() && file.isFile()) {    // 경로가 file 인지 확인하는 메소드 -> 참이면 true 리턴
-            try (BufferedReader reader = new BufferedReader(new FileReader(lastIdPath))) {
-                id = Integer.parseInt(reader.readLine()) + 1;
-            } catch (IOException e) {
-                System.out.println("파일 읽기 에러" + e.getMessage());
-            }
-        }
-
-        // 저장된 json 파일 탐색
-        String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
-        File jsonFiles = new File(jsonFilePath);
-
-        if (jsonFiles.exists() && jsonFiles.isDirectory()) {
-            File[] fileArr = jsonFiles.listFiles((dir, name) -> name.endsWith(".json"));
-
-            if(fileArr != null) {
-                for (File f : fileArr) {
-
-                    String[] values = new String[3];
-                    int cnt = 0;
-
-                    try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            if (line.length() > 1) {
-                                values[cnt] = line.split(": ")[1].replaceAll("\"", "")
-                                    .replaceAll(",", "");
-                                cnt++;
-                            }
-                        }
-                        wiseSayings.put(Integer.parseInt(values[0]),
-                            new WiseSaying(Integer.parseInt(values[0]), values[1], values[2]));
-
-                    } catch (Exception e) {
-                        System.out.println("파일 읽기 에러" + e.getMessage());
-                    }
-                }
-            }
-        }
 
         while (true) {
             System.out.print("명령) ");
@@ -94,9 +46,9 @@ public class Main {
                     + "\t\"author\": \"" + author + "\"\n"
                     + "}";
 
-                jsonFilePath =
+                String jsonFilePath =
                     System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-                file = new File(jsonFilePath);
+                File file = new File(jsonFilePath);
                 file.getParentFile().mkdirs();
 
                 // json 파일 생성
@@ -107,6 +59,7 @@ public class Main {
                 }
 
                 // txt 파일 생성
+                String lastIdPath = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
                 file = new File(lastIdPath);
                 try(FileWriter fileWriter = new FileWriter(file)) {
                     fileWriter.write(String.valueOf(id));
@@ -121,13 +74,10 @@ public class Main {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("--------------------");
 
-                ArrayList<Integer> ids = new ArrayList<>(wiseSayings.keySet());
-                Collections.sort(ids, Collections.reverseOrder());
-
-                for (int tempId : ids) {
-                    System.out.println(
-                        wiseSayings.get(tempId).getId() + " / " + wiseSayings.get(tempId).getAuthor() + " / "
-                            + wiseSayings.get(tempId).getContent());
+                List<WiseSaying> listOfWiseSaying = WiseSayingService.createListofWiseSaying();
+                listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+                for (WiseSaying wiseSaying : listOfWiseSaying) {
+                    System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
                 }
 
             } else if (cmd.substring(0, 2).equals("삭제")) {  // 삭제
@@ -138,10 +88,10 @@ public class Main {
                     wiseSayings.remove(tempId);
 
                     // 파일 삭제 로직
-                    jsonFilePath =
+                    String jsonFilePath =
                         System.getProperty("user.dir") + "/db/wiseSaying/" + tempId
                             + ".json";
-                    file = new File(jsonFilePath);
+                    File file = new File(jsonFilePath);
 
                     if (file.exists()) {
                         if (file.delete()) {
@@ -174,7 +124,7 @@ public class Main {
                     wiseSaying.setAuthor(author);
 
                     // 파일 덮어쓰기(수정)
-                    jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + tempId + ".json";
+                    String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + tempId + ".json";
 
                     String jsonData = "{\n"
                         + "\t\"id\": \"" + tempId + "\",\n"
@@ -194,8 +144,8 @@ public class Main {
                 }
 
             } else if (cmd.equals("빌드")) {
-                jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
-                jsonFiles = new File(jsonFilePath);
+                String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
+                File jsonFiles = new File(jsonFilePath);
                 StringBuilder jsonContents = new StringBuilder();
 
                 if (jsonFiles.exists() && jsonFiles.isDirectory()) {
