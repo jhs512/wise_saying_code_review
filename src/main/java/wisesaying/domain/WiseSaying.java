@@ -31,4 +31,15 @@ public class WiseSaying {
 	public String getWriter() {
 		return writer;
 	}
+
+	public void fetch(String updateWiseSaying, String updateWriter) {
+		if (!this.wiseSaying.equals(updateWiseSaying)) {
+			this.wiseSaying = updateWiseSaying;
+		}
+
+		if (!this.writer.equals(updateWriter)) {
+			this.writer = updateWriter;
+		}
+	}
+
 }
