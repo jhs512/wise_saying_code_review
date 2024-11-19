@@ -10,7 +10,11 @@ import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
 
 public class WiseSayingService {
-	private static final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
+	private final WiseSayingRepository wiseSayingRepository;
+
+	public WiseSayingService(WiseSayingRepository wiseSayingRepository) {
+		this.wiseSayingRepository = new WiseSayingRepository();
+	}
 
 	public Long add(String wiseSaying, String writer) {
 		Long savedId = 0L;
@@ -41,13 +45,8 @@ public class WiseSayingService {
 		}
 	}
 
-	public void delete(Scanner sc) {
+	public void delete(Long targetId) {
 		try {
-			System.out.print("삭제?id = ");
-
-			Long targetId = sc.nextLong();
-			sc.nextLine();
-
 			Long deletedId = wiseSayingRepository.delete(targetId);
 
 			System.out.println(deletedId + "번 명언이 삭제되었습니다.");
