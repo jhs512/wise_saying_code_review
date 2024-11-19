@@ -16,9 +16,9 @@ public class Controller extends  Service{
     static public void StrPrint(String[] str, boolean IsLineBreak){
         for(String i : str) {
             if (IsLineBreak)
-                System.out.println(str);
+                System.out.println(i);
             else
-                System.out.print(str);
+                System.out.print(i);
         }
 
     }
@@ -51,6 +51,4 @@ public class Controller extends  Service{
         if (str.equals("빌드")) return WiseBuild();
         return 0;
     }
-
-
 }

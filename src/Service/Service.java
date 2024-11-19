@@ -26,12 +26,15 @@ public class Service {
     public int WiseExit(){
         return -1;
     }
-    public String WiseList(){
+    public String[] WiseList(){
+        String[] output = new String[wise.size()];
+        int i = 0;
         for(String[] j : wise){
-            if(j[1].equals("d_1241")) return (j[0] + "번 명언은 존재하지 않습니다.");
-            else return j[0] + " / " + j[1] + " / " + j[2];
+            if(j[1].equals("d_1241")) output[i] = (j[0] + "번 명언은 존재하지 않습니다.");
+            else output[i] =  j[0] + " / " + j[1] + " / " + j[2];
+            i++;
         }
-        return null;
+        return output;
     }
 
     public String WiseDelete(String str){
