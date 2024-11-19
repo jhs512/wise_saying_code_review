@@ -1,6 +1,5 @@
 package Service;
 
-import Controller.Controller;
 import Repository.Json;
 import Repository.JsonArray;
 
@@ -8,61 +7,57 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static Controller.Controller.GetString;
-import static Controller.Controller.StrPrint;
-
 public class Service {
 
-    public ArrayList<String[]> wise = new ArrayList<String[]>();
+    public ArrayList<String[]> wise = new ArrayList<>();
     public String url = ".\\db\\wiseSaying\\data.json";
 
     public int GetId(String str){
         return Integer.parseInt(str.substring(str.indexOf("?id=")+4));
     }
-    public int WiseInert(){
+    public int WiseInert(String wiseWord,String name){
         String[] content = new String[3];
         content[0] = "" + (wise.size()+1);
-        content[1] = GetString("명언 : ");
-        content[2] = GetString("작가 : ");
+        content[1] = wiseWord;
+        content[2] = name;
         wise.add(content);
         return 0;
     }
     public int WiseExit(){
         return -1;
     }
-    public int WiseList(){
-        StrPrint("번호 / 작가 / 명언",true);
-        StrPrint("-----------------", true);
+    public String WiseList(){
         for(String[] j : wise){
-            if(j[1].equals("d_1241")) StrPrint(j[0] + "번 명언은 존재하지 않습니다.",true);
-            else StrPrint(j[0] + " / " + j[1] + " / " + j[2],true);
+            if(j[1].equals("d_1241")) return (j[0] + "번 명언은 존재하지 않습니다.");
+            else return j[0] + " / " + j[1] + " / " + j[2];
         }
-        return 0;
+        return null;
     }
 
-    public int WiseDelete(String str){
+    public String WiseDelete(String str){
         int id =  GetId(str);
         String[] save = wise.get(id-1);
-        if(save[1].equals("d_1241")) StrPrint(save[0] + "번 명언은 존재하지 않습니다.",true);
+        if(save[1].equals("d_1241")) return save[0] + "번 명언은 존재하지 않습니다.";
         save[1] ="d_1241";
         save[2] = "d_1241";
-        return 0;
+        return null;
     }
-    public int WiseChange(String str){
+    public String[] WiseChange(String str,String wiseWord,String name){
         int id = GetId(str);
         String[] save = wise.get(id-1);
+        String[] output = new String[2];
         if(save[1].equals("d_1241")){
-            StrPrint("명언(기존) : 삭제된 명언입니다.",true);
-            save[2] = GetString("명언 : ");
-            StrPrint("작가(기존) : 삭제된 명언입니다.",true);
-            save[1] = GetString("작가 : ");
-            return 0;
+            output[0] = "명언(기존) : 삭제된 명언입니다.";
+            save[2] = wiseWord;
+            output[1] ="작가(기존) : 삭제된 명언입니다.";
+            save[1] = name;
+            return output;
         }
-        StrPrint("명언(기존) : " + save[2],true);
-        save[2] = GetString("명언 : ");
-        StrPrint("작가(기존) : " + save[1],true);
-        save[1] = GetString("작가 : ");
-        return 0;
+        output[0] = "명언(기존) : 삭제된 명언입니다.";
+        save[2] =wiseWord;
+        output[1] ="작가(기존) : 삭제된 명언입니다.";
+        save[1] = name;
+        return output;
 
     }
     public int WiseBuild(){
