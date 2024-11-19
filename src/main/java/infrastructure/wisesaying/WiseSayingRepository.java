@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,7 +30,7 @@ public class WiseSayingRepository {
 				Long id = objectMapper.readValue(lastIdFile, Long.class);
 				idGeneration = new IdGeneration(id);
 			} else {
-				idGeneration = new IdGeneration(0L);
+				idGeneration = new IdGeneration(1L);
 			}
 
 			if (wiseSayingFile.exists()) {
@@ -76,19 +77,31 @@ public class WiseSayingRepository {
 		return id;
 	}
 
-	public WiseSayingEntity findById(Long id) throws IOException {
+	public Optional<WiseSaying> findById(Long id) throws IOException {
 		File wiseSayingFile = new File(FILE_PATH + id + ".json");
 		WiseSayingEntity wiseSayingEntity = objectMapper.readValue(wiseSayingFile, WiseSayingEntity.class);
 
 		if (Objects.isNull(wiseSayingEntity)) {
-			throw new WiseSayingException(id + "번 명언은 존재하지 않습니다.");
+			return Optional.empty();
 		}
 
-		return wiseSayingEntity;
+		WiseSaying wiseSaying = new WiseSaying(
+			wiseSayingEntity.getId(),
+			wiseSayingEntity.getWiseSaying(),
+			wiseSayingEntity.getWriter()
+		);
+
+		return Optional.of(wiseSaying);
 	}
 
-	public LinkedList<WiseSayingEntity> findAll() throws IOException {
-		return new LinkedList<>(wiseSayingEntityLinkedHashMap.values());
+	public Optional<LinkedList<WiseSaying>> findAll() throws IOException {
+		if (wiseSayingEntityLinkedHashMap.isEmpty()) {
+			return Optional.empty();
+		}
+
+		return Optional.of(wiseSayingEntityLinkedHashMap.values().stream()
+			.map(WiseSayingEntity::toModel)
+			.collect(Collectors.toCollection(LinkedList::new)));
 	}
 
 	public Long delete(Long id) {
@@ -103,7 +116,8 @@ public class WiseSayingRepository {
 		return id;
 	}
 
-	public void update(WiseSayingEntity wiseSayingEntity) throws IOException {
+	public void update(WiseSaying wiseSaying) throws IOException {
+		WiseSayingEntity wiseSayingEntity = WiseSayingEntity.from(wiseSaying);
 		File wiseSayingFile = new File(FILE_PATH + wiseSayingEntity.getId() + ".json");
 		wiseSayingEntityLinkedHashMap.replace(wiseSayingEntity.getId(), wiseSayingEntity);
 		objectMapper.writeValue(wiseSayingFile, wiseSayingEntity);
