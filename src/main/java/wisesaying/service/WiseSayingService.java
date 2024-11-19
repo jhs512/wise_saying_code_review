@@ -1,12 +1,12 @@
-package service;
+package wisesaying.service;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-import entity.WiseSayingEntity;
-import exception.WiseSayingException;
-import repository.WiseSayingRepository;
+import infrastructure.wisesaying.WiseSayingEntity;
+import wisesaying.exception.WiseSayingException;
+import infrastructure.wisesaying.WiseSayingRepository;
 
 public class WiseSayingService {
 	private static final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();

@@ -1,4 +1,4 @@
-package exception;
+package wisesaying.exception;
 
 public class WiseSayingException extends RuntimeException {
 

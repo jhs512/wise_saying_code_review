@@ -1,4 +1,4 @@
-package repository;
+package infrastructure.wisesaying;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import entity.WiseSayingEntity;
-import exception.WiseSayingException;
+import wisesaying.exception.WiseSayingException;
 
 public class WiseSayingRepository {
 	private final IdGeneration idGeneration;

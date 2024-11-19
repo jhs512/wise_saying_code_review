@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-import service.WiseSayingService;
+import wisesaying.service.WiseSayingService;
 
 public class WiseSayingApplication {
 	private static final WiseSayingService wiseSayingService = new WiseSayingService();

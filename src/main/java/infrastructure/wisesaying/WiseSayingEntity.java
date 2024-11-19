@@ -1,4 +1,4 @@
-package entity;
+package infrastructure.wisesaying;
 
 public class WiseSayingEntity {
 	private Long id;

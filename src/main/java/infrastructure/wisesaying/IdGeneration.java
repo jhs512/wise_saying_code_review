@@ -1,4 +1,4 @@
-package repository;
+package infrastructure.wisesaying;
 
 public class IdGeneration {
 	private Long id;
