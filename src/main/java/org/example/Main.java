@@ -10,21 +10,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import org.example.dto.WiseSaying;
 
 public class Main {
-
-    public static class WiseSaying {
-
-        int id;
-        String content;
-        String author;
-
-        public WiseSaying(int id, String content, String author) {
-            this.id = id;
-            this.content = content;
-            this.author = author;
-        }
-    }
 
     public static void main(String[] args) throws IOException {
 
@@ -53,7 +41,7 @@ public class Main {
             }
         }
 
-        // 저장된 json 파일 탐색, 리팩토링 필요 -> 위에 txt 파일 이랑 한번에 읽어와서 파싱할 수 있을 것 같다.
+        // 저장된 json 파일 탐색
         String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
         File jsonFiles = new File(jsonFilePath);
 
@@ -138,8 +126,8 @@ public class Main {
 
                 for (int tempId : ids) {
                     System.out.println(
-                        wiseSayings.get(tempId).id + " / " + wiseSayings.get(tempId).author + " / "
-                            + wiseSayings.get(tempId).content);
+                        wiseSayings.get(tempId).getId() + " / " + wiseSayings.get(tempId).getAuthor() + " / "
+                            + wiseSayings.get(tempId).getContent());
                 }
 
             } else if (cmd.substring(0, 2).equals("삭제")) {  // 삭제
@@ -174,16 +162,16 @@ public class Main {
                     WiseSaying wiseSaying = wiseSayings.get(tempId);
 
                     // 명언 수정
-                    System.out.println("명언(기존) : " + wiseSaying.content);
+                    System.out.println("명언(기존) : " + wiseSaying.getContent());
                     System.out.print("명언 : ");
                     content = br.readLine();
-                    wiseSaying.content = content;
+                    wiseSaying.setContent(content);
 
                     // 작가 수정
-                    System.out.println("작가(기존) : " + wiseSaying.author);
+                    System.out.println("작가(기존) : " + wiseSaying.getAuthor());
                     System.out.print("작가 : ");
                     author = br.readLine();
-                    wiseSaying.author = author;
+                    wiseSaying.setAuthor(author);
 
                     // 파일 덮어쓰기(수정)
                     jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + tempId + ".json";
