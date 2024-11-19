@@ -2,12 +2,12 @@ package wisesaying.service;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Scanner;
 
-import infrastructure.wisesaying.WiseSayingEntity;
+import infrastructure.wisesaying.WiseSayingRepository;
 import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
-import infrastructure.wisesaying.WiseSayingRepository;
 
 public class WiseSayingService {
 	private static final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
@@ -27,12 +27,15 @@ public class WiseSayingService {
 
 	public void findAll() {
 		try {
-			LinkedList<WiseSayingEntity> findAll = wiseSayingRepository.findAll();
+			Optional<LinkedList<WiseSaying>> findAll = wiseSayingRepository.findAll();
 			System.out.println("번호 / 작가 / 명언");
-			for (WiseSayingEntity wiseSayingEntity : findAll) {
-				System.out.printf("%d / %s / %s \n",
-					wiseSayingEntity.getId(), wiseSayingEntity.getWriter(), wiseSayingEntity.getWiseSaying());
-			}
+
+			findAll.ifPresent(wiseSayings -> wiseSayings.forEach(
+				wiseSaying -> System.out.printf("%d / %s / %s \n",
+					wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying())
+				)
+			);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,25 +64,26 @@ public class WiseSayingService {
 			Long target = sc.nextLong();
 			sc.nextLine();
 
-			WiseSayingEntity targetEntity = wiseSayingRepository.findById(target);
+			Optional<WiseSaying> wiseSaying = wiseSayingRepository.findById(target);
 
-			System.out.println("명언 (기존) : " + targetEntity.getWiseSaying());
+			if (wiseSaying.isEmpty()) {
+				System.out.println(target + "번 명언이 존재하지 않습니다.");
+				return;
+			}
+
+			WiseSaying targetWiseSaying = wiseSaying.get();
+
+			System.out.println("명언 (기존) : " + targetWiseSaying.getWiseSaying());
 			System.out.print("명언 : ");
 			String updateWiseSaying = sc.nextLine();
 
-			System.out.println("작가 (기존) : " + targetEntity.getWriter());
+			System.out.println("작가 (기존) : " + targetWiseSaying.getWriter());
 			System.out.print("작가 : ");
 			String updateWriter = sc.nextLine();
 
-			if (!updateWiseSaying.equals(targetEntity.getWiseSaying())) {
-				targetEntity.setWiseSaying(updateWiseSaying);
-			}
+			targetWiseSaying.fetch(updateWiseSaying, updateWriter);
 
-			if (!updateWriter.equals(targetEntity.getWriter())) {
-				targetEntity.setWriter(updateWriter);
-			}
-
-			wiseSayingRepository.update(targetEntity);
+			wiseSayingRepository.update(targetWiseSaying);
 		} catch (WiseSayingException e) {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
