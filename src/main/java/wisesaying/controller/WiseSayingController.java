@@ -28,4 +28,8 @@ public class WiseSayingController {
 	public void findAll() {
 		wiseSayingService.findAll();
 	}
+
+	public void update(Scanner sc) {
+		wiseSayingService.update(sc);
+	}
 }
