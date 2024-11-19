@@ -10,6 +10,32 @@ public class WiseController {
         this.service = service;
     }
 
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("== 명언 앱 ==");
+
+        while (true) {
+            System.out.print("명령) ");
+            String command = scanner.nextLine();
+
+            if (command.equals("종료")) {
+                break;
+            } else if (command.equals("등록")) {
+                applyWise();
+            } else if (command.equals("목록")) {
+                printWise();
+            } else if (command.startsWith("삭제?id=")) {
+                int id = Integer.parseInt(command.split("\\?id=")[1]);
+                deleteWise(id);
+            } else if (command.startsWith("수정?id=")) {
+                int id = Integer.parseInt(command.split("\\?id=")[1]);
+                editWise(id);
+            } else if (command.equals("빌드")) {
+                buildWise();
+            }
+        }
+    }
+
     public void applyWise(){
         System.out.print("명언 : ");
         String wise = scanner.nextLine();
