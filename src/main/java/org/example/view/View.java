@@ -22,7 +22,6 @@ public class View {
             System.out.print("명령) ");
             flag = register(scanner.nextLine());
         }
-
     }
 
     private static boolean register(String input) {
@@ -59,6 +58,18 @@ public class View {
                 System.out.println(parsedId + "번 명언은 존재하지 않습니다.");
             }
 
+        } else if (input.startsWith("수정?id=")) {
+            String id = input.substring(6);
+            WiseSayingItem item = store.get(Long.parseLong(id));
+            System.out.println("명언(기존) : " + item.getWiseSaying());
+            System.out.print("명언 : ");
+            String newWiseSaying = scanner.nextLine();
+            item.setWiseSaying(newWiseSaying);
+
+            System.out.println("작가(기존) : " + item.getAuthor());
+            System.out.print("작가 : ");
+            String newAuthor = scanner.nextLine();
+            item.setAuthor(newAuthor);
         }
         return true;
     }
