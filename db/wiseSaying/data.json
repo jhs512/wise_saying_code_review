@@ -1,1 +1,17 @@
-[{"author":"명언1","id":"1","content":"작가1"},{"author":"명언2","id":"2","content":"작가2"},{"author":"명언3","id":"3","content":"작가3"}]
+[
+    {
+        "id": 1,
+        "author": "1",
+        "content": "1"
+    },
+    {
+        "id": 2,
+        "author": "2",
+        "content": "2"
+    },
+    {
+        "id": 3,
+        "author": "3",
+        "content": "3"
+    }
+]

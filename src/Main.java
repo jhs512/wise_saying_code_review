@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import java.util.List;
 
 public class Main {
 
@@ -84,18 +83,18 @@ public class Main {
 
     }
     public static int WiseBuild(){
-        JSONArray personArray = new JSONArray();
+        JsonArray personArray = new JsonArray();
         for(String[] i : wise) {
-            JSONObject json = new JSONObject();
-            json.put("id", i[0]);
+            Json json = new Json();
+            json.put("id", Integer.parseInt(i[0]));
             json.put("author", i[1]);
             json.put("content", i[2]);
 
-            personArray.add(json);
+            personArray.put(json);
         }
         try {
             FileWriter file = new FileWriter(url);
-            file.write(personArray.toJSONString());
+            file.write(personArray.toString());
             file.flush();
             file.close();
         } catch (IOException e){
