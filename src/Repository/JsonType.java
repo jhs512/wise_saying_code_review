@@ -1,3 +1,5 @@
+package Repository;
+
 public class JsonType{
     String name;
     String stringContent;
