@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import org.example.dto.WiseSaying;
 import org.example.repository.WiseSayingRepository;
 import org.example.service.WiseSayingService;
@@ -20,20 +20,19 @@ public class Main {
         System.out.println("== 명언 앱 ==");
         String cmd;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        HashMap<Integer, WiseSaying> wiseSayings = new HashMap<>();
 
-        String author = "";
-        String content = "";
+
+
 
         while (true) {
             System.out.print("명령) ");
             if ((cmd = br.readLine()).equals("종료")) break;  // 종료
             else if (cmd.equals("등록")) {    // 등록
                 System.out.print("명언 : ");
-                content = br.readLine();
+                String content = br.readLine();
 
                 System.out.print("작가 : ");
-                author = br.readLine();
+                String author = br.readLine();
 
                 int id = WiseSayingRepository.findLastId();
                 WiseSayingService.createJsonFile(id, content, author);
@@ -52,66 +51,27 @@ public class Main {
                 }
 
             } else if (cmd.substring(0, 2).equals("삭제")) {  // 삭제
+
                 int tempId = cmd.charAt(6) - '0';
+                WiseSayingService.removeJsonFile(tempId);
 
-                if (wiseSayings.containsKey(tempId)) {
-                    // map 에서 삭제
-                    wiseSayings.remove(tempId);
-
-                    // 파일 삭제 로직
-                    String jsonFilePath =
-                        System.getProperty("user.dir") + "/db/wiseSaying/" + tempId
-                            + ".json";
-                    File file = new File(jsonFilePath);
-
-                    if (file.exists()) {
-                        if (file.delete()) {
-                            System.out.println(tempId + "번 명언이 삭제되었습니다.");
-                        } else {
-                            System.out.println("파일 삭제에 실패 했습니다.");
-                        }
-                    } else {
-                        System.out.println(tempId + "번 명언은 존재하지 않습니다.");
-                    }
-                } else {
-                    System.out.println(tempId + "번 명언은 존재하지 않습니다.");
-                }
             } else if (cmd.substring(0, 2).equals("수정")) {  // 수정
+
                 int tempId = cmd.charAt(6) - '0';
 
-                if (wiseSayings.containsKey(tempId)) {
-                    WiseSaying wiseSaying = wiseSayings.get(tempId);
-
+                Optional<WiseSaying> wiseSaying = WiseSayingService.getWiseSaying(tempId);
+                if (wiseSaying.isPresent()) {
                     // 명언 수정
-                    System.out.println("명언(기존) : " + wiseSaying.getContent());
+                    System.out.println("명언(기존) : " + wiseSaying.get().getContent());
                     System.out.print("명언 : ");
-                    content = br.readLine();
-                    wiseSaying.setContent(content);
+                    String content = br.readLine();
 
                     // 작가 수정
-                    System.out.println("작가(기존) : " + wiseSaying.getAuthor());
+                    System.out.println("작가(기존) : " + wiseSaying.get().getAuthor());
                     System.out.print("작가 : ");
-                    author = br.readLine();
-                    wiseSaying.setAuthor(author);
+                    String author = br.readLine();
 
-                    // 파일 덮어쓰기(수정)
-                    String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + tempId + ".json";
-
-                    String jsonData = "{\n"
-                        + "\t\"id\": \"" + tempId + "\",\n"
-                        + "\t\"content\": \"" + content + "\",\n"
-                        + "\t\"author\": \"" + author + "\"\n"
-                        + "}";
-
-                    try(BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFilePath))) {
-                        writer.write(jsonData);
-                        System.out.println("파일이 수정 되었습니다.");
-                    } catch (IOException e) {
-                        System.out.println("파일 수정 에러" + e.getMessage());
-                    }
-
-                } else {
-                    System.out.println(tempId + "번 명언은 존재하지 않습니다.");
+                    WiseSayingService.updateJsonFile(tempId, content, author);
                 }
 
             } else if (cmd.equals("빌드")) {

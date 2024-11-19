@@ -31,14 +31,27 @@ public class WiseSayingRepository {
         File jsonFiles = new File(jsonFilePath);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
-            File[] files = jsonFiles.listFiles((dir, name) -> name.endsWith(".json"));
+            File[] files = jsonFiles.listFiles(
+                (dir, name) -> name.endsWith(".json") && !name.startsWith("data"));
             return Optional.ofNullable(files);
         }
 
         return Optional.empty();
     }
 
+    public static Optional<File> findById(int id) {
+
+        String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        File jsonFile = new File(jsonFilePath);
+
+        if (jsonFile.exists()) {
+            return Optional.of(jsonFile);
+        }
+        return Optional.empty();
+    }
+
     public static void save(String data, String path) {
+
         File file = new File(path);
         file.getParentFile().mkdirs();
 
@@ -47,6 +60,18 @@ public class WiseSayingRepository {
         } catch (IOException e) {
             System.out.println("파일 저장 에러" + e.getMessage());
         }
+    }
+
+    public static boolean delete(int id) throws IOException {
+
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        File file = new File(path);
+
+        if (file.exists()) {
+            file.delete();
+            return true;
+        }
+        return false;
     }
 
 }
