@@ -41,5 +41,24 @@ public class WiseSayingService {
         return list;
     }
 
+    public static void createJsonFile(int id, String content, String author) {
+
+        String data = "{\n"
+            + "\t\"id\": \"" + id + "\",\n"
+            + "\t\"content\": \"" + content + "\",\n"
+            + "\t\"author\": \"" + author + "\"\n"
+            + "}";
+
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        WiseSayingRepository.save(data, path);
+    }
+
+    public static void createTxtFile(int id) {
+        String path = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
+        WiseSayingRepository.save(String.valueOf(id), path);
+    }
+
+
+
 
 }

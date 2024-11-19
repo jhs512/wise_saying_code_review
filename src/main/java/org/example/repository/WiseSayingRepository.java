@@ -3,6 +3,7 @@ package org.example.repository;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -35,6 +36,17 @@ public class WiseSayingRepository {
         }
 
         return Optional.empty();
+    }
+
+    public static void save(String data, String path) {
+        File file = new File(path);
+        file.getParentFile().mkdirs();
+
+        try(FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(data);
+        } catch (IOException e) {
+            System.out.println("파일 저장 에러" + e.getMessage());
+        }
     }
 
 }

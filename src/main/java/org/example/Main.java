@@ -21,7 +21,7 @@ public class Main {
         String cmd;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         HashMap<Integer, WiseSaying> wiseSayings = new HashMap<>();
-        int id = WiseSayingRepository.findLastId();
+
         String author = "";
         String content = "";
 
@@ -34,41 +34,12 @@ public class Main {
 
                 System.out.print("작가 : ");
                 author = br.readLine();
-                wiseSayings.put(id, new WiseSaying(id, content, author));
+
+                int id = WiseSayingRepository.findLastId();
+                WiseSayingService.createJsonFile(id, content, author);
+                WiseSayingService.createTxtFile(id);
 
                 System.out.println(id + "번 명언이 등록되었습니다.");
-
-
-                // 파일 저장 로직
-                String jsonData = "{\n"
-                    + "\t\"id\": \"" + id + "\",\n"
-                    + "\t\"content\": \"" + content + "\",\n"
-                    + "\t\"author\": \"" + author + "\"\n"
-                    + "}";
-
-                String jsonFilePath =
-                    System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-                File file = new File(jsonFilePath);
-                file.getParentFile().mkdirs();
-
-                // json 파일 생성
-                try(FileWriter fileWriter = new FileWriter(file)) {
-                    fileWriter.write(jsonData);
-                } catch (IOException e) {
-                    System.out.println("파일 저장 에러" + e.getMessage());
-                }
-
-                // txt 파일 생성
-                String lastIdPath = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
-                file = new File(lastIdPath);
-                try(FileWriter fileWriter = new FileWriter(file)) {
-                    fileWriter.write(String.valueOf(id));
-                } catch (IOException e) {
-                    System.out.println("파일 저장 에러" + e.getMessage());
-                }
-
-                // 등록할 때 마다 생성되는 명언번호가 증가
-                id++;
 
             } else if (cmd.equals("목록")) {      // 목록
                 System.out.println("번호 / 작가 / 명언");
