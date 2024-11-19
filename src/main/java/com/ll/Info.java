@@ -2,8 +2,8 @@ package com.ll;
 
 public class Info {
     int id;
-    String saying;
-    String writer;
+    String content;
+    String author;
 
     public int getId() {
         return id;
@@ -12,19 +12,19 @@ public class Info {
     public void setId(int id) {
         this.id = id;
     }
-    public String getWriter() {
-        return writer;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public String getSaying() {
-        return saying;
+    public String getContent() {
+        return content;
     }
 
-    public void setSaying(String saying) {
-        this.saying = saying;
+    public void setContent(String content) {
+        this.content = content;
     }
 }
