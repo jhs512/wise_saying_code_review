@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WiseServiceImpl implements WiseService {
     private WiseRepository repository;
@@ -21,8 +22,13 @@ public class WiseServiceImpl implements WiseService {
     }
 
     @Override
-    public ArrayList<Wise> getWises() {
+    public List<Wise> getWises() {
         return repository.getWises();
+    }
+
+    @Override
+    public List<Wise> getWises(String keywordType, String keyword) {
+        return repository.getWises(keywordType, keyword);
     }
 
     @Override

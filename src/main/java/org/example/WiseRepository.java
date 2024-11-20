@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WiseRepository {
-    private ArrayList<Wise> wises = new ArrayList<>();
+    private List<Wise> wises = new ArrayList<>();
     private int index = 1;
     private String BASE_PATH;
 
@@ -44,8 +45,18 @@ public class WiseRepository {
         return index++;
     }
 
-    public ArrayList<Wise> getWises() {
+    public List<Wise> getWises() {
         return wises;
+    }
+
+    public List<Wise> getWises(String keywordType, String keyword) {
+        return wises.stream().filter((wise) -> {
+                    if (keywordType.equals("author")) {
+                        return wise.author.contains(keyword);
+                    } else {
+                        return wise.content.contains(keyword);
+                    }
+                }).collect(Collectors.toList());
     }
 
     public void editWise(int id, String newContent, String newAuthor) throws IOException {
@@ -143,6 +154,7 @@ public class WiseRepository {
                             //읽어들이지 않고 일단 스킵
                         }
                     });
+            wises = wises.reversed();
         }
     }
 

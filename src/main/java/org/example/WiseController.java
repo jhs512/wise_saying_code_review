@@ -36,7 +36,16 @@ public class WiseController {
                 applyWise();
                 break;
             case Command.LIST:
-                printWise();
+                String keywordType = command.getKeywordType(input);
+                String keyword = command.getKeyword(input);
+
+                if (keywordType != null && keyword != null) {
+                    printListInfo(keywordType, keyword);
+                    printWises(keywordType, keyword);
+                } else if (keywordType == null && keyword == null) {
+                    printColumnNames();
+                    printWises();
+                }
                 break;
             case Command.DELETE:
                 try {
@@ -81,11 +90,25 @@ public class WiseController {
         }
     }
 
-    public void printWise() {
+    public void printColumnNames() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("---------------");
+    }
 
+    public void printListInfo(String keywordType, String keyword) {
+        System.out.println("---------------");
+        System.out.println("검색타입 : " + keywordType);
+        System.out.println("검색어 : " + keyword);
+
+        printColumnNames();
+    }
+
+    public void printWises() {
         service.getWises().forEach(wise -> System.out.println(wise));
+    }
+
+    public void printWises(String keywordType, String keyword) {
+        service.getWises(keywordType, keyword).forEach(wise -> System.out.println(wise));
     }
 
     public void editWise(int id) {
