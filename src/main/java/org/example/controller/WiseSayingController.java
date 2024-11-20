@@ -62,7 +62,7 @@ public class WiseSayingController {
         }
     }
 
-    public static void createBuildFile() {
+    public static void createBuildFile() throws IOException {
         if (WiseSayingService.createDataJsonFile()) {
             System.out.println("data.json 파일의 내용이 갱신되었습니다.");
         }

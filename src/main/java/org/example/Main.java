@@ -18,8 +18,9 @@ public class Main {
     public static class App {
         public void run() throws IOException {
             System.out.println("== 명언 앱 ==");
-            String cmd;
+
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String cmd;
 
             while (true) {
                 System.out.print("명령) ");

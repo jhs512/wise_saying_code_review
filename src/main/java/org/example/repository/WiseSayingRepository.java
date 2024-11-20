@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import org.example.config.ConfigReader;
 
 public class WiseSayingRepository {
 
@@ -25,8 +26,7 @@ public class WiseSayingRepository {
         return 1;
     }
 
-    public static boolean save(String data, String path) {
-
+    public static boolean save(String data, String path) throws IOException {
         File file = new File(path);
         file.getParentFile().mkdirs();
 
@@ -34,9 +34,19 @@ public class WiseSayingRepository {
             fileWriter.write(data);
             return true;
         } catch (IOException e) {
-            System.out.println("파일 저장 에러" + e.getMessage());
-            return false;
+            throw new IOException(e.getMessage());
         }
+    }
+
+    public static int saveWiseSaying(String data, int id) throws IOException {
+        String path = ConfigReader.getJsonFilePath("file.save.path", id);
+        save(data, path);
+        return id;
+    }
+
+    public static boolean saveTxtFile(int id) throws IOException {
+        String path = ConfigReader.getTxtFilePath("file.save.path");
+        return save(String.valueOf(id), path);
     }
 
     public static Optional<File[]> findAll() {

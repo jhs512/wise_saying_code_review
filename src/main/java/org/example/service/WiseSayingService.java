@@ -9,32 +9,23 @@ import java.util.List;
 import java.util.Optional;
 import org.example.dto.WiseSaying;
 import org.example.repository.WiseSayingRepository;
+import org.example.util.CreateJsonData;
 
 public class WiseSayingService {
 
-    public static int createJsonFile(int id, String content, String author) {
 
-        String data = "{\n"
-            + "\t\"id\": \"" + id + "\",\n"
-            + "\t\"content\": \"" + content + "\",\n"
-            + "\t\"author\": \"" + author + "\"\n"
-            + "}";
-
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-        if (WiseSayingRepository.save(data, path)) {
-            return id;
-        }
-        return -1;
+    public static int createJsonFile(int id, String content, String author) throws IOException {
+        String jsonData = CreateJsonData.createJsonData(id, content, author);
+        return WiseSayingRepository.saveWiseSaying(jsonData, id);
     }
 
-    public static int createWiseSaying(String content, String author) {
+    public static int createWiseSaying(String content, String author) throws IOException {
         int id = WiseSayingRepository.findLastId();
         return createJsonFile(id, content, author);
     }
 
-    public static boolean createTxtFile(int id) {
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
-        return WiseSayingRepository.save(String.valueOf(id), path);
+    public static boolean createTxtFile(int id) throws IOException {
+        return WiseSayingRepository.saveTxtFile(id);
     }
 
     public static List<WiseSaying> createListOfWiseSaying() {
@@ -71,7 +62,7 @@ public class WiseSayingService {
         return WiseSayingRepository.delete(id);
     }
 
-    public static void updateJsonFile(int id, String content, String author) {
+    public static void updateJsonFile(int id, String content, String author) throws IOException {
         Optional<File> byId = WiseSayingRepository.findById(id);
         if (byId.isPresent()) {
             createJsonFile(id, content, author);
@@ -105,7 +96,7 @@ public class WiseSayingService {
         return Optional.empty();
     }
 
-    public static boolean createDataJsonFile() {
+    public static boolean createDataJsonFile() throws IOException {
         String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/";
         File jsonFiles = new File(jsonFilePath);
         StringBuilder jsonContents = new StringBuilder();
