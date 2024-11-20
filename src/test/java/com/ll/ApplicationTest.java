@@ -2,6 +2,7 @@ package com.ll;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -75,9 +76,6 @@ public class ApplicationTest {
     controller.search("수정했어요", "content");
     String actualOutput = outputStream.toString();
     assertThat(actualOutput).isEqualTo("");
-
-
-
   }
   @Test
   public void appTest() {
