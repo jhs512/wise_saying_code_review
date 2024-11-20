@@ -12,8 +12,17 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 test {
     useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/test/java'// 새 디렉토리 추가
+        }
+    }
 }
