@@ -113,9 +113,8 @@ public class Repository {
     sb.append("[\n");
     for (Map<String, String> map : maps) {
       sb.append("\t{\n");
-      sb.append("\t\t\"id\" : \"");
+      sb.append("\t\t\"id\" : ");
       sb.append(map.get("id"));
-      sb.append("\"");
       sb.append(",\n");
 
       sb.append("\t\t\"content\" : \"");
