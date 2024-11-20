@@ -1,32 +1,29 @@
 package com.ll;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    private static final String DB_FOLDER = Paths.get("db/wiseSaying").toString();
-    private static final String LAST_ID_FILE = DB_FOLDER + "/lastId.txt";
-    private static final Gson gson = new Gson();
+    private static final String DB_FOLDER = "db"; // db 폴더 경로
+    private static final String DATA_JSON_FILE = DB_FOLDER + "/data.json"; // db 폴더 내 data.json 경로
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("== 명언 앱 ==");
 
-        // 폴더 생성
+        // db 폴더 생성
         File folder = new File(DB_FOLDER);
         if (!folder.exists()) folder.mkdirs();
 
         // 데이터 로드
-        List<WiseSaying> wiseSayings = loadWiseSayings();
-        int lastId = loadLastId();
+        List<WiseSaying> wiseSayings = loadFromDataJson();
+        int lastId = getLastId(wiseSayings);
 
         while (true) {
             System.out.print("명령) ");
@@ -42,8 +39,6 @@ public class Main {
                 lastId++;
                 WiseSaying wiseSaying = new WiseSaying(lastId, content, author);
                 wiseSayings.add(wiseSaying);
-                saveWiseSaying(wiseSaying);
-                saveLastId(lastId);
 
                 System.out.println(lastId + "번 명언이 등록되었습니다.");
                 System.out.println();
@@ -77,7 +72,6 @@ public class Main {
 
                         wiseSaying.setContent(newContent);
                         wiseSaying.setAuthor(newAuthor);
-                        saveWiseSaying(wiseSaying);
 
                         System.out.println(idToEdit + "번 명언이 수정되었습니다.");
                     } else {
@@ -86,6 +80,28 @@ public class Main {
                 } catch (Exception e) {
                     System.out.println("올바른 수정 명령을 입력하세요. 예: 수정?id=1");
                 }
+                System.out.println();
+            } else if (order.startsWith("삭제?id=")) {
+                try {
+                    int idToDelete = Integer.parseInt(order.split("=")[1]);
+                    Optional<WiseSaying> optionalWiseSaying = wiseSayings.stream()
+                            .filter(ws -> ws.getId() == idToDelete).findFirst();
+
+                    if (optionalWiseSaying.isPresent()) {
+                        WiseSaying wiseSaying = optionalWiseSaying.get();
+                        wiseSayings.remove(wiseSaying);
+
+                        System.out.println(idToDelete + "번 명언이 삭제되었습니다.");
+                    } else {
+                        System.out.println(idToDelete + "번 명언은 존재하지 않습니다.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("올바른 삭제 명령을 입력하세요. 예: 삭제?id=1");
+                }
+                System.out.println();
+            } else if (order.equals("빌드")) {
+                saveToDataJson(wiseSayings);
+                System.out.println("data.json 파일의 내용이 갱신되었습니다.");
                 System.out.println();
             } else if (order.equals("종료")) {
                 System.out.println("프로그램을 종료합니다.");
@@ -132,47 +148,36 @@ public class Main {
         }
     }
 
-    // 명언 저장
-    private static void saveWiseSaying(WiseSaying wiseSaying) throws IOException {
-        String fileName = DB_FOLDER + "/" + wiseSaying.getId() + ".json";
-        try (Writer writer = new FileWriter(fileName)) {
-            gson.toJson(wiseSaying, writer);
+    // data.json 저장
+    private static void saveToDataJson(List<WiseSaying> wiseSayings) {
+        try (Writer writer = new FileWriter(DATA_JSON_FILE)) {
+            gson.toJson(wiseSayings, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // 명언 로드
-    private static List<WiseSaying> loadWiseSayings() throws IOException {
-        List<WiseSaying> wiseSayings = new ArrayList<>();
-        File folder = new File(DB_FOLDER);
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
-
-        if (files != null) {
-            for (File file : files) {
-                try (Reader reader = new FileReader(file)) {
-                    WiseSaying wiseSaying = gson.fromJson(reader, WiseSaying.class);
-                    wiseSayings.add(wiseSaying);
-                }
-            }
+    // data.json 로드
+    private static List<WiseSaying> loadFromDataJson() {
+        File file = new File(DATA_JSON_FILE);
+        if (!file.exists()) {
+            return new ArrayList<>();
         }
 
-        return wiseSayings;
-    }
-
-    // 마지막 ID 저장
-    private static void saveLastId(int lastId) throws IOException {
-        try (Writer writer = new FileWriter(LAST_ID_FILE)) {
-            writer.write(String.valueOf(lastId));
+        try (Reader reader = new FileReader(file)) {
+            WiseSaying[] wiseSayingsArray = gson.fromJson(reader, WiseSaying[].class);
+            return new ArrayList<>(Arrays.asList(wiseSayingsArray));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
-    // 마지막 ID 로드
-    private static int loadLastId() throws IOException {
-        File file = new File(LAST_ID_FILE);
-        if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                return Integer.parseInt(reader.readLine().trim());
-            }
-        }
-        return 0;
+    // 마지막 ID 가져오기
+    private static int getLastId(List<WiseSaying> wiseSayings) {
+        return wiseSayings.stream()
+                .mapToInt(WiseSaying::getId)
+                .max()
+                .orElse(0);
     }
 }
