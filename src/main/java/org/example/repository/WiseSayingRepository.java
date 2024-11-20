@@ -12,11 +12,11 @@ public class WiseSayingRepository {
 
     public static int findLastId() {
 
-        String lastIdPath = System.getProperty("user.dir") + "/db/wiseSaying/lastId.txt";
-        File file = new File(lastIdPath);
+        String path = ConfigReader.getTxtFilePath("file.save.path");
+        File file = new File(path);
 
         if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(lastIdPath))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
                 return Integer.parseInt(reader.readLine()) + 1;
             } catch (IOException e) {
                 System.out.println("파일 읽기 에러" + e.getMessage());
