@@ -57,7 +57,7 @@ public class Service {
 
   }
 
-  public void listUp() {
+  public void listUp(List<Map<String, String>> data) {
     Console.print("번호 / 작가 / 명언\n" +
         "----------------------\n");
     StringBuilder sb = new StringBuilder();
@@ -70,6 +70,27 @@ public class Service {
       sb.append("\n");
     }
     Console.print(sb.toString());
+  }
+
+  public void listUp() {
+    listUp(data);
+  }
+
+  public void search(String keyword, String keywordType) {
+    if (Objects.equals(keywordType, "content")) {
+      List<Map<String, String>> result = data.stream().filter(
+          it-> it.get("content").trim().contains(keyword.trim())
+      ).toList();
+      listUp(result);
+      return;
+    }
+    if (Objects.equals(keywordType, "author")) {
+      List<Map<String, String>> result = data.stream().filter(
+          it-> it.get("author").trim().contains(keyword.trim())
+      ).toList();
+      listUp(result);
+    }
+    Console.print("올바르지 않은 키워드 타입입니다");
   }
 
   public void delete(String id) {

@@ -67,10 +67,22 @@ public class ApplicationTest {
   }
 
   @Test
+  public void searchTest() {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputStream));
+
+    Service controller = new Service();
+    controller.search("수정했어요", "content");
+    String actualOutput = outputStream.toString();
+    assertThat(actualOutput).isEqualTo("");
+
+
+
+  }
+  @Test
   public void appTest() {
 
     ByteArrayInputStream in1 = new ByteArrayInputStream("수정?id=1 \n 수정했어요 \n 용준짱".getBytes());
     System.setIn(in1);
-
   }
 }
