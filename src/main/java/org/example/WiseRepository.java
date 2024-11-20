@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -38,13 +37,12 @@ public class WiseRepository {
         return wises;
     }
 
-    public void editWise(int id, String newWise, String newAuthor) throws IOException {
+    public void editWise(int id, String newContent, String newAuthor) throws IOException {
         String path = BASE_PATH + id + ".json";
-
         String data = new String(Files.readAllBytes(Paths.get(path)));
 
-        data = editJson(data, "content", newWise, false);
-        data = editJson(data, "author", newAuthor, true);
+        data = editJson(data, "content", newContent);
+        data = editJson(data, "author", newAuthor);
 
         try (FileOutputStream output = new FileOutputStream(path)) {
             output.write(data.getBytes());
@@ -152,15 +150,19 @@ public class WiseRepository {
         }
     }
 
-    private String editJson(String data, String key, String value, boolean last) {
+    private String editJson(String data, String key, String value) {
         Pattern pattern = Pattern.compile("(\"" + key + "\":[^,}]*)");
         Matcher matcher = pattern.matcher(data);
 
         if (matcher.find()) {
-            data = matcher.replaceFirst("\"" + key + "\":" + "\"" + value + "\"");
+            data = matcher.replaceFirst(getKeyValueString(key, value));
         }
 
         return data;
+    }
+
+    private String getKeyValueString(String key, String value) {
+        return String.format("\"%s\":" + "\"%s\"", key, value);
     }
 
     private String getJsonString(Wise wise) {
