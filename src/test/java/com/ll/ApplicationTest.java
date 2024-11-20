@@ -73,7 +73,7 @@ public class ApplicationTest {
   @Test
   public void deleteTest() {
     Controller controller = new Controller(true);
-    Console.args = "id=6&keyword=123";
+    Console.args = "id=4&keyword=123";
     controller.delete();
   }
 

@@ -53,8 +53,12 @@ public class Service {
   }
 
   public Result listUp(List<Map<String, String>> data) {
-
     StringBuilder sb = new StringBuilder();
+    Comparator<Map<String, String>> comparator = (map1, map2) -> {
+      return map2.get("id").compareTo(map1.get("id"));
+    };
+    data.sort(comparator);
+
     for (Map<String, String> d : data) {
       sb.append(d.get("id"));
       sb.append(" / ");
