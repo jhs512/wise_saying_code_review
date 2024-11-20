@@ -15,24 +15,43 @@ public class WiseController {
         Scanner scanner = new Scanner(System.in);
         System.out.println("== 명언 앱 ==");
 
+        whileLoop:
         while (true) {
             System.out.print("명령) ");
-            String command = scanner.nextLine();
+            String input = scanner.nextLine();
+            Command command = Command.findByCommand(input);
 
-            if (command.equals("종료")) {
-                break;
-            } else if (command.equals("등록")) {
-                applyWise();
-            } else if (command.equals("목록")) {
-                printWise();
-            } else if (command.startsWith("삭제?id=")) {
-                int id = Integer.parseInt(command.split("\\?id=")[1]);
-                deleteWise(id);
-            } else if (command.startsWith("수정?id=")) {
-                int id = Integer.parseInt(command.split("\\?id=")[1]);
-                editWise(id);
-            } else if (command.equals("빌드")) {
-                buildWise();
+            switch (command) {
+                case Command.APPLY:
+                    applyWise();
+                    break;
+                case Command.LIST:
+                    printWise();
+                    break;
+                case Command.DELETE:
+                    try {
+                        int id = command.getId(input);
+                        deleteWise(id);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("id 값을 입력해주세요");
+                    }
+                    break;
+                case Command.EDIT:
+                    try {
+                        int id = command.getId(input);
+                        editWise(id);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("id 값을 입력해주세요");
+                    }
+                    break;
+                case Command.BUILD:
+                    buildWise();
+                    break;
+                case Command.QUIT:
+                    break whileLoop;
+                case Command.UNKNOWN:
+                    System.out.println("알 수 없는 명령어입니다.");
+                    break;
             }
         }
     }
