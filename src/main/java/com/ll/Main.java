@@ -11,24 +11,36 @@ enum Command {
     DELETE,
     UPDATE,
     BUILD,
-    EXIT
+    EXIT;
 }
 
 class Console {
 
     static Scanner scanner = new Scanner(System.in);
+    static String args;
+
     public static Command getCommand() {
         while (true) {
-            System.out.print("명령) ");
+            Console.print("명령) ");
             String command = getInput();
 
+            try {
+                args = command.split("\\?")[1];
+            } catch (IndexOutOfBoundsException e) {
+                args = "";
+            }
+
             if (Objects.equals(command, "등록")) return Command.CREATE;
-            if (Objects.equals(command, "삭제")) return Command.DELETE;
+            if (command.contains("삭제")) return Command.DELETE;
             if (Objects.equals(command, "목록")) return Command.LIST_ALL;
-            if (Objects.equals(command, "수정")) return Command.UPDATE;
+            if (command.contains("수정")) return Command.UPDATE;
             if (Objects.equals(command, "빌드")) return Command.BUILD;
             if (Objects.equals(command, "종료")) return Command.EXIT;
         }
+    }
+
+    public static String getArgs() {
+        return args;
     }
 
     public static String getInput() {
@@ -41,6 +53,21 @@ class Console {
 
     public static void print(String args) {
         System.out.print(args);
+    }
+
+    public static Map<String, String> getParsedArgs(String input) {
+        try {
+            String args = input.split("\\?")[1];
+            String key = args.split("=")[0];
+            String value = args.split("=")[1];
+
+            Map<String, String> result = new HashMap<>();
+            result.put(key, value);
+            return result;
+
+        } catch (IndexOutOfBoundsException e) {
+            return new HashMap<>();
+        }
     }
 }
 
@@ -328,7 +355,28 @@ class App {
 
             if (command == Command.EXIT) break;
             if (command == Command.BUILD) controller.build();
-
+            if (command == Command.CREATE) controller.create();
+            if (command == Command.LIST_ALL) controller.listUp();
+            if (command == Command.DELETE) {
+                String args = Console.getArgs();
+                try {
+                    String id = args.split("=")[0];
+                    String value = args.split("=")[1];
+                    controller.delete(value);
+                } catch (IndexOutOfBoundsException e) {
+                    Console.print("입력 값이 올바르지 않습니다");
+                }
+            }
+            if (command == Command.UPDATE) {
+                String args = Console.getArgs();
+                try {
+                    String id = args.split("=")[0];
+                    String value = args.split("=")[1];
+                    controller.update(value);
+                } catch (IndexOutOfBoundsException e) {
+                    Console.print("입력 값이 올바르지 않습니다\n");
+                }
+            }
         }
     }
 }

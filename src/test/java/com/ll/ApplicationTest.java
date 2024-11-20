@@ -65,4 +65,14 @@ public class ApplicationTest {
 
     assertThat(controller.data.getFirst().get("content")).isEqualTo("수정");
   }
+
+  @Test
+  public void appTest() {
+
+    ByteArrayInputStream in1 = new ByteArrayInputStream("수정?id=1 \n 수정했어요 \n 용준짱".getBytes());
+    System.setIn(in1);
+
+    App app = new App();
+    app.execute();
+  }
 }
