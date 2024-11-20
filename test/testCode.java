@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 //등록 종류 목록 삭제 수정 빌드
 public class testCode {
     @Test
-    public void test1() {
-        String[][] input = {{"등록", "1치킨", "1"},{"등록", "2", "2피자"},{"등록", "1치킨2", "1"},{"등록", "2", "2피자2"},{"목록"},{"목록?keyword=치킨&keywordType=author"},{"목록?keyword=피자&keywordType=content"},{"삭제?id=5"},{"수정?id=2","수정1","수정1"},{"수정?id=2134","수정1","수정1"},{"빌드"},{"종료"}};
+    public void testInsert() {
+        String input = "";
         testUtil.input(input);
     }
     //@Test

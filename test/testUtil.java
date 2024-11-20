@@ -1,6 +1,7 @@
 import Controller.Controller;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class testUtil {
@@ -39,10 +40,17 @@ public class testUtil {
             throw new RuntimeException(e);
         }
     }
-    public static void input(String[][] arr) {
+    public static ArrayList<String[]> StringtoStringArr(String str){
+        ArrayList<String[]> arr = new ArrayList<>();
+        for(String i: str.split("\n"))
+                arr.add(i.split(" "));
+
+        return arr;
+    }
+    public static void input(String str) {
         int chk = 0;
         Controller c = new Controller();
-        for (String[] i : arr) {
+        for (String[] i : StringtoStringArr(str)) {
             chk = c.CheckInputContentTest(testUtil.genScannerArr(i));
             ByteArrayOutputStream output = testUtil.setOutToByteArray();
             String capturedOutput = output.toString();
