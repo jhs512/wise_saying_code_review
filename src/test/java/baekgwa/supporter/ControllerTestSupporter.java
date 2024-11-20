@@ -3,6 +3,7 @@ package baekgwa.supporter;
 import baekgwa.controller.WiseSayingController;
 import baekgwa.dto.RequestDto;
 import baekgwa.dto.ResponseDto;
+import baekgwa.dto.ResponseDto.FindList;
 import baekgwa.entity.WiseSaying;
 import baekgwa.service.mock.MockWiseSayingService;
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class ControllerTestSupporter {
@@ -73,6 +75,11 @@ public abstract class ControllerTestSupporter {
 
             @Override
             public void build() {}
+
+            @Override
+            public List<FindList> search(Map<String, String> orders) {
+                return List.of();
+            }
         });
     }
 }
