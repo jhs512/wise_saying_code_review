@@ -56,10 +56,10 @@ public class Controller {
         } else if (command.startsWith("수정")) {
             handleUpdateCommand(command);
         } else if (command.startsWith("목록")) {
-            if(command.equals("목록")) {
-                service.getList();
-            } else {
+            if(command.contains("keyword")) {
                 service.searchWiseSayingList(command);
+            } else {
+                service.getList(command);
             }
         } else if (command.equals("빌드")) {
             service.build();

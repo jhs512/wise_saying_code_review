@@ -1,9 +1,13 @@
 package org.example.mvc;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,27 +62,49 @@ class Service {
     }
 
     // 명언 목록 조회
-    public void getList() {
+    public void getList(String command) {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("------------------");
 
-        List<WiseSaying> wiseSayingList = repository.findAll();
+        // 현재 페이지 정보 command 파싱해서 획득
+        int page = 1;
+        if(command.contains("page")) {
+            page = Integer.parseInt(command.split("\\?")[1].split("=")[1]);
+        }
 
-        // 모든 wiseSaying 출력
-        for(WiseSaying wiseSaying : wiseSayingList) {
+        // 레포지토리에서 키 리스트 획득
+        List<Integer> keys = repository.getKeys();
+        keys.sort(Collections.reverseOrder());
+        int size = keys.size();
+        int page_num = (size+4) / 5;
+        if(size == 0) {
+            System.out.println("명언이 존재하지 않습니다.");
+            return;
+        }
+
+        int start = (page-1) * 5;
+
+        // 페이지에 맞게 5개의 wiseSaying 출력
+        for(int i=start; i<start+5; i++) {
+            if(i >= size) break;
+            WiseSaying wiseSaying = repository.findById(keys.get(i)).get();
             System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
-        System.out.println("명언 목록 출력 완료");
+
+        printPages(page_num, page);
     }
 
     // 명언 목록 검색
     public void searchWiseSayingList(String command) {
+
+        // 명령어 파싱해서 검색 조건 및 페이지 정보 획득
         String[] query = command.split("\\?");
         String[] params = query[1].split("&");
 
         String keyword = "";
         String keywordType = "";
 
+        int page = 1;
         for(int i=0; i<params.length; i++) {
             String[] param = params[i].split("=");
 
@@ -86,25 +112,64 @@ class Service {
                 keyword = param[1];
             } else if (param[0].equals("keywordType")) {
                 keywordType = param[1];
+            } else if (param[0].equals("page")){
+                page = Integer.parseInt(param[1]);
             } else {
                 System.out.println("잘못된 검색 명령입니다.");
                 return;
             }
         }
 
+        // 검색 조건에 맞는 키 리스트 획득
         List<WiseSaying> wiseSayingList = repository.findAll();
+        List<Integer> keys = new ArrayList<>();
+        keys.sort(Collections.reverseOrder());
+
         if(keywordType.equals("content")) {
             for(WiseSaying wiseSaying : wiseSayingList) {
                 if(wiseSaying.getContent().contains(keyword)) {
-                    System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+                    keys.add(wiseSaying.getId());
                 }
             }
         } else if (keywordType.equals("author")) {
             for(WiseSaying wiseSaying : wiseSayingList) {
                 if(wiseSaying.getAuthor().contains(keyword)) {
-                    System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+                    keys.add(wiseSaying.getId());
                 }
             }
+        }
+
+        int size = keys.size();
+        int page_num = (size+4) / 5;
+        int start = (page-1) * 5;
+
+        // 페이지에 맞게 5개의 명언 출력
+        for(int i=start; i<start+5; i++) {
+            if(i >= size) break;
+            WiseSaying wiseSaying = repository.findById(keys.get(i)).get();
+            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        printPages(page_num, page);
+    }
+
+    // 페이지 번호와 현재 페이지 정보 출력
+    public void printPages(int page_num, int cur_page) {
+        System.out.println("------------------");
+
+        System.out.print("페이지 : ");
+        for(int i=1; i<page_num; i++) {
+            if (cur_page == i) {
+                System.out.print("[" + i+ "] / ");
+            } else {
+                System.out.print(i+ " / ");
+            }
+        }
+        if(page_num == cur_page) {
+            System.out.println("[" + page_num + "]");
+        }
+        else {
+            System.out.println(page_num);
         }
     }
 

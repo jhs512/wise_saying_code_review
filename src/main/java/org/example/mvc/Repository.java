@@ -1,17 +1,14 @@
 package org.example.mvc;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 class Repository {
 
-    private static final TreeMap<Integer, WiseSaying> store = new TreeMap<>();
+    private static final HashMap<Integer, WiseSaying> store = new HashMap<>();
 
     private int id = 0;
 
-    public static TreeMap<Integer, WiseSaying> getInstance() {
+    public static HashMap<Integer, WiseSaying> getInstance() {
         return store;
     }
 
@@ -22,6 +19,9 @@ class Repository {
         return id;
     }
 
+    public List<Integer> getKeys() {
+        return new ArrayList<>(store.keySet());
+    }
     // 서버를 껐다가 킬 때 리포지토리 저장 용도
     public WiseSaying save(int id, WiseSaying wiseSaying) {
         store.put(id, wiseSaying);
