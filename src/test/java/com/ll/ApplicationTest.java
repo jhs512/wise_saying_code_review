@@ -62,6 +62,7 @@ public class ApplicationTest {
     // ByteArrayOutputStream을 이용하여 출력을 가로채기
     ByteArrayOutputStream stream = setOutput();
 
+    Console.args = "page=2";
     Controller controller = new Controller(true);
     controller.listUp();
 

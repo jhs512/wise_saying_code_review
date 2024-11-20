@@ -46,15 +46,34 @@ public class Controller {
   }
 
   public void listUp(List<Map<String, String>> data) {
+    Map<String, String> parsed = argParse();
+    List<String> args = parsed.keySet().stream().filter(
+        it-> Objects.equals(it, "page")
+    ).toList();
+    if (args.isEmpty()) {
+      parsed.put("page", "1");
+      return;
+    }
+    String page = parsed.get("page");
     Console.print("번호 / 작가 / 명언\n" +
         "----------------------\n");
-    Console.print(controller.listUp(data).args().toString());
+    Console.print(controller.listUp(data, page).args().toString());
   }
 
   public void listUp() {
+    Map<String, String> parsed = argParse();
+    List<String> args = parsed.keySet().stream().filter(
+        it-> Objects.equals(it, "page")
+    ).toList();
+    if (args.isEmpty()) {
+      parsed.put("page", "1");
+      return;
+    }
+    String page = parsed.get("page");
+
     Console.print("번호 / 작가 / 명언\n" +
         "----------------------\n");
-    Console.print(controller.listUp().args().toString());
+    Console.print(controller.listUp(page).args().toString());
   }
 
   public void delete() {

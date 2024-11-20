@@ -52,14 +52,26 @@ public class Service {
     return new Result(true, itemID);
   }
 
-  public Result listUp(List<Map<String, String>> data) {
+  public Result listUp(List<Map<String, String>> data, String page) {
+    int dataSize = data.size();
+    final int pageInt = Integer.parseInt(page) - 1;
+    final int pageItemLimit = 5;
+    final int startIndex = pageItemLimit*pageInt;
+    int endIndex = pageItemLimit*pageInt+5;
+    if (endIndex>dataSize) {
+      endIndex = dataSize;
+    }
+
     StringBuilder sb = new StringBuilder();
+
+    if (startIndex > dataSize) return new Result(false, sb);
     Comparator<Map<String, String>> comparator = (map1, map2) -> {
       return map2.get("id").compareTo(map1.get("id"));
     };
     data.sort(comparator);
+    List<Map<String, String>> subData = data.subList(startIndex, endIndex);
 
-    for (Map<String, String> d : data) {
+    for (Map<String, String> d : subData) {
       sb.append(d.get("id"));
       sb.append(" / ");
       sb.append(d.get("content"));
@@ -70,8 +82,8 @@ public class Service {
     return new Result(true, sb);
   }
 
-  public Result listUp() {
-    return listUp(data);
+  public Result listUp(String page) {
+    return listUp(data, page);
   }
 
   public Result search(String keyword, String keywordType) {
