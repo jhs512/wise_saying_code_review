@@ -15,6 +15,10 @@ public class Service {
     public int GetId(String str){
         return Integer.parseInt(str.substring(str.indexOf("?id=")+4));
     }
+    public boolean ChkId(int id){
+        if(id > wise.size()) return true;
+        return false;
+    }
     public int WiseInert(String wiseWord,String name){
         String[] content = new String[3];
         content[0] = "" + (wise.size()+1);
@@ -38,27 +42,38 @@ public class Service {
     }
 
     public String WiseDelete(String str){
-        int id =  GetId(str);
-        String[] save = wise.get(id-1);
+        int id =  GetId(str)-1;
+        if(ChkId(id)) return (id+1) + "번은 존재 하지않음";
+        String[] save = wise.get(id);
         if(save[1].equals("d_1241")) return save[0] + "번 명언은 존재하지 않습니다.";
         save[1] ="d_1241";
         save[2] = "d_1241";
-        return null;
+        return "삭제완료";
     }
     public String[] WiseChange(String str,String wiseWord,String name){
-        int id = GetId(str);
-        String[] save = wise.get(id-1);
-        String[] output = new String[2];
+        int id = GetId(str)-1;
+        String[] s = new String[1];
+        if(ChkId(id)) {
+            s[0] = (id+1) + "번은 존재 하지않음";
+            return s;
+        }
+        String[] save = wise.get(id);
+        String[] output = new String[4];
         if(save[1].equals("d_1241")){
             output[0] = "명언(기존) : 삭제된 명언입니다.";
             save[2] = wiseWord;
             output[1] ="작가(기존) : 삭제된 명언입니다.";
             save[1] = name;
-            return output;
         }
-        output[0] = "명언(기존) : 삭제된 명언입니다.";
+        else{
+            output[0] = "명언(기존) : "+save[2];
+            save[2] = wiseWord;
+            output[1] ="작가(기존) : "+save[1];
+            save[1] = name;
+        }
+        output[2] = "명언 : " + wiseWord;
         save[2] =wiseWord;
-        output[1] ="작가(기존) : 삭제된 명언입니다.";
+        output[3] ="작가 : "+name;
         save[1] = name;
         return output;
 

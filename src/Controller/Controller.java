@@ -31,6 +31,7 @@ public class Controller extends  Service{
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
+
     public int CheckInputContent(){
         String str = GetString("명령)");
         if(str.equals("등록")) return WiseInert(GetString("명언 : "),GetString("작가 : "));
@@ -46,6 +47,33 @@ public class Controller extends  Service{
         }
         if (str.contains("수정")){
             StrPrint(WiseChange(str,GetString("명언 : "),GetString("작가 : ")),true);
+            return 0;
+        }
+        if (str.equals("빌드")) return WiseBuild();
+        return 0;
+    }
+    static  public String GetStringTest(String str,Scanner scanner){
+        String s = scanner.nextLine();
+        StrPrint(str,false);
+        StrPrint(s,true);
+        return s;
+    }
+    public int CheckInputContentTest(Scanner[] scanner){
+        int i = 0;
+        String str = GetStringTest("명령)",scanner[i++]);
+        if(str.equals("등록")) return WiseInert(GetStringTest("명언 : ",scanner[i++]),GetStringTest("작가 : ",scanner[i++]));
+        if (str.equals("종료")) return WiseExit();
+        if (str.equals("목록")){
+            PrintTitle();
+            StrPrint(WiseList(),true);
+            return 0;
+        };
+        if (str.contains("삭제")) {
+            StrPrint(WiseDelete(str),true);
+            return 0;
+        }
+        if (str.contains("수정")){
+            StrPrint(WiseChange(str,GetStringTest("명언 : ",scanner[i++]),GetStringTest("작가 : ",scanner[i++])),true);
             return 0;
         }
         if (str.equals("빌드")) return WiseBuild();
