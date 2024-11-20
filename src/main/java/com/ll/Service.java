@@ -10,7 +10,7 @@ public class Service {
 
   Service(Boolean isTestMode) {
     repository = new Repository(isTestMode);
-    data = repository.load();
+    data = sortData(repository.load());
     this.isTestMode = isTestMode;
   }
 
@@ -52,26 +52,32 @@ public class Service {
     return new Result(true, itemID);
   }
 
-  public Result listUp(List<Map<String, String>> data, String page) {
+  private List<Map<String, String>> sortData(List<Map<String, String>> data) {
+    //데이터 정렬
+    Comparator<Map<String, String>> comparator = (map1, map2) -> {
+      return Integer.parseInt(map2.get("id")) - (Integer.parseInt(map1.get("id")));
+    };
+    data.sort(comparator);
+    return data;
+  }
+
+  private List<Map<String, String>> extractPageData(List<Map<String, String>> data, String page) {
+    //인덱스 계산
     int dataSize = data.size();
     final int pageInt = Integer.parseInt(page) - 1;
     final int pageItemLimit = 5;
     final int startIndex = pageItemLimit*pageInt;
     int endIndex = pageItemLimit*pageInt+5;
-    if (endIndex>dataSize) {
-      endIndex = dataSize;
-    }
-
-    StringBuilder sb = new StringBuilder();
-
-    if (startIndex > dataSize) return new Result(false, sb);
-    Comparator<Map<String, String>> comparator = (map1, map2) -> {
-      return map2.get("id").compareTo(map1.get("id"));
-    };
-    data.sort(comparator);
+    if (endIndex>dataSize) endIndex = dataSize;
+    if (startIndex > dataSize) return new ArrayList<>();
     List<Map<String, String>> subData = data.subList(startIndex, endIndex);
+    return subData;
+  }
+  public Result listUp(List<Map<String, String>> data, String page) {
+    StringBuilder sb = new StringBuilder();
+    List<Map<String, String>> pageData = extractPageData(data, page);
 
-    for (Map<String, String> d : subData) {
+    for (Map<String, String> d : pageData) {
       sb.append(d.get("id"));
       sb.append(" / ");
       sb.append(d.get("content"));

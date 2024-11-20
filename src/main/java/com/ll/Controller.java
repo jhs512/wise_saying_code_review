@@ -52,7 +52,6 @@ public class Controller {
     ).toList();
     if (args.isEmpty()) {
       parsed.put("page", "1");
-      return;
     }
     String page = parsed.get("page");
     Console.print("번호 / 작가 / 명언\n" +

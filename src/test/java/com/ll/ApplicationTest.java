@@ -62,7 +62,7 @@ public class ApplicationTest {
     // ByteArrayOutputStream을 이용하여 출력을 가로채기
     ByteArrayOutputStream stream = setOutput();
 
-    Console.args = "page=2";
+    Console.args = "page=6";
     Controller controller = new Controller(true);
     controller.listUp();
 
@@ -90,7 +90,7 @@ public class ApplicationTest {
   @Test
   public void searchTest() {
     ByteArrayOutputStream stream = setOutput();
-    Console.args = "keywokeywor&&dType=autho";
+    Console.args = "keyword=테스트&keywordType=content";
     Controller controller = new Controller(true);
     controller.search();
 
