@@ -11,7 +11,7 @@ public class ApplicationTest {
 
   @Test
   public void fileLoadTest () {
-    Controller controller = new Controller();
+    Service controller = new Service();
     assertThat(controller.data).hasSize(2);
     assertThat(controller.data.getFirst().get("id")).isEqualTo("1");
     assertThat(controller.data.getFirst().get("content")).isEqualTo("명언 1");
@@ -19,13 +19,13 @@ public class ApplicationTest {
 
   @Test
   public void fileBuildTest () {
-    Controller controller = new Controller();
+    Service controller = new Service();
     controller.build();
   }
 
   @Test
   public void createTest() {
-    Controller controller = new Controller();
+    Service controller = new Service();
     ByteArrayInputStream in1 = new ByteArrayInputStream("엄\n준".getBytes());
     System.setIn(in1);
     controller.create();
@@ -38,7 +38,7 @@ public class ApplicationTest {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outputStream));
 
-    Controller controller = new Controller();
+    Service controller = new Service();
     controller.listUp();
 
     String actualOutput = outputStream.toString();
@@ -49,7 +49,7 @@ public class ApplicationTest {
 
   @Test
   public void deleteTest() {
-    Controller controller = new Controller();
+    Service controller = new Service();
     controller.delete("5");
     assertThat(controller.data.toString()).isEqualTo("[]");
   }
@@ -60,7 +60,7 @@ public class ApplicationTest {
     ByteArrayInputStream in1 = new ByteArrayInputStream("수정\n완\n".getBytes());
     System.setIn(in1);
 
-    Controller controller = new Controller();
+    Service controller = new Service();
     controller.update("5");
 
     assertThat(controller.data.getFirst().get("content")).isEqualTo("수정");
@@ -72,7 +72,5 @@ public class ApplicationTest {
     ByteArrayInputStream in1 = new ByteArrayInputStream("수정?id=1 \n 수정했어요 \n 용준짱".getBytes());
     System.setIn(in1);
 
-    App app = new App();
-    app.execute();
   }
 }
