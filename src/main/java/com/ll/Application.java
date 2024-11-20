@@ -8,7 +8,8 @@ enum Command {
     DELETE,
     UPDATE,
     BUILD,
-    EXIT;
+    EXIT,
+    SEARCH
 }
 
 class Console {

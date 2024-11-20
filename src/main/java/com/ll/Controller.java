@@ -32,6 +32,21 @@ public class Controller {
           Console.print("입력 값이 올바르지 않습니다\n");
         }
       }
+      if (command == Command.SEARCH) {
+        String args = Console.getArgs();
+        try {
+          String[] parsedArgs = args.split("&");
+          String key1 = parsedArgs[0].split("=")[0];
+          String keyword = parsedArgs[0].split("=")[1];
+
+          String key2 = parsedArgs[1].split("=")[0];
+          String keywordType = parsedArgs[1].split("=")[1];
+          controller.search(keyword, keywordType);
+
+        } catch (IndexOutOfBoundsException e) {
+          Console.print("입력 값이 올바르지 않습니다\n");
+        }
+      }
     }
   }
 }
