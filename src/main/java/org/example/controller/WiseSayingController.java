@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.example.dto.WiseSaying;
 import org.example.service.WiseSayingService;
+import org.example.util.QueryStringParser;
 
 public class WiseSayingController {
 
@@ -28,7 +29,7 @@ public class WiseSayingController {
     public static void getAllWiseSaying() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("--------------------");
-        List<WiseSaying> listOfWiseSaying = WiseSayingService.createListOfWiseSaying();
+        List<WiseSaying> listOfWiseSaying = WiseSayingService.getListOfWiseSaying();
         listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
             for (WiseSaying wiseSaying : listOfWiseSaying) {
                 System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
@@ -40,12 +41,12 @@ public class WiseSayingController {
         if (id != -1) {
             System.out.println(id + "번 명언이 삭제되었습니다.");
         } else {
-            System.out.println(cmd.charAt(6) - '0' + "번 명언은 존재하지 않습니다.");
+            System.out.println(QueryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
         }
     }
 
     public static void updateWiseSaying(String cmd) throws IOException {
-        Optional<WiseSaying> wiseSaying = WiseSayingService.getWiseSaying(cmd.charAt(6) - '0');
+        Optional<WiseSaying> wiseSaying = WiseSayingService.getWiseSaying(QueryStringParser.getId(cmd));
 
         if (wiseSaying.isPresent()) {
             System.out.println("명언(기존) : " + wiseSaying.get().getContent());
@@ -58,7 +59,7 @@ public class WiseSayingController {
 
             WiseSayingService.updateJsonFile(wiseSaying.get().getId(), content, author);
         } else {
-            System.out.println(cmd.charAt(6) - '0' + "번 명언은 존재하지 않습니다.");
+            System.out.println(QueryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
         }
     }
 

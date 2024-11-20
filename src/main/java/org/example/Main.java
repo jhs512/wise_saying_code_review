@@ -5,6 +5,7 @@ import static org.example.controller.WiseSayingController.createBuildFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import org.example.controller.WiseSayingController;
 
 public class Main {
@@ -42,6 +43,7 @@ public class Main {
                     System.out.println("올바르지 않은 명령어 입니다.");
                 }
             }
+            System.out.println("앱이 종료 되었습니다.");
         }
     }
 }

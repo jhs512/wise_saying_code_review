@@ -1,12 +1,18 @@
 package org.example.repository;
 
+import static org.example.util.FileToWiseSaying.parseFileToWiseSaying;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.example.config.ConfigReader;
+import org.example.dto.WiseSaying;
+import org.example.util.FileToWiseSaying;
 
 public class WiseSayingRepository {
 
@@ -49,23 +55,36 @@ public class WiseSayingRepository {
         return save(String.valueOf(id), path);
     }
 
-    public static Optional<File[]> findAll() {
+    public static boolean saveBuildFile(String data) throws IOException {
+        String path = ConfigReader.getBuildFilePath("file.save.path");
+        return save(data, path);
+    }
 
-        String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying";
-        File jsonFiles = new File(jsonFilePath);
+    public static Optional<List<WiseSaying>> findAll() {
+
+        String path = ConfigReader.getProperty("file.save.path");
+        File jsonFiles = new File(path);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
             File[] files = jsonFiles.listFiles(
                 (dir, name) -> name.endsWith(".json") && !name.startsWith("data"));
-            return Optional.ofNullable(files);
+
+            if(files != null) {
+                List<WiseSaying> list = new ArrayList<>();
+
+                for(File file : files) {
+                    list.add(FileToWiseSaying.parseFileToWiseSaying(file).get());
+                }
+                return Optional.of(list);
+            }
         }
 
         return Optional.empty();
     }
 
-    public static int delete(int id) throws IOException {
+    public static int delete(int id) {
 
-        String path = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
+        String path = ConfigReader.getJsonFilePath("file.save.path", id);
         File file = new File(path);
 
         if (file.exists()) {
@@ -75,13 +94,12 @@ public class WiseSayingRepository {
         return -1;
     }
 
-    public static Optional<File> findById(int id) {
+    public static Optional<WiseSaying> findById(int id) {
+        String path = ConfigReader.getJsonFilePath("file.save.path", id);
+        File file = new File(path);
 
-        String jsonFilePath = System.getProperty("user.dir") + "/db/wiseSaying/" + id + ".json";
-        File jsonFile = new File(jsonFilePath);
-
-        if (jsonFile.exists()) {
-            return Optional.of(jsonFile);
+        if (file.exists()) {
+            return parseFileToWiseSaying(file);
         }
         return Optional.empty();
     }
