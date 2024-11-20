@@ -4,12 +4,13 @@ import java.io.File;
 import java.util.*;
 
 public class Service {
-  static String FILE_DIR = "src/main/resources/db/wiseSaying";
   public List<Map<String, String>> data;
   public Boolean isTestMode;
+  public Repository repository;
 
   Service(Boolean isTestMode) {
-    data = Repository.load();
+    repository = new Repository(isTestMode);
+    data = repository.load();
     this.isTestMode = isTestMode;
   }
 
@@ -33,7 +34,7 @@ public class Service {
   }
 
   public void build() {
-    Repository.build(data);
+    repository.build(data);
   }
 
   public Result create(String wise, String author) {
@@ -45,8 +46,8 @@ public class Service {
     item.put("content", wise);
     item.put("author", author);
     data.add(item);
-    Repository.saveJson(item);
-    Repository.saveLastId(getLastID());
+    repository.saveJson(item);
+    repository.saveLastId(getLastID());
 
     return new Result(true, itemID);
   }
@@ -103,19 +104,11 @@ public class Service {
 
     //최댓값이 달라졌을 때 수정
     if (Integer.parseInt(getLastID()) < Integer.parseInt(id)) {
-      Repository.modifyLastId(id);
+      repository.modifyLastId(id);
+      repository.saveLastId(getLastID());
     }
 
-    File file = new File(STR."\{FILE_DIR}/\{id}.json");
-    if (file.exists()) { // 파일이 존재하는 경우
-      if (file.delete()) {
-        return new Result(true, STR."\{id}번 명언이 삭제되었습니다.\n");
-      } else {
-        return new Result(false, "파일 삭제에 실패했습니다\n");
-      }
-    } else {
-      return new Result(false, STR."\{id}번 명언은 존재하지 않습니다.\n");
-    }
+    return repository.delete(id);
   }
 
   public Result update(String id, String newContent, String newAuthor) {
@@ -127,15 +120,17 @@ public class Service {
     int index = 0;
     for (Map<String, String> d : data) {
       if (Objects.equals(d.get("id"), id)) {
+        data.set(index, newData);
         break;
       }
       index += 1;
     }
-    data.set(index, newData);
+
+    if (index >= data.size()) return new Result(false, "변경에 실패했습니다");
 
     //파일 덮어씌우기
-    Repository.saveJson(newData);
-    Repository.saveLastId(getLastID());
+    repository.saveJson(newData);
+    repository.saveLastId(getLastID());
 
     return new Result(true, "변경에 성공했습니다");
   }

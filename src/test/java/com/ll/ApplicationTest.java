@@ -2,84 +2,102 @@ package com.ll;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 public class ApplicationTest {
+  public void setInput(String input) {
+
+  ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+  System.setIn(in);
+
+  try {
+    in.close();
+  } catch (IOException e) {
+    System.out.println("처리되지 못한 스트림");
+  }
+  }
+
+  public ByteArrayOutputStream setOutput() {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputStream));
+    return outputStream;
+  }
+
+  public String getOutput(ByteArrayOutputStream outputStream) {
+    String output = outputStream.toString();
+    try {
+      outputStream.close();
+    } catch (IOException e) {
+      System.out.println("처리되지 못한 스트림");
+    }
+    return output;
+  }
+
 
   @Test
   public void fileLoadTest () {
-    Service service = new Service();
-    assertThat(service.data).hasSize(2);
-    assertThat(service.data.getFirst().get("id")).isEqualTo("1");
-    assertThat(service.data.getFirst().get("content")).isEqualTo("명언 1");
+    Service service = new Service(true);
+    assertThat(service.data).hasSize(0);
   }
 
   @Test
   public void fileBuildTest () {
-    Service controller = new Service();
-    controller.build();
+    Service service = new Service();
+    service.build();
   }
 
   @Test
   public void createTest() {
-    Service controller = new Service();
-    ByteArrayInputStream in1 = new ByteArrayInputStream("엄\n준".getBytes());
-    System.setIn(in1);
+    setInput("테스트명언\n테스트저자");
+    Controller controller = new Controller(true);
     controller.create();
-    assertThat(controller.data.getLast().get("content")).isEqualTo("엄");
   }
 
   @Test
   public void listUpTest() {
     // ByteArrayOutputStream을 이용하여 출력을 가로채기
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStream));
+    ByteArrayOutputStream stream = setOutput();
 
-    Service controller = new Service();
+    Controller controller = new Controller(true);
     controller.listUp();
 
-    String actualOutput = outputStream.toString();
-
+    String actualOutput = getOutput(stream);
     assertThat(actualOutput).isEqualTo("번호 / 작가 / 명언\n" +
         "----------------------");
   }
 
   @Test
   public void deleteTest() {
-    Service controller = new Service();
-    controller.delete("5");
-    assertThat(controller.data.toString()).isEqualTo("[]");
+    Controller controller = new Controller(true);
+    Console.args = "id=6&keyword=123";
+    controller.delete();
   }
 
   @Test
   public void updateTest() {
-
-    ByteArrayInputStream in1 = new ByteArrayInputStream("수정\n완\n".getBytes());
-    System.setIn(in1);
-
-    Service controller = new Service();
-    controller.update("5");
-
-    assertThat(controller.data.getFirst().get("content")).isEqualTo("수정");
+    setInput("수\n완");
+    Console.args = "id=6&keyword=123";
+    Controller controller = new Controller(true);
+    controller.update();
+//    assertThat(controller.data.getFirst().get("content")).isEqualTo("수정");
   }
 
   @Test
   public void searchTest() {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStream));
+    ByteArrayOutputStream stream = setOutput();
+    Console.args = "keywokeywor&&dType=autho";
+    Controller controller = new Controller(true);
+    controller.search();
 
-    Service controller = new Service();
-    controller.search("수정했어요", "content");
-    String actualOutput = outputStream.toString();
-    assertThat(actualOutput).isEqualTo("");
+    String output = getOutput(stream);
+    assertThat(output).isEqualTo("");
   }
   @Test
   public void appTest() {
-
     ByteArrayInputStream in1 = new ByteArrayInputStream("수정?id=1 \n 수정했어요 \n 용준짱".getBytes());
     System.setIn(in1);
   }

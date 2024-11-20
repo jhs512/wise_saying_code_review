@@ -8,20 +8,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Repository {
-  static String FILE_DIR = "src/main/resources/db/wiseSaying";
-  public List<Map<String, String>> data;
-  public Boolean isTestMode;
+  String FILE_DIR;
+  Boolean isTestMode;
 
   Repository(Boolean isTestMode) {
-    data = load();
     this.isTestMode = isTestMode;
+    if (isTestMode) {
+      FILE_DIR = "src/test/resources/db/wiseSaying";
+    } else {
+      FILE_DIR = "src/main/resources/db/wiseSaying";
+    }
   }
 
   Repository() {
     this(false);
   }
 
-  private static File[] getFiles() {
+  private File[] getFiles() {
     File directory = new File(FILE_DIR);
 
     if (directory.exists() && directory.isDirectory()) {
@@ -31,7 +34,7 @@ public class Repository {
     }
   }
 
-  private static StringBuilder loadStringFile() throws IOException {
+  private StringBuilder loadStringFile() throws IOException {
     StringBuilder data = new StringBuilder();
 
     data.append("[");
@@ -54,7 +57,7 @@ public class Repository {
     return data;
   }
 
-  private static List<Map<String, String>> strToMap(String strData) throws IOException {
+  private List<Map<String, String>> strToMap(String strData) throws IOException {
     try {
       //정규 표현식으로 {} 안에 있는 내용을 리스트로 반환
       String regex = "\\{(.|\\n)*?\\}";
@@ -96,7 +99,7 @@ public class Repository {
 
   }
 
-  public static List<Map<String, String>> load() {
+  public List<Map<String, String>> load() {
     try {
       String strData = loadStringFile().toString();
       return strToMap(strData);
@@ -105,7 +108,7 @@ public class Repository {
     }
   }
 
-  private static String mapToStr(List<Map<String, String>> maps) {
+  private String mapToStr(List<Map<String, String>> maps) {
     StringBuilder sb = new StringBuilder();
     sb.append("[\n");
     for (Map<String, String> map : maps) {
@@ -131,8 +134,8 @@ public class Repository {
     return sb.toString();
   }
 
-  public static void build(List<Map<String, String>> data) {
-    String strData = Repository.mapToStr(data);
+  public void build(List<Map<String, String>> data) {
+    String strData = mapToStr(data);
 
     try (FileWriter writer = new FileWriter(STR."\{FILE_DIR}/data.json");) {
       writer.write(strData);
@@ -141,12 +144,12 @@ public class Repository {
     }
   }
 
-  public static void saveJson(Map<String, String> data) {
+  public void saveJson(Map<String, String> data) {
     List<Map<String, String>> mapData = new ArrayList<>();
     mapData.add(data);
 
     //id.json 형식으로 저장
-    String strData = Repository.mapToStr(mapData).replace("[", "").replace("]", "");
+    String strData = mapToStr(mapData).replace("[", "").replace("]", "");
     try (FileWriter writer = new FileWriter(STR."\{FILE_DIR}/\{data.get("id")}.json");) {
       writer.write(strData);
     } catch (IOException e) {
@@ -154,7 +157,7 @@ public class Repository {
     }
   }
 
-  public static void saveLastId(String lastId) {
+  public void saveLastId(String lastId) {
     //lastId.txt 저장
     try (FileWriter writer = new FileWriter(STR."\{FILE_DIR}/lastId.txt");) {
       writer.write(lastId);
@@ -163,11 +166,24 @@ public class Repository {
     }
   }
 
-  public static void modifyLastId(String id) {
+  public void modifyLastId(String id) {
     try (FileWriter writer = new FileWriter(STR."\{FILE_DIR}/lastId.txt");) {
       writer.write(id);
     } catch (IOException e) {
       throw new RuntimeException("수정에 실패했습니다", e);
+    }
+  }
+
+  public Result delete(String id) {
+    File file = new File(STR."\{FILE_DIR}/\{id}.json");
+    if (file.exists()) { // 파일이 존재하는 경우
+      if (file.delete()) {
+        return new Result(true, STR."\{id}번 명언이 삭제되었습니다.\n");
+      } else {
+        return new Result(false, "파일 삭제에 실패했습니다\n");
+      }
+    } else {
+      return new Result(false, STR."\{id}번 명언은 존재하지 않습니다.\n");
     }
   }
 }
