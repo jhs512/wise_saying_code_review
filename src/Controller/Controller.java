@@ -15,6 +15,7 @@ public class Controller extends  Service{
     }
     static public void StrPrint(String[] str, boolean IsLineBreak){
         for(String i : str) {
+            if(i  == null) continue;
             if (IsLineBreak)
                 System.out.println(i);
             else
@@ -38,7 +39,7 @@ public class Controller extends  Service{
         if (str.equals("종료")) return WiseExit();
         if (str.equals("목록")){
             PrintTitle();
-            StrPrint(WiseList(),true);
+            StrPrint(WiseList(str),true);
             return 0;
         };
         if (str.contains("삭제")) {
@@ -50,6 +51,7 @@ public class Controller extends  Service{
             return 0;
         }
         if (str.equals("빌드")) return WiseBuild();
+        if (str.equals("불러오기")) return 0;
         return 0;
     }
     static  public String GetStringTest(String str,Scanner scanner){
@@ -63,9 +65,9 @@ public class Controller extends  Service{
         String str = GetStringTest("명령)",scanner[i++]);
         if(str.equals("등록")) return WiseInert(GetStringTest("명언 : ",scanner[i++]),GetStringTest("작가 : ",scanner[i++]));
         if (str.equals("종료")) return WiseExit();
-        if (str.equals("목록")){
+        if (str.contains("목록")){
             PrintTitle();
-            StrPrint(WiseList(),true);
+            StrPrint(WiseList(str),true);
             return 0;
         };
         if (str.contains("삭제")) {

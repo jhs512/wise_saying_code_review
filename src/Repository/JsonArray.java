@@ -47,6 +47,9 @@ public class JsonArray {
 
         return str;
     }
+    public void ReadJson(){
+
+    }
 
 
 }

@@ -1,2 +1,22 @@
 [
+    {
+        "id": 1,
+        "author": "1치킨",
+        "content": "1"
+    },
+    {
+        "id": 2,
+        "author": "수정1",
+        "content": "수정1"
+    },
+    {
+        "id": 3,
+        "author": "1치킨2",
+        "content": "1"
+    },
+    {
+        "id": 4,
+        "author": "2",
+        "content": "2피자2"
+    }
 ]
