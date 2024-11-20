@@ -1,8 +1,6 @@
 package com.ll;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 public class Service {
@@ -37,12 +35,8 @@ public class Service {
   public void build() {
     Repository.build(data);
   }
-  public void create() {
-    Console.print("명언 : ");
-    String wise = Console.getInput();
-    Console.print("작가 : ");
-    String author = Console.getInput();
 
+  public Result create(String wise, String author) {
     int intItemID = Integer.parseInt(getLastID()) + 1;
     String itemID = Integer.toString(intItemID);
 
@@ -53,13 +47,12 @@ public class Service {
     data.add(item);
     Repository.saveJson(item);
     Repository.saveLastId(getLastID());
-    Console.print(itemID + "번 명언이 등록되었습니다.\n");
 
+    return new Result(true, itemID);
   }
 
-  public void listUp(List<Map<String, String>> data) {
-    Console.print("번호 / 작가 / 명언\n" +
-        "----------------------\n");
+  public Result listUp(List<Map<String, String>> data) {
+
     StringBuilder sb = new StringBuilder();
     for (Map<String, String> d : data) {
       sb.append(d.get("id"));
@@ -69,31 +62,36 @@ public class Service {
       sb.append(d.get("author"));
       sb.append("\n");
     }
-    Console.print(sb.toString());
+    return new Result(true, sb);
   }
 
-  public void listUp() {
-    listUp(data);
+  public Result listUp() {
+    return listUp(data);
   }
 
-  public void search(String keyword, String keywordType) {
+  public Result search(String keyword, String keywordType) {
     if (Objects.equals(keywordType, "content")) {
       List<Map<String, String>> result = data.stream().filter(
           it-> it.get("content").trim().contains(keyword.trim())
       ).toList();
-      listUp(result);
-      return;
+      return new Result(true, result);
     }
     if (Objects.equals(keywordType, "author")) {
       List<Map<String, String>> result = data.stream().filter(
           it-> it.get("author").trim().contains(keyword.trim())
       ).toList();
-      listUp(result);
+      return new Result(true, result);
     }
-    Console.print("올바르지 않은 키워드 타입입니다");
+    if (Objects.equals(keywordType, "id")) {
+      List<Map<String, String>> result = data.stream().filter(
+          it-> it.get("id").trim().contains(keyword.trim())
+      ).toList();
+      return new Result(true, result);
+    }
+    return new Result(false, "올바르지 않은 키워드 타입입니다");
   }
 
-  public void delete(String id) {
+  public Result delete(String id) {
     Map<String, String> target = new HashMap<>();
     for (Map<String, String> d : data) {
       if (Objects.equals(d.get("id"), id)) {
@@ -103,49 +101,24 @@ public class Service {
     }
     data.remove(target);
 
-    File file = new File(STR."\{FILE_DIR}/\{id}.json");
-    if (file.exists()) { // 파일이 존재하는 경우
-      if (file.delete()) {
-        Console.print(STR."\{id}번 명언이 삭제되었습니다.\n");
-      } else {
-        Console.print("파일 삭제에 실패했습니다\n");
-      }
-    } else {
-      Console.print(STR."\{id}번 명언은 존재하지 않습니다.\n");
-    }
-
     //최댓값이 달라졌을 때 수정
     if (Integer.parseInt(getLastID()) < Integer.parseInt(id)) {
       Repository.modifyLastId(id);
     }
+
+    File file = new File(STR."\{FILE_DIR}/\{id}.json");
+    if (file.exists()) { // 파일이 존재하는 경우
+      if (file.delete()) {
+        return new Result(true, STR."\{id}번 명언이 삭제되었습니다.\n");
+      } else {
+        return new Result(false, "파일 삭제에 실패했습니다\n");
+      }
+    } else {
+      return new Result(false, STR."\{id}번 명언은 존재하지 않습니다.\n");
+    }
   }
 
-  public void update(String id) {
-
-    //탐색
-    Map<String, String> target = new HashMap<>();
-    int index = 0;
-    for (Map<String, String> d : data) {
-      if (Objects.equals(d.get("id"), id)) {
-        target = d;
-        break;
-      }
-      index += 1;
-    }
-
-    if (target.isEmpty()) {
-      Console.print(STR."\{id}번 명언은 존재하지 않습니다.\n");
-      return;
-    }
-
-    Console.print(STR."명언(기존) : \{target.get("content")}\n");
-    Console.print("명언 : ");
-    String newContent = Console.getInput();
-
-    Console.print(STR."\n작가(기존) : \{target.get("author")}\n");
-    Console.print("작가 : ");
-    String newAuthor = Console.getInput();
-
+  public Result update(String id, String newContent, String newAuthor) {
     Map<String, String> newData = new HashMap<>();
     newData.put("id", id);
     newData.put("content", newContent);
