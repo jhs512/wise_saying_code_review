@@ -12,10 +12,10 @@ public class ApplicationTest {
 
   @Test
   public void fileLoadTest () {
-    Service controller = new Service();
-    assertThat(controller.data).hasSize(2);
-    assertThat(controller.data.getFirst().get("id")).isEqualTo("1");
-    assertThat(controller.data.getFirst().get("content")).isEqualTo("명언 1");
+    Service service = new Service();
+    assertThat(service.data).hasSize(2);
+    assertThat(service.data.getFirst().get("id")).isEqualTo("1");
+    assertThat(service.data.getFirst().get("content")).isEqualTo("명언 1");
   }
 
   @Test

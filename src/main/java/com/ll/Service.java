@@ -124,10 +124,19 @@ public class Service {
     newData.put("content", newContent);
     newData.put("author", newAuthor);
 
+    int index = 0;
+    for (Map<String, String> d : data) {
+      if (Objects.equals(d.get("id"), id)) {
+        break;
+      }
+      index += 1;
+    }
     data.set(index, newData);
 
     //파일 덮어씌우기
     Repository.saveJson(newData);
     Repository.saveLastId(getLastID());
+
+    return new Result(true, "변경에 성공했습니다");
   }
 }

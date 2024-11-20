@@ -87,7 +87,8 @@ public class Controller {
     Console.print(STR."\n작가(기존) : \{target.getFirst().get("author")}\n");
     Console.print("작가 : ");
     String newAuthor = Console.getInput();
-    controller.update(id, newContent, newAuthor);
+    Result resultUpdate = controller.update(id, newContent, newAuthor);
+    Console.print(resultUpdate.args().toString());
   }
 
   public void search() {

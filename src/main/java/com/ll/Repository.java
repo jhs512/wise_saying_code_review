@@ -105,7 +105,7 @@ public class Repository {
     }
   }
 
-  public static String mapToStr(List<Map<String, String>> maps) {
+  private static String mapToStr(List<Map<String, String>> maps) {
     StringBuilder sb = new StringBuilder();
     sb.append("[\n");
     for (Map<String, String> map : maps) {
