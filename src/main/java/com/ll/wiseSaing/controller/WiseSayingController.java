@@ -1,5 +1,6 @@
-package com.ll;
+package com.ll.wiseSaing.controller;
 
+import com.ll.wiseSaing.Info;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -9,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Command {
+public class WiseSayingController{
 
     static final String PATH = "D:\\son\\project\\programmers\\db\\wiseSaying\\";
     Scanner sc = new Scanner(System.in);

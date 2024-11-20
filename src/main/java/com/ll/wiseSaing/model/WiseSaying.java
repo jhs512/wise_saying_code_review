@@ -1,6 +1,6 @@
-package com.ll;
+package com.ll.wiseSaing.model;
 
-public class Info {
+public class WiseSaying {
     int id;
     String content;
     String author;
