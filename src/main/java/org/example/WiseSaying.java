@@ -7,9 +7,7 @@ public class WiseSaying implements Serializable {
     private String content;
     private String author;
 
-    public WiseSaying(){
-
-    }
+    public WiseSaying(){}
 
     public WiseSaying(int id, String content, String author){
         this.id = id;
@@ -17,9 +15,7 @@ public class WiseSaying implements Serializable {
         this.author = author;
     }
 
-//    public void setId(int id){
-//        this.id = id;
-//    }
+    public void setId(int id) { this.id = id;}
 
     public void setContent(String content){
         this.content = content;
@@ -29,9 +25,7 @@ public class WiseSaying implements Serializable {
         this.author = author;
     }
 
-    public int getId(){
-        return id;
-    }
+    public int getId(){return id;}
 
     public String getContent(){
         return content;
