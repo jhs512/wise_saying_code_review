@@ -81,6 +81,10 @@ public class WiseSayingEntity {
 	}
 
 	public static LinkedHashMap<Long, WiseSayingEntity> fromJsonList(String json) {
+		if (json == null || json.isEmpty()) {
+			return new LinkedHashMap<>();
+		}
+
 		String substring = json.substring(1, json.length() - 1);
 		String[] jsonArray = substring.split("},\\{");
 
