@@ -15,13 +15,24 @@ import java.util.stream.Stream;
 public class WiseRepository {
     private ArrayList<Wise> wises = new ArrayList<>();
     private int index = 1;
-    private final String BASE_PATH = "db/wiseSaying/";
+    private String BASE_PATH;
 
     public WiseRepository() {
+        BASE_PATH = "db/wiseSaying/";
         try {
             loadWises();
             loadLastId();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
+    }
+
+    public WiseRepository(String basePath) {
+        BASE_PATH = basePath;
+        try {
+            loadWises();
+            loadLastId();
+        } catch (IOException e) {
+        }
     }
 
     public int applyWise(String content, String author) throws IOException {
@@ -84,6 +95,22 @@ public class WiseRepository {
             return result.get();
         } else {
             return null;
+        }
+    }
+
+    public void deleteAll() {
+        File dir = new File(BASE_PATH);
+
+        if (dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        file.delete();
+                    }
+                }
+            }
         }
     }
 

@@ -5,55 +5,65 @@ import java.util.Scanner;
 
 public class WiseController {
     private WiseService service;
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner;
 
     public WiseController(WiseService service) {
         this.service = service;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public WiseController(WiseService service, Scanner scanner) {
+        this.service = service;
+        this.scanner = scanner;
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
+        boolean isNotQuit = true;
         System.out.println("== 명언 앱 ==");
 
-        whileLoop:
-        while (true) {
-            System.out.print("명령) ");
-            String input = scanner.nextLine();
-            Command command = Command.findByCommand(input);
-
-            switch (command) {
-                case Command.APPLY:
-                    applyWise();
-                    break;
-                case Command.LIST:
-                    printWise();
-                    break;
-                case Command.DELETE:
-                    try {
-                        int id = command.getId(input);
-                        deleteWise(id);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("id 값을 입력해주세요");
-                    }
-                    break;
-                case Command.EDIT:
-                    try {
-                        int id = command.getId(input);
-                        editWise(id);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("id 값을 입력해주세요");
-                    }
-                    break;
-                case Command.BUILD:
-                    buildWise();
-                    break;
-                case Command.QUIT:
-                    break whileLoop;
-                case Command.UNKNOWN:
-                    System.out.println("알 수 없는 명령어입니다.");
-                    break;
-            }
+        while (isNotQuit) {
+            isNotQuit = handleCommand();
         }
+    }
+
+    public boolean handleCommand() {
+        System.out.print("명령) ");
+        String input = scanner.nextLine();
+        Command command = Command.findByCommand(input);
+
+        switch (command) {
+            case Command.APPLY:
+                applyWise();
+                break;
+            case Command.LIST:
+                printWise();
+                break;
+            case Command.DELETE:
+                try {
+                    int id = command.getId(input);
+                    deleteWise(id);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("id 값을 입력해주세요");
+                }
+                break;
+            case Command.EDIT:
+                try {
+                    int id = command.getId(input);
+                    editWise(id);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("id 값을 입력해주세요");
+                }
+                break;
+            case Command.BUILD:
+                buildWise();
+                break;
+            case Command.QUIT:
+                return false;
+            case Command.UNKNOWN:
+                System.out.println("알 수 없는 명령어입니다.");
+                break;
+        }
+        return true;
     }
 
     public void applyWise() {
@@ -90,6 +100,7 @@ public class WiseController {
             System.out.print("작가 : ");
             String newAuthor = scanner.nextLine();
 
+            System.out.println(newContent + newAuthor);
             try {
                 service.editWise(id, newContent, newAuthor);
                 previous.content = newContent;
