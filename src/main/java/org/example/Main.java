@@ -5,7 +5,6 @@ import static org.example.controller.WiseSayingController.createBuildFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 import org.example.controller.WiseSayingController;
 
 public class Main {
@@ -13,14 +12,21 @@ public class Main {
     public static void main(String[] args) throws IOException {
         App app = new App();
         app.run();
-
     }
 
     public static class App {
+        private final BufferedReader br;
+
+        public App() {
+            this(new BufferedReader(new InputStreamReader(System.in)));
+        }
+
+        public App(BufferedReader br) {
+            this.br = br;
+        }
+
         public void run() throws IOException {
             System.out.println("== 명언 앱 ==");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String cmd;
 
             while (true) {
@@ -28,22 +34,23 @@ public class Main {
                 cmd = br.readLine();
 
                 if (cmd.equals("종료")) {
+                    System.out.println("앱이 종료 되었습니다.");
                     break;
                 } else if (cmd.equals("등록")) {
-                    WiseSayingController.createWiseSaying();
+                    WiseSayingController.createWiseSaying(br);
                 } else if (cmd.equals("목록")) {
                     WiseSayingController.getAllWiseSaying();
                 } else if (cmd.startsWith("삭제")) {
                     WiseSayingController.deleteWiseSaying(cmd);
                 } else if (cmd.startsWith("수정")) {
-                    WiseSayingController.updateWiseSaying(cmd);
+                    WiseSayingController.updateWiseSaying(cmd, br);
                 } else if (cmd.equals("빌드")) {
                     createBuildFile();
                 } else {
                     System.out.println("올바르지 않은 명령어 입니다.");
                 }
             }
-            System.out.println("앱이 종료 되었습니다.");
+
         }
     }
 }

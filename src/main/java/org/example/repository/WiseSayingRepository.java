@@ -18,7 +18,7 @@ public class WiseSayingRepository {
 
     public static int findLastId() {
 
-        String path = ConfigReader.getTxtFilePath("file.save.path");
+        String path = ConfigReader.getTxtFilePath("test.save.path");
         File file = new File(path);
 
         if (file.exists()) {
@@ -45,24 +45,24 @@ public class WiseSayingRepository {
     }
 
     public static int saveWiseSaying(String data, int id) throws IOException {
-        String path = ConfigReader.getJsonFilePath("file.save.path", id);
+        String path = ConfigReader.getJsonFilePath("test.save.path", id);
         save(data, path);
         return id;
     }
 
     public static boolean saveTxtFile(int id) throws IOException {
-        String path = ConfigReader.getTxtFilePath("file.save.path");
+        String path = ConfigReader.getTxtFilePath("test.save.path");
         return save(String.valueOf(id), path);
     }
 
     public static boolean saveBuildFile(String data) throws IOException {
-        String path = ConfigReader.getBuildFilePath("file.save.path");
+        String path = ConfigReader.getBuildFilePath("test.save.path");
         return save(data, path);
     }
 
     public static Optional<List<WiseSaying>> findAll() {
 
-        String path = ConfigReader.getProperty("file.save.path");
+        String path = ConfigReader.getProperty("test.save.path");
         File jsonFiles = new File(path);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
@@ -79,12 +79,12 @@ public class WiseSayingRepository {
             }
         }
 
-        return Optional.empty();
+        return Optional.of(new ArrayList<>());
     }
 
     public static int delete(int id) {
 
-        String path = ConfigReader.getJsonFilePath("file.save.path", id);
+        String path = ConfigReader.getJsonFilePath("test.save.path", id);
         File file = new File(path);
 
         if (file.exists()) {
@@ -95,7 +95,7 @@ public class WiseSayingRepository {
     }
 
     public static Optional<WiseSaying> findById(int id) {
-        String path = ConfigReader.getJsonFilePath("file.save.path", id);
+        String path = ConfigReader.getJsonFilePath("test.save.path", id);
         File file = new File(path);
 
         if (file.exists()) {

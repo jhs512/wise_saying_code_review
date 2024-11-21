@@ -2,7 +2,6 @@ package org.example.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 import org.example.dto.WiseSaying;
@@ -11,9 +10,7 @@ import org.example.util.QueryStringParser;
 
 public class WiseSayingController {
 
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-    public static void createWiseSaying() throws IOException {
+    public static void createWiseSaying(BufferedReader br) throws IOException {
         System.out.print("명언 : ");
         String content = br.readLine();
         System.out.print("작가 : ");
@@ -31,9 +28,9 @@ public class WiseSayingController {
         System.out.println("--------------------");
         List<WiseSaying> listOfWiseSaying = WiseSayingService.getListOfWiseSaying();
         listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
-            for (WiseSaying wiseSaying : listOfWiseSaying) {
-                System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
-            }
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
     }
 
     public static void deleteWiseSaying(String cmd) throws IOException {
@@ -45,7 +42,7 @@ public class WiseSayingController {
         }
     }
 
-    public static void updateWiseSaying(String cmd) throws IOException {
+    public static void updateWiseSaying(String cmd, BufferedReader br) throws IOException {
         Optional<WiseSaying> wiseSaying = WiseSayingService.getWiseSaying(QueryStringParser.getId(cmd));
 
         if (wiseSaying.isPresent()) {
