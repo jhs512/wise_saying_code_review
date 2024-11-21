@@ -1,7 +1,9 @@
 package wisesaying.controller;
 
+import java.util.LinkedList;
 import java.util.Scanner;
 
+import wisesaying.domain.WiseSaying;
 import wisesaying.service.WiseSayingService;
 
 public class WiseSayingController {
@@ -28,7 +30,14 @@ public class WiseSayingController {
 	}
 
 	public void findAll() {
-		wiseSayingService.findAll();
+		LinkedList<WiseSaying> wiseSayingLinkedList = wiseSayingService.findAll();
+		System.out.println("번호 / 작가 / 명언");
+
+		wiseSayingLinkedList.forEach((wiseSaying) -> {
+			System.out.printf("%d / %s / %s \n",
+					wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying());
+		});
+
 	}
 
 	public void update() {

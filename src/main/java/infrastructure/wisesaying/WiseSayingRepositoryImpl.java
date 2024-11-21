@@ -90,7 +90,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 
 	public Optional<LinkedList<WiseSaying>> findAll() throws IOException {
 		if (wiseSayingEntityLinkedHashMap.isEmpty()) {
-			return Optional.empty();
+			return Optional.of(new LinkedList<>());
 		}
 
 		return Optional.of(wiseSayingEntityLinkedHashMap.values().stream()

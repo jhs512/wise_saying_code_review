@@ -29,20 +29,16 @@ public class WiseSayingServiceImpl implements WiseSayingService{
 		return savedId;
 	}
 
-	public void findAll() {
+	public LinkedList<WiseSaying> findAll() {
 		try {
 			Optional<LinkedList<WiseSaying>> findAll = wiseSayingRepository.findAll();
-			System.out.println("번호 / 작가 / 명언");
+			LinkedList<WiseSaying> wiseSayingLinkedList = findAll.orElseGet(() -> new LinkedList<>());
 
-			findAll.ifPresent(wiseSayings -> wiseSayings.forEach(
-				wiseSaying -> System.out.printf("%d / %s / %s \n",
-					wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying())
-				)
-			);
-
+			return wiseSayingLinkedList;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return new LinkedList<>();
 	}
 
 	public void delete(Long targetId) {
