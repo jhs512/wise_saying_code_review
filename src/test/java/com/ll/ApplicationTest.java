@@ -99,7 +99,12 @@ public class ApplicationTest {
   }
   @Test
   public void appTest() {
-    ByteArrayInputStream in1 = new ByteArrayInputStream("수정?id=1 \n 수정했어요 \n 용준짱".getBytes());
-    System.setIn(in1);
+    setInput("명\n등록\n현재를 사랑하라.\n작자미상\n종료\n");
+
+    Controller controller = new Controller(true);
+    controller.execute();
+
+    ByteArrayOutputStream output = setOutput();
+    assertThat(getOutput(output)).contains("");
   }
 }
