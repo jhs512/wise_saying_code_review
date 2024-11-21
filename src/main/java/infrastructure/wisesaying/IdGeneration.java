@@ -10,4 +10,8 @@ public class IdGeneration {
 	public Long generationId() {
 		return ++id;
 	}
+
+	public void resetId() {
+		id = 0L;
+	}
 }
