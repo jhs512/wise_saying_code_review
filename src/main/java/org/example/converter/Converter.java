@@ -2,6 +2,8 @@ package org.example.converter;
 
 import org.example.model.WiseSayingItem;
 
+import java.lang.runtime.ObjectMethods;
+import java.util.List;
 import java.util.Map;
 
 public class Converter {
@@ -11,15 +13,51 @@ public class Converter {
 
         jsonBuilder.append("{\n");
 
-        jsonBuilder.append("  \"").append("id").append("\"").append(": ")
+        jsonBuilder.append("\t\"").append("id").append("\"").append(": ")
                 .append(item.getId()).append(",").append("\n");
-        jsonBuilder.append("  \"").append("content").append("\"").append(": ")
+        jsonBuilder.append("\t\"").append("content").append("\"").append(": ")
                 .append("\"").append(item.getWiseSaying()).append("\",").append("\n");
-        jsonBuilder.append("  \"").append("author").append("\"").append(": ")
+        jsonBuilder.append("\t\"").append("author").append("\"").append(": ")
                 .append("\"").append(item.getAuthor()).append("\"\n");
 
         jsonBuilder.append("}");
 
-    return jsonBuilder.toString();
+        return jsonBuilder.toString();
     }
+
+    public WiseSayingItem parseToJava(String jsonString) {
+
+        String id = jsonString.split("\"id\":")[1].split(",")[0].trim();
+        String wiseSaying = jsonString.split("\"content\":")[1].split(",")[0].replace("\"","").trim();
+        String author = jsonString.split("\"author\":")[1].split("}")[0].replace("\"","").trim();
+
+        return WiseSayingItem.of(Long.parseLong(id), author, wiseSaying);
+
+    }
+
+    public String multipleConvertToJson(List<WiseSayingItem> items) {
+        StringBuilder jsonBuilder = new StringBuilder();
+
+        jsonBuilder.append("[\n");
+
+        for (int i = 0; i < items.size(); i++) {
+            WiseSayingItem item = items.get(i);
+
+            jsonBuilder.append("  {").append("\n");
+            jsonBuilder.append("    \"id\": ").append(item.getId()).append(",").append("\n");
+            jsonBuilder.append("    \"content\": \"").append(item.getWiseSaying()).append("\",").append("\n");
+            jsonBuilder.append("    \"author\": \"").append(item.getAuthor()).append("\"\n");
+            jsonBuilder.append("  }");
+
+            if (i < items.size() - 1) {
+                jsonBuilder.append(",");
+            }
+            jsonBuilder.append("\n");
+        }
+
+        jsonBuilder.append("]");
+
+        return jsonBuilder.toString();
+    }
+
 }

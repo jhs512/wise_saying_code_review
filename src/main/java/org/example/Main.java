@@ -1,10 +1,11 @@
 package org.example;
 
-import org.example.view.View;
+
+import org.example.controller.WiseSayingController;
 
 public class Main {
     public static void main(String[] args) {
-        View.start();
-
+        WiseSayingController wiseSayingController = new AppConfig().wiseSayingController();
+        wiseSayingController.run();
     }
 }
