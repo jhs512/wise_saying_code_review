@@ -23,11 +23,10 @@ public class WiseSayingController {
         }
     }
 
-    public static void getAllWiseSaying() {
+    public static void getAllWiseSaying(String cmd) {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("--------------------");
         List<WiseSaying> listOfWiseSaying = WiseSayingService.getListOfWiseSaying();
-        listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
         for (WiseSaying wiseSaying : listOfWiseSaying) {
             System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
@@ -43,7 +42,6 @@ public class WiseSayingController {
         System.out.println("--------------------");
 
         List<WiseSaying> listByKeyword = WiseSayingService.getListByKeyword(keyword[0], keyword[1]);
-        listByKeyword.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
         for (WiseSaying wiseSaying : listByKeyword) {
             System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }

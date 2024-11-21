@@ -27,11 +27,15 @@ public class WiseSayingService {
     }
 
     public static List<WiseSaying> getListOfWiseSaying() {
-        return WiseSayingRepository.findAll();
+        List<WiseSaying> list = WiseSayingRepository.findAll();
+        list.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+        return list;
     }
 
     public static List<WiseSaying> getListByKeyword(String keyword, String type) {
-        return WiseSayingRepository.findByKeyword(keyword, type);
+        List<WiseSaying> byKeyword = WiseSayingRepository.findByKeyword(keyword, type);
+        byKeyword.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+        return byKeyword;
     }
 
     public static int removeJsonFile(String cmd) {
