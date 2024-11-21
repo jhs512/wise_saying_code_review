@@ -1,14 +1,12 @@
 import Controller.Controller;
+import Service.Service;
 
 
 public class Main {
     public static void main(String[] args) {
-        int chk = 0;
-        Controller c = new Controller();
+        Service service = new Service();
+        Controller c = new Controller(service);
+        c.run();
 
-        while (chk == 0) {
-            chk = c.CheckInputContent();
-
-        }
     }
 }

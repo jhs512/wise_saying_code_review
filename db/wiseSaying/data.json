@@ -1,22 +1,72 @@
 [
     {
         "id": 1,
-        "author": "1치킨",
+        "author": "1a",
         "content": "1"
     },
     {
         "id": 2,
-        "author": "수정1",
-        "content": "수정1"
+        "author": "2a",
+        "content": "2"
     },
     {
         "id": 3,
-        "author": "1치킨2",
-        "content": "1"
+        "author": "3a",
+        "content": "3"
     },
     {
         "id": 4,
-        "author": "2",
-        "content": "2피자2"
+        "author": "4a",
+        "content": "4"
+    },
+    {
+        "id": 5,
+        "author": "5",
+        "content": "5"
+    },
+    {
+        "id": 6,
+        "author": "6a",
+        "content": "6"
+    },
+    {
+        "id": 7,
+        "author": "7a",
+        "content": "7"
+    },
+    {
+        "id": 8,
+        "author": "1a",
+        "content": "1"
+    },
+    {
+        "id": 9,
+        "author": "2a",
+        "content": "2"
+    },
+    {
+        "id": 10,
+        "author": "3a",
+        "content": "3"
+    },
+    {
+        "id": 11,
+        "author": "4a",
+        "content": "4"
+    },
+    {
+        "id": 12,
+        "author": "5",
+        "content": "5"
+    },
+    {
+        "id": 13,
+        "author": "6a",
+        "content": "6"
+    },
+    {
+        "id": 14,
+        "author": "7a",
+        "content": "7"
     }
 ]

@@ -12,16 +12,6 @@ public class testUtil {
 
         return new Scanner(in);
     }
-    public static Scanner[] genScannerArr(final String[] input) {
-        final InputStream[] in = new ByteArrayInputStream[input.length];
-        Scanner[] s = new Scanner[input.length];
-        for(int i = 0; i< input.length; i++){
-            in[i] =  new ByteArrayInputStream(input[i].getBytes());
-            s[i] = new Scanner(in[i]);
-        }
-
-        return s;
-    }
 
     // System.out의 출력을 스트림으로 받기
     public static ByteArrayOutputStream setOutToByteArray() {
@@ -47,16 +37,5 @@ public class testUtil {
 
         return arr;
     }
-    public static void input(String str) {
-        int chk = 0;
-        Controller c = new Controller();
-        for (String[] i : StringtoStringArr(str)) {
-            chk = c.CheckInputContentTest(testUtil.genScannerArr(i));
-            ByteArrayOutputStream output = testUtil.setOutToByteArray();
-            String capturedOutput = output.toString();
-            System.out.println("Captured: " + capturedOutput);
-            testUtil.clearSetOutToByteArray(output);
-        }
 
-    }
 }

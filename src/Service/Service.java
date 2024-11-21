@@ -15,6 +15,15 @@ public class Service {
         if(a.length <2) return null;
         return a[1].split("&");
     }
+    public boolean isDigit(String str){
+        for(char c : str.toCharArray()){
+            if(!Character.isDigit(c)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public String GetQueryContent(String strOri,String strSearch){
         String[] strs = SeparateString(strOri);
         if(strs == null) return "";
@@ -26,6 +35,8 @@ public class Service {
         return "";
     }
     public int GetId(String str) {
+        String s = GetQueryContent(str,"id");
+        if(s == "" || !isDigit(s)) return -1;
         return Integer.parseInt(GetQueryContent(str,"id"));
     }
 
@@ -35,17 +46,23 @@ public class Service {
     }
 
     public String GetType(String str) {
-        return GetQueryContent(str,"keywordType=");
+        return GetQueryContent(str,"keywordType");
     }
 
     public boolean ChkId(int id) {
-        if (id >= wise.size()) return true;
+        if ((id >= wise.size()) || (id <0)) return true;
         return false;
     }
     public int GetPage(String str) {
-        String s = GetQueryContent(str,"page=");
+        String s = GetQueryContent(str,"page");
         if(s == "") return 1;
         return Integer.parseInt(s);
+
+    }
+    public int GetPage(int num) {
+        float n = num;
+        return (int) Math.ceil(n/5);
+
 
     }
 
@@ -71,7 +88,7 @@ public class Service {
 
         int i = 0;
         if ((type == "") || (keyword == "")) {
-            totalPage = Math.max(wise.size()/5,1);
+            totalPage = Math.max(GetPage(wise.size()),1);
             page = Math.min(totalPage,page);
             List<String[]> arr =  wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page-1)*5).limit((page)*5).toList();
             for (String[] j : arr) {
@@ -83,7 +100,7 @@ public class Service {
             List<String[]> arr1 = new ArrayList<>();
             if (type.equals("content")) arr1 = wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
             else if (type.equals("author"))  arr1 =  wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
-            totalPage = Math.max(arr1.size()/5,1);
+            totalPage = Math.max(GetPage(arr1.size()),1);
             page = Math.min(totalPage,page);
             List<String[]> arr =  arr1.stream().skip((page-1)*5).limit((page)*5).toList();
             for (String[] j : arr) {
