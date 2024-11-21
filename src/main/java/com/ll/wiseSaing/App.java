@@ -1,11 +1,12 @@
 package com.ll.wiseSaing;
 
 import com.ll.wiseSaing.controller.WiseSayingController;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
+import com.ll.wiseSaing.model.WiseSaying;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -16,10 +17,6 @@ public class App {
     static final String DELETE = "삭제";
     static final String MODIFY = "수정";
     static final String Build = "빌드";
-    static final String PATH = "D:\\son\\project\\programmers\\db\\wiseSaying\\";
-
-    static JSONArray arr;
-    static int id = 0;
 
     public void run() throws IOException, ParseException {
         System.out.println("== 명언 앱 ==");
@@ -28,57 +25,42 @@ public class App {
         WiseSayingController ws = new WiseSayingController();
 
         String command = "";
-        init();
+
+        int id = 0;
+        List<WiseSaying> list = new ArrayList<>();
+        ws.init(id, list);
 
         while (!command.equals(EXIT)) {
             System.out.print("명령) ");
             command = sc.nextLine();
-            ;
+
             if (command.length() > 1) {
                 switch (command.substring(0, 2)) {
                     case INSERT -> {
                         id++;
-                        ws.insert(id, arr);
+                        ws.insert(id, list);
                     }
                     case LIST -> {
-                        ws.list(arr);
+                        ws.selectList(list);
                     }
                     case DELETE -> {
+                        if(!command.contains("=")) continue;
                         int delete_id = Integer.parseInt(command.split("=")[1]);
-                        ws.delete(delete_id, arr);
+                        ws.delete(delete_id, list);
                     }
                     case MODIFY -> {
+                        if(!command.contains("=")) continue;
                         int modify_id = Integer.parseInt(command.split("=")[1]);
-                        ws.modify(modify_id, arr);
+                        ws.modify(modify_id, list);
                     }
                     case Build -> {
-                        ws.build(arr);
+                        ws.build(list);
                     }
                 }
             }
         }
         sc.close();
 
-        File file = new File(PATH+"lastId.txt");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
-        bw.write(String.valueOf(id));
-        bw.close();
-    }
-
-    void init() throws IOException, ParseException {
-        Reader reader = new FileReader(new File(PATH + "data.json"));
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(reader);
-        arr = (JSONArray) obj;
-
-        File file = new File(PATH + "lastId.txt");
-        if (file.exists()) {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            id = Integer.parseInt(br.readLine());
-        }
+        ws.end(id);
     }
 }
