@@ -52,8 +52,6 @@ public class WiseSayingRepository {
         Path path = Path.of(DB_DIRECTORY_PATH.getData() + "/" + fileName);
         String jsonString = "";
 
-        //todo json 파일을 읽어와 string 으로 변환해야함
-
         try {
             jsonString = Files.readString(path);
         } catch (IOException e) {
@@ -175,8 +173,6 @@ public class WiseSayingRepository {
 
     private void saveFile(WiseSayingItem item) {
 
-        //todo 예외처리 수정
-
         File file = new File(DB_DIRECTORY_PATH.getData(), item.getId() + EXTENSION_JSON.getData());
         Converter converter = new Converter();
         String json = converter.singleConvertToJson(item);
@@ -189,7 +185,7 @@ public class WiseSayingRepository {
     }
 
     public void saveAllWiseSaying() {
-        File file = new File(DB_DIRECTORY_PATH.getData(), ALL_DATA_FILE_NAME.getData()+EXTENSION_JSON.getData());
+        File file = new File(DB_DIRECTORY_PATH.getData(), ALL_DATA_FILE_NAME.getData() + EXTENSION_JSON.getData());
         Converter converter = new Converter();
         List<WiseSayingItem> wiseSayingItems = loadFiles();
         String jsonString = converter.multipleConvertToJson(wiseSayingItems);
