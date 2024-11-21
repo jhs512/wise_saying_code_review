@@ -1,5 +1,6 @@
 package Repository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class JsonArray {
@@ -47,7 +48,27 @@ public class JsonArray {
 
         return str;
     }
-    public void ReadJson(){
+    public ArrayList<String[]> LoadTextToArrayList(String str){
+        ArrayList<String[]> arr = new ArrayList<>();
+        str =str.replace("\n",""); str =str.replace("[","");
+        str =str.replace("{",""); str =str.replace("]","");
+        for(String i : str.split("}")){
+            int count = 0;
+            String[] save = new String[3];
+            for(String j: i.split(",")){
+                String[] l =  j.split(":");
+                if(l.length <= 1) continue;
+                String replace = l[1].replace("\"","");
+                replace = replace.trim();
+                if(replace.length() >0){
+                    save[count++] = replace;
+                }
+
+
+            }
+            arr.add(save);
+        }
+        return arr;
 
     }
 

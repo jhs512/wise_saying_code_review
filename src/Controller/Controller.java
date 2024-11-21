@@ -9,18 +9,15 @@ import java.util.Scanner;
 public class Controller{
     private Scanner scanner;
     private Service service;
-    private  boolean isTest;
+
     public Controller(){
-        isTest = false;
-        this.service = service;
+        scanner = new Scanner(System.in);
     }
     public Controller(Service service){
-        isTest = true;
         scanner = new Scanner(System.in);
         this.service = service;
     }
     public Controller(Service service,Scanner sc){
-        isTest = true;
         this.service = service;
         scanner = sc;
     }
@@ -48,29 +45,33 @@ public class Controller{
     public String GetString(String str){
         StrPrint(str,false);
         String result = scanner.nextLine();;
-        if(isTest) StrPrint(result,true);
         return result;
     }
 
     public int CheckInputContent(){
         String str = GetString("명령)");
-        if(str.equals("등록")) return service.WiseInert(GetString("명언 : "),GetString("작가 : "));
-        if (str.equals("종료")) return service.WiseExit();
-        if (str.contains("목록")){
-            PrintTitle();
-            StrPrint(service.WiseList(str),true);
+        if(str.equals("등록")) {
+            StrPrint(service.WiseInert(GetString("명언 : "), GetString("작가 : ")),true);
             return 0;
         };
-        if (str.contains("삭제")) {
+
+        if (str.equals("종료")) return service.WiseExit();
+        else if (str.contains("목록")){
+            PrintTitle();
+            StrPrint(service.WiseList(str),true);
+        }
+        else if (str.contains("삭제")) {
             StrPrint(service.WiseDelete(str),true);
-            return 0;
         }
-        if (str.contains("수정")){
+        else if (str.contains("수정")){
             StrPrint(service.WiseChange(str,GetString("명언 : "),GetString("작가 : ")),true);
-            return 0;
         }
-        if (str.equals("빌드")) return service.WiseBuild();
-        if (str.equals("불러오기")) return 0;
+        else if (str.equals("빌드")) {
+            StrPrint(service.WiseBuild(),true);
+        }
+        else if (str.equals("로드")) {
+            StrPrint(service.WiseLoad(),true);
+        }
         return 0;
     }
 
@@ -82,7 +83,4 @@ public class Controller{
         }
     }
 
-    public boolean isTest() {
-        return isTest;
-    }
 }

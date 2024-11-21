@@ -1,4 +1,5 @@
 import Controller.Controller;
+import Service.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -36,6 +37,16 @@ public class testUtil {
                 arr.add(i.split(" "));
 
         return arr;
+    }
+    public static String Run(String input){
+        input = input.replace(" ","\n");
+        ByteArrayOutputStream output = setOutToByteArray();
+        Service service = new Service();
+        Controller c = new Controller(service, genScanner(input));
+        c.run();
+        clearSetOutToByteArray(output);
+        System.out.println(output.toString());
+        return output.toString();
     }
 
 }

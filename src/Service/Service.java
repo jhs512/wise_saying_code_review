@@ -66,13 +66,13 @@ public class Service {
 
     }
 
-    public int WiseInert(String wiseWord, String name) {
+    public String WiseInert(String wiseWord, String name) {
         String[] content = new String[3];
         content[0] = "" + (wise.size() + 1);
         content[1] = wiseWord;
         content[2] = name;
         wise.add(content);
-        return 0;
+        return wise.size() + "번 명언 등록";
     }
 
     public int WiseExit() {
@@ -119,7 +119,7 @@ public class Service {
         int id = GetId(str) - 1;
         if (ChkId(id)) return (id + 1) + "번은 존재 하지않음";
         String[] save = wise.get(id);
-        if (save[1].equals("d_1241")) return save[0] + "번 명언은 존재하지 않습니다.";
+        if (save[1].equals("d_1241")) return save[0] + "번은 존재 하지않음.";
         save[1] = "d_1241";
         save[2] = "d_1241";
         return "삭제완료";
@@ -153,7 +153,7 @@ public class Service {
 
     }
 
-    public int WiseBuild() {
+    public String WiseBuild() {
         JsonArray personArray = new JsonArray();
         for (String[] i : wise) {
             Json json = new Json();
@@ -163,9 +163,11 @@ public class Service {
             personArray.put(json);
         }
         Util.File.save(personArray);
-        return 0;
+        return "빌드완료";
     }
-    public int WiseLoad(){
-        return 0;
+    public String WiseLoad(){
+        JsonArray personArray = new JsonArray();
+        wise = personArray.LoadTextToArrayList(Util.File.load());
+        return "정상 로드";
     }
 }

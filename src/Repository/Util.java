@@ -1,7 +1,11 @@
 package Repository;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Util {
     public static class File{
@@ -14,6 +18,26 @@ public class Util {
                 file.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+        static public String load(){
+            try {
+                Path filePath = Paths.get(url);
+                String content = Files.readString(filePath);
+                return content;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+        static public String load(String url_){
+            try {
+                Path filePath = Paths.get(url_);
+                String content = Files.readString(filePath);
+                return content;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
             }
         }
         static public void save(JsonArray jarr,String url_) {
