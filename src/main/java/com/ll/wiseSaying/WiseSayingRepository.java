@@ -31,12 +31,15 @@ public class WiseSayingRepository {
     public int save(WiseSaying wiseSaying) {
         wiseSaying.setId(++lastId); // ID 자동 생성
         wiseSayings.add(wiseSaying);
+        saveToFile(); // 파일로 저장
         return wiseSaying.getId();
     }
 
     // 모든 명언 조회
     public List<WiseSaying> findAll() {
-        return wiseSayings;
+        List<WiseSaying> reversedList = new ArrayList<>(wiseSayings);
+        java.util.Collections.reverse(reversedList); // 리스트를 역순으로 정렬
+        return reversedList;
     }
 
     // 명언 삭제 id 를 기준

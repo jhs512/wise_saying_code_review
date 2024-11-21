@@ -1,5 +1,6 @@
 package com.ll.wiseSaying;
 
+import java.util.List;
 import java.util.Scanner;
 /*
   사용자 명령어를 받아 처리
@@ -24,13 +25,26 @@ public class WiseSayingController {
             System.out.print("작가 : ");
             String author = scanner.nextLine();
 
-            // ID는 create 메서드 내부에서 자동 생성
             int id = wiseSayingService.create(content, author);
             System.out.println(id + "번 명언이 등록되었습니다.");
         } else if (command.equals("목록")) {
-            wiseSayingService.findAll().forEach(wiseSaying -> {
-                System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
-            });
+            List<WiseSaying> wiseSayings = wiseSayingService.findAll();
+            if (wiseSayings.isEmpty()) {
+                System.out.println("등록된 명언이 없습니다.");
+            } else {
+                System.out.println("번호 / 작가 / 명언");
+                System.out.println("----------------------");
+
+                // 최신 데이터가 상단에 오도록 역순으로 출력
+                for (int i = wiseSayings.size() - 1; i >= 0; i--) {
+                    WiseSaying wiseSaying = wiseSayings.get(i);
+                    System.out.println(
+                            wiseSaying.getId() + " / " +
+                                    wiseSaying.getAuthor() + " / " +
+                                    wiseSaying.getContent()
+                    );
+                }
+            }
         } else if (command.startsWith("삭제?id=")) {
             int id = Integer.parseInt(command.split("=")[1]);
             boolean deleted = wiseSayingService.delete(id);
