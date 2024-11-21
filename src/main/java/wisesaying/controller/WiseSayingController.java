@@ -43,21 +43,26 @@ public class WiseSayingController {
 	}
 
 	public void update() {
-		System.out.print("수정?id = ");
-		Long target = sc.nextLong();
-		sc.nextLine();
+		try {
+			System.out.print("수정?id = ");
+			Long target = sc.nextLong();
+			sc.nextLine();
 
-		WiseSaying targetWiseSaying = wiseSayingService.findById(target);
+			WiseSaying targetWiseSaying = wiseSayingService.findById(target);
 
-		System.out.println("명언 (기존) : " + targetWiseSaying.getWiseSaying());
-		System.out.print("명언 : ");
-		String updateWiseSaying = sc.nextLine();
+			System.out.println("명언 (기존) : " + targetWiseSaying.getWiseSaying());
+			System.out.print("명언 : ");
+			String updateWiseSaying = sc.nextLine();
 
-		System.out.println("작가 (기존) : " + targetWiseSaying.getWriter());
-		System.out.print("작가 : ");
-		String updateWriter = sc.nextLine();
+			System.out.println("작가 (기존) : " + targetWiseSaying.getWriter());
+			System.out.print("작가 : ");
+			String updateWriter = sc.nextLine();
 
-		wiseSayingService.update(targetWiseSaying, updateWiseSaying, updateWriter);
+			wiseSayingService.update(targetWiseSaying, updateWiseSaying, updateWriter);
+		} catch (InputMismatchException e) {
+			System.out.println("숫자만 입력 가능합니다.");
+		}
+
 	}
 
 	public void delete() {
