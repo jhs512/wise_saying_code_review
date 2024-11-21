@@ -95,8 +95,6 @@ public class WiseSayingController {
 			System.out.println("== 명언 앱 ==");
 			System.out.print("명령) ");
 
-			Scanner sc = new Scanner(System.in);
-
 			String select = sc.nextLine();
 
 			if (select.equals("종료")) {
