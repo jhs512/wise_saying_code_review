@@ -1,4 +1,4 @@
-package baekgwa.dto;
+package baekgwa.wisesaying.dto;
 
 
 public class ResponseDto {

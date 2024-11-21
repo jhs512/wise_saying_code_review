@@ -1,4 +1,4 @@
-package baekgwa.entity;
+package baekgwa.wisesaying.entity;
 
 import java.util.Objects;
 

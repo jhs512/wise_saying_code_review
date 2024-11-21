@@ -1,6 +1,6 @@
-package baekgwa.repository;
+package baekgwa.wisesaying.repository;
 
-import baekgwa.entity.WiseSaying;
+import baekgwa.wisesaying.entity.WiseSaying;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

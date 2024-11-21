@@ -1,14 +1,14 @@
-package baekgwa.service;
+package baekgwa.wisesaying.service;
 
-import baekgwa.dto.RequestDto;
-import baekgwa.dto.ResponseDto;
-import baekgwa.dto.ResponseDto.FindList;
-import baekgwa.entity.WiseSaying;
+import baekgwa.wisesaying.dto.RequestDto;
+import baekgwa.wisesaying.dto.ResponseDto;
+import baekgwa.wisesaying.dto.ResponseDto.FindList;
+import baekgwa.wisesaying.entity.WiseSaying;
 import baekgwa.global.data.domain.Pageable;
 import baekgwa.global.data.domain.PageableResponse;
 import baekgwa.global.data.domain.Search;
 import baekgwa.global.exception.CustomException;
-import baekgwa.repository.WiseSayingRepository;
+import baekgwa.wisesaying.repository.WiseSayingRepository;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;

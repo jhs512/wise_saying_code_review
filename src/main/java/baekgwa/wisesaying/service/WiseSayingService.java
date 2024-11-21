@@ -1,8 +1,8 @@
-package baekgwa.service;
+package baekgwa.wisesaying.service;
 
-import baekgwa.dto.RequestDto;
-import baekgwa.dto.ResponseDto;
-import baekgwa.dto.ResponseDto.FindSayingInfo;
+import baekgwa.wisesaying.dto.RequestDto;
+import baekgwa.wisesaying.dto.ResponseDto;
+import baekgwa.wisesaying.dto.ResponseDto.FindSayingInfo;
 import baekgwa.global.data.domain.Pageable;
 import baekgwa.global.data.domain.PageableResponse;
 import baekgwa.global.data.domain.Search;

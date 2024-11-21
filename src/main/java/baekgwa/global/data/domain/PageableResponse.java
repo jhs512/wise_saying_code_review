@@ -1,6 +1,5 @@
 package baekgwa.global.data.domain;
 
-import baekgwa.dto.ResponseDto;
 import baekgwa.global.exception.CustomException;
 import java.util.List;
 

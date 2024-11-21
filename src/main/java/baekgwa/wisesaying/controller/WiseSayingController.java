@@ -1,4 +1,4 @@
-package baekgwa.controller;
+package baekgwa.wisesaying.controller;
 
 import java.io.IOException;
 import java.util.Map;

@@ -1,13 +1,13 @@
-package baekgwa.controller;
+package baekgwa.wisesaying.controller;
 
-import baekgwa.dto.RequestDto;
-import baekgwa.dto.ResponseDto;
-import baekgwa.dto.ResponseDto.FindList;
+import baekgwa.wisesaying.dto.RequestDto;
+import baekgwa.wisesaying.dto.ResponseDto;
+import baekgwa.wisesaying.dto.ResponseDto.FindList;
 import baekgwa.global.data.domain.Pageable;
 import baekgwa.global.data.domain.PageableResponse;
 import baekgwa.global.data.domain.Search;
 import baekgwa.global.util.ControllerUtils;
-import baekgwa.service.WiseSayingService;
+import baekgwa.wisesaying.service.WiseSayingService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
@@ -110,7 +110,7 @@ public class WiseSayingControllerImpl implements WiseSayingController {
     }
 
     private static void printPage(PageableResponse<FindList> findData) {
-        StringBuilder sb = new StringBuilder("페이지: ");
+        StringBuilder sb = new StringBuilder("페이지 : ");
         for (int now = 1; now <= findData.getTotalPages(); now++) {
             if (now == findData.getNowPages()) {
                 sb.append("[").append(now).append("]"); // 현재 페이지는 대괄호로 표시
