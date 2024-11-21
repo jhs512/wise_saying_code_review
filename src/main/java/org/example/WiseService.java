@@ -8,9 +8,13 @@ public interface WiseService {
 
     Wise getWise(int id);
 
-    List<Wise> getWises();
+    List<Wise> getWises(int page);
 
-    List<Wise> getWises(String keywordType, String keyword);
+    List<Wise> getWises(String keywordType, String keyword, int page);
+
+    int getWiseSize();
+
+    int getWiseSize(String keywordType, String keyword);
 
     void editWise(int id, String newContent, String newAuthor) throws IOException;
 

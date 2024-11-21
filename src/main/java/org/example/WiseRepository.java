@@ -4,18 +4,19 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.min;
+
 public class WiseRepository {
     private List<Wise> wises = new ArrayList<>();
     private int index = 1;
+    private int pageOffset = 5;
     private String BASE_PATH;
 
     public WiseRepository() {
@@ -45,18 +46,30 @@ public class WiseRepository {
         return index++;
     }
 
-    public List<Wise> getWises() {
-        return wises;
+    public int getWiseSize() {
+        return (int) ceil(wises.size() / (double) pageOffset);
     }
 
-    public List<Wise> getWises(String keywordType, String keyword) {
-        return wises.stream().filter((wise) -> {
-                    if (keywordType.equals("author")) {
-                        return wise.author.contains(keyword);
-                    } else {
-                        return wise.content.contains(keyword);
-                    }
-                }).collect(Collectors.toList());
+    public int getWiseSize(String keywordType, String keyword) {
+        return (int) ceil(searchWises(keywordType, keyword).size() / (double) pageOffset);
+    }
+
+    public List<Wise> getWises(int page) {
+        try {
+            return wises.reversed()
+                    .subList((page - 1) * pageOffset, min(page * pageOffset, wises.size()));
+        } catch (IndexOutOfBoundsException e) {
+            return List.of();
+        }
+    }
+
+    public List<Wise> getWises(String keywordType, String keyword, int page) {
+        try {
+            List<Wise> result = searchWises(keywordType, keyword);
+            return result.subList(min(result.size() - 1, (page - 1) * pageOffset), min(page * pageOffset, result.size()));
+        } catch (IndexOutOfBoundsException e) {
+            return List.of();
+        }
     }
 
     public void editWise(int id, String newContent, String newAuthor) throws IOException {
@@ -125,6 +138,17 @@ public class WiseRepository {
         }
     }
 
+    private List<Wise> searchWises(String keywordType, String keyword) {
+        return wises.stream().filter((wise) -> {
+                    if (keywordType.equals("author")) {
+                        return wise.author.contains(keyword);
+                    } else {
+                        return wise.content.contains(keyword);
+                    }
+                }).collect(Collectors.toList())
+                .reversed();
+    }
+
     private void saveWise(Wise wise) throws IOException {
         String path = BASE_PATH + index + ".json";
 
@@ -154,7 +178,7 @@ public class WiseRepository {
                             //읽어들이지 않고 일단 스킵
                         }
                     });
-            wises = wises.reversed();
+            wises.sort(Comparator.comparingInt(wise -> wise.index));
         }
     }
 

@@ -15,7 +15,7 @@ public enum Command {
     public final String name;
     private static final String editRegex = "^수정\\?id=(\\d+)$";
     private static final String deleteRegex = "^삭제\\?id=(\\d+)$";
-    private static final String listRegex = "^목록\\?keywordType=(author|content)&keyword=(.+)$";
+    private static final String listRegex = "^목록(?:\\?keywordType=(author|content)&keyword=([^&]+))?(?:[?&]page=(\\d+))?$";
 
     Command(String name) {
         this.name = name;
@@ -59,6 +59,22 @@ public enum Command {
             return matcher.group(2);
         } else {
             return null;
+        }
+    }
+
+    public int getPage(String command) {
+        Pattern pattern = Pattern.compile(listRegex);
+        Matcher matcher = pattern.matcher(command);
+
+        if (matcher.matches()) {
+            String page = matcher.group(3);
+            if (page != null) {
+                return Integer.parseInt(page);
+            } else {
+                return 1;
+            }
+        } else {
+            return 1;
         }
     }
 

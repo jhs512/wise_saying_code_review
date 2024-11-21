@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +36,7 @@ public class ControllerTest {
                 현재를 사랑하라.
                 작자미상
                 """);
+
         controller = new WiseController(service, scanner);
         controller.handleCommand();
 
@@ -143,7 +145,7 @@ public class ControllerTest {
         assertThat(result)
                 .contains("data.json 파일의 내용이 갱신되었습니다.");
 
-        ArrayList<Wise> wises = repository.getWises();
+        List<Wise> wises = repository.getWises(1);
         assertThat(wises.get(0).toString())
                 .isEqualTo("1 / 작자미상 / 현재를 사랑하라.");
 

@@ -22,13 +22,23 @@ public class WiseServiceImpl implements WiseService {
     }
 
     @Override
-    public List<Wise> getWises() {
-        return repository.getWises();
+    public List<Wise> getWises(int page) {
+        return repository.getWises(page);
     }
 
     @Override
-    public List<Wise> getWises(String keywordType, String keyword) {
-        return repository.getWises(keywordType, keyword);
+    public List<Wise> getWises(String keywordType, String keyword, int page) {
+        return repository.getWises(keywordType, keyword, page);
+    }
+
+    @Override
+    public int getWiseSize() {
+        return repository.getWiseSize();
+    }
+
+    @Override
+    public int getWiseSize(String keywordType, String keyword) {
+        return repository.getWiseSize(keywordType, keyword);
     }
 
     @Override

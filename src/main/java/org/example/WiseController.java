@@ -38,13 +38,14 @@ public class WiseController {
             case Command.LIST:
                 String keywordType = command.getKeywordType(input);
                 String keyword = command.getKeyword(input);
+                int page = command.getPage(input);
 
                 if (keywordType != null && keyword != null) {
                     printListInfo(keywordType, keyword);
-                    printWises(keywordType, keyword);
+                    printWises(keywordType, keyword, page);
                 } else if (keywordType == null && keyword == null) {
                     printColumnNames();
-                    printWises();
+                    printWises(page);
                 }
                 break;
             case Command.DELETE:
@@ -99,16 +100,21 @@ public class WiseController {
         System.out.println("---------------");
         System.out.println("검색타입 : " + keywordType);
         System.out.println("검색어 : " + keyword);
+        System.out.println("---------------");
 
         printColumnNames();
     }
 
-    public void printWises() {
-        service.getWises().forEach(wise -> System.out.println(wise));
+    public void printWises(int page) {
+        service.getWises(page).forEach(wise -> System.out.println(wise));
+
+        printPages(page, service.getWiseSize());
     }
 
-    public void printWises(String keywordType, String keyword) {
-        service.getWises(keywordType, keyword).forEach(wise -> System.out.println(wise));
+    public void printWises(String keywordType, String keyword, int page) {
+        service.getWises(keywordType, keyword, page).forEach(wise -> System.out.println(wise));
+
+        printPages(page, service.getWiseSize(keywordType, keyword));
     }
 
     public void editWise(int id) {
@@ -152,5 +158,19 @@ public class WiseController {
         if (result) {
             System.out.println("data.json 파일의 내용이 갱신되었습니다.");
         }
+    }
+
+    private void printPages(int page, int lastPage) {
+        System.out.println("---------------");
+        System.out.print("페이지 :");
+
+        for (int p = 1; p <= lastPage; p++) {
+            if (p == page) {
+                System.out.printf(" [%d]", p);
+            } else {
+                System.out.printf(" %d", p);
+            }
+        }
+        System.out.println();
     }
 }
