@@ -38,7 +38,7 @@ public class Controller {
     Console.print("작가 : ");
     String author = Console.getInput();
     Result result = controller.create(wise, author);
-    if (result.isSuccess()) Console.print(STR."\{result.args()}번 명언이 등록되었습니다.");
+    if (result.isSuccess()) Console.print(STR."\{result.args()}번 명언이 등록되었습니다.\n");
   }
 
   public void build() {

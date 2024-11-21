@@ -7,6 +7,8 @@ public class Service {
   public List<Map<String, String>> data;
   public Boolean isTestMode;
   public Repository repository;
+  private static final int pageItemLimit = 5;
+
 
   Service(Boolean isTestMode) {
     repository = new Repository(isTestMode);
@@ -48,12 +50,11 @@ public class Service {
     data.add(item);
     repository.saveJson(item);
     repository.saveLastId(getLastID());
-
     return new Result(true, itemID);
   }
 
   private List<Map<String, String>> sortData(List<Map<String, String>> data) {
-    //데이터 정렬
+    //데이터 정렬]
     Comparator<Map<String, String>> comparator = (map1, map2) -> {
       return Integer.parseInt(map2.get("id")) - (Integer.parseInt(map1.get("id")));
     };
@@ -65,17 +66,37 @@ public class Service {
     //인덱스 계산
     int dataSize = data.size();
     final int pageInt = Integer.parseInt(page) - 1;
-    final int pageItemLimit = 5;
     final int startIndex = pageItemLimit*pageInt;
     int endIndex = pageItemLimit*pageInt+5;
     if (endIndex>dataSize) endIndex = dataSize;
     if (startIndex > dataSize) return new ArrayList<>();
-    List<Map<String, String>> subData = data.subList(startIndex, endIndex);
-    return subData;
+    return data.subList(startIndex, endIndex);
   }
+
+  private StringBuilder makePageList(StringBuilder sb, String page) {
+    int allPageAmount = (data.size() + 1 )/ pageItemLimit;
+    if (Integer.parseInt(page) >= allPageAmount) return sb;
+    sb.append(STR."페이지 : ");
+    //페이지 개수 출력
+    for (int p=1;p<=allPageAmount;p++) {
+      if (p == Integer.parseInt(page)) {
+        sb.append(STR." [\{p}] ");
+      } else {
+        sb.append(STR." \{p} ");
+      }
+      sb.append("/");
+    }
+    sb.deleteCharAt(sb.length() - 1);
+    sb.append("\n");
+    return sb;
+  }
+
   public Result listUp(List<Map<String, String>> data, String page) {
     StringBuilder sb = new StringBuilder();
-    List<Map<String, String>> pageData = extractPageData(data, page);
+    List<Map<String, String>> pageData = extractPageData(sortData(data), page);
+    if (pageData.isEmpty()) {
+      sb.append("결과값이 없습니다\n");
+    }
 
     for (Map<String, String> d : pageData) {
       sb.append(d.get("id"));
@@ -85,7 +106,8 @@ public class Service {
       sb.append(d.get("author"));
       sb.append("\n");
     }
-    return new Result(true, sb);
+    sb.append("----------------------\n");
+    return new Result(true, makePageList(sb, page));
   }
 
   public Result listUp(String page) {
