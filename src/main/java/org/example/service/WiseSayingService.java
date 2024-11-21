@@ -1,9 +1,8 @@
 package org.example.service;
 
-import org.example.WiseSaying;
+import org.example.object.WiseSaying;
 import org.example.repository.WiseSayingRepository;
-
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class WiseSayingService {
@@ -17,8 +16,8 @@ public class WiseSayingService {
         wiseSayingRepository.flush();
     }
 
-    public List<WiseSaying> getWiseSayingList(){
-        return wiseSayingRepository.getWiseSayingList();
+    public Map<Integer, WiseSaying> getWiseSayingMap(){
+        return wiseSayingRepository.getWiseSayingMap();
     }
 
     public int registerWiseSaying(WiseSaying wiseSaying){
@@ -36,7 +35,4 @@ public class WiseSayingService {
     public boolean deleteWiseSaying(int id){
         return wiseSayingRepository.deleteWiseSaying(id);
     }
-
-
-
 }

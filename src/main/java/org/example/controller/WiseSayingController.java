@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.WiseSaying;
+import org.example.object.WiseSaying;
 import org.example.repository.WiseSayingRepository;
 import org.example.service.WiseSayingService;
 
@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WiseSayingController {
-    private final Scanner scanner = new Scanner(System.in);
+public class WiseSayingController extends Controller {
+    private final Scanner scanner;
     private final WiseSayingService wiseSayingService;
     private static final Map<String, Runnable> ID_NOT_REQUIRED_COMMANDS_MAP = new HashMap<>();
     private static final Map<String, Consumer<Integer>> ID_REQUIRED_COMMANDS_MAP = new HashMap<>();
@@ -30,8 +30,10 @@ public class WiseSayingController {
     private static final Pattern PATTERN = Pattern.compile("^(" + String.join("|", ID_REQUIRED_COMMANDS) + ")\\?id=(\\d+)$");
 
 
-    public WiseSayingController(){
-        wiseSayingService = new WiseSayingService(new WiseSayingRepository());
+    public WiseSayingController(Scanner scanner, String jsonFilePath, String lastIdFilePath){
+        this.scanner = scanner;
+
+        wiseSayingService = new WiseSayingService(new WiseSayingRepository(jsonFilePath, lastIdFilePath));
 
         ID_NOT_REQUIRED_COMMANDS_MAP.put(
                 END, this::flush);
@@ -62,7 +64,7 @@ public class WiseSayingController {
     }
 
     private void showWiseSayingList(){
-        for(WiseSaying wiseSaying : wiseSayingService.getWiseSayingList()){
+        for(WiseSaying wiseSaying : wiseSayingService.getWiseSayingMap().values()){
             System.out.printf("%d / %s / %s\n",wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent());
         }
     }

@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.WiseSaying;
+import org.example.object.WiseSaying;
 import org.example.mapper.MyJsonMapper;
 
 import java.io.*;
@@ -9,25 +9,23 @@ import java.util.*;
 public class WiseSayingRepository {
     private static final MyJsonMapper MAPPER = new MyJsonMapper();
 
-    private final Map<Integer, WiseSaying> wiseSayingMap = new HashMap<>();
-    private final List<WiseSaying> wiseSayingList;
+    private final Map<Integer, WiseSaying> wiseSayingMap;
     private int lastId;
+    private final String jsonFilePath;
+    private final String lastIdFilePath;
 
-    private static final String JSON_FILE_PATH = "data.json";
-    private static final String LAST_ID_FILE_PATH = "lastId.txt";
 
-    public WiseSayingRepository(){
+    public WiseSayingRepository(String jsonFilePath, String lastIdFilePath){
+        this.jsonFilePath = jsonFilePath;
+        this.lastIdFilePath = lastIdFilePath;
         try{
-            File jsonFile = new File(JSON_FILE_PATH);
+            File jsonFile = new File(jsonFilePath);
             if(jsonFile.createNewFile()){
-                wiseSayingList = new ArrayList<>();
+                wiseSayingMap = new TreeMap<>();
             }else {
-                wiseSayingList = MAPPER.parseJsonFromFile(JSON_FILE_PATH);
-                for(WiseSaying wiseSaying : wiseSayingList){
-                    wiseSayingMap.put(wiseSaying.getId(), wiseSaying);
-                }
+                wiseSayingMap  = MAPPER.parseJsonFromFile(jsonFilePath);
             }
-            File lastIdFile = new File(LAST_ID_FILE_PATH);
+            File lastIdFile = new File(lastIdFilePath);
 
             if(lastIdFile.createNewFile()){
                 lastId = 0;
@@ -45,18 +43,17 @@ public class WiseSayingRepository {
         }
     }
 
-    public List<WiseSaying> getWiseSayingList(){
-        return wiseSayingList;
+    public Map<Integer, WiseSaying> getWiseSayingMap(){
+        return wiseSayingMap;
     }
 
     public Optional<WiseSaying> getWiseSayingById(int id){
-        return Optional.of(wiseSayingMap.get(id));
+        return Optional.ofNullable(wiseSayingMap.get(id));
     }
 
     public int registerWiseSaying(WiseSaying wiseSaying){
         wiseSaying.setId(++lastId);
         wiseSayingMap.put(lastId, wiseSaying);
-        wiseSayingList.add(wiseSaying);
         return lastId;
     }
 
@@ -64,12 +61,7 @@ public class WiseSayingRepository {
         if(!wiseSayingMap.containsKey(id)){
             return false;
         }else{
-            WiseSaying wiseSaying = wiseSayingMap.get(id);
-            if(!wiseSayingList.contains(wiseSaying)){
-                throw new IllegalStateException("저장소 상태가 이상합니당");
-            }
             wiseSayingMap.remove(id);
-            wiseSayingList.remove(wiseSaying);
             return true;
         }
     }
@@ -80,13 +72,13 @@ public class WiseSayingRepository {
 
     public void flush(){
         try {
-            File jsonFile = new File(JSON_FILE_PATH);
-            String json = MAPPER.makeJsonFromWiseSaying(wiseSayingList);
+            File jsonFile = new File(jsonFilePath);
+            String json = MAPPER.makeJsonFromWiseSaying(wiseSayingMap);
             BufferedWriter jsonWriter = new BufferedWriter(new FileWriter(jsonFile, false));
             jsonWriter.write(json);
             jsonWriter.close();
 
-            File lastIdFile = new File(LAST_ID_FILE_PATH);
+            File lastIdFile = new File(lastIdFilePath);
             BufferedWriter writer = new BufferedWriter(new FileWriter(lastIdFile, false));
             writer.write(String.valueOf(lastId));
             writer.close();

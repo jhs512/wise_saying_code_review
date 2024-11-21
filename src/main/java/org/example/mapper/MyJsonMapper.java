@@ -1,15 +1,11 @@
 package org.example.mapper;
 
-import org.example.WiseSaying;
-
+import org.example.object.WiseSaying;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MyJsonMapper {
@@ -17,18 +13,18 @@ public class MyJsonMapper {
             .map(Field::getName)
             .collect(Collectors.toSet());
 
-    public List<WiseSaying> parseJsonFromFile(String fileName){
+    public Map<Integer, WiseSaying> parseJsonFromFile(String fileName){
         try {
             Path path = Paths.get(fileName);
             String text = Files.readString(path);
             return makeWiseSayingListFromString(text);
         }catch (Exception e){
-            return new ArrayList<>();
+            return new TreeMap<>();
         }
     }
 
-    private List<WiseSaying> makeWiseSayingListFromString(String text){
-        List<WiseSaying> result = new ArrayList<>();
+    private Map<Integer, WiseSaying> makeWiseSayingListFromString(String text){
+        Map<Integer, WiseSaying> result = new TreeMap<>();
         String arrayText = text.length() >= 2 ? text.substring(1, text.length() - 1) : "";
 
         StringBuilder sb = new StringBuilder();
@@ -53,7 +49,8 @@ public class MyJsonMapper {
             if(parsingWiseSaying && current != '{'){
                 sb.append(current);
             }else if(!parsingWiseSaying){
-                result.add(makeWiseSaying(sb.toString()));
+                WiseSaying wiseSaying = makeWiseSaying(sb.toString());
+                result.put(wiseSaying.getId(), wiseSaying);
                 sb.setLength(0);
             }
             previousChar = current;
@@ -74,18 +71,23 @@ public class MyJsonMapper {
         }
     }
 
-    public String makeJsonFromWiseSaying(List<WiseSaying> wiseSayingList){
+    public String makeJsonFromWiseSaying(Map<Integer, WiseSaying> wiseSayingMap){
         StringBuilder sb = new StringBuilder("[");
-        int size = wiseSayingList.size();
-        for(int i = 0; i < size; i++){
-            WiseSaying wiseSaying = wiseSayingList.get(i);
+        int size = wiseSayingMap.size();
+        int currentIndex = 0;
+        for(Map.Entry<Integer, WiseSaying> entry : wiseSayingMap.entrySet()){
+
+            WiseSaying wiseSaying = entry.getValue();
             sb.append("{\"id\":");
-            sb.append(wiseSaying.getId());
+            sb.append(entry.getKey());
             sb.append(",\"content\":\"");
             sb.append(wiseSaying.getContent());
             sb.append("\",\"author\":\"");
             sb.append(wiseSaying.getAuthor()).append("\"}");
-            if(i < size - 1){
+
+            currentIndex++;
+
+            if(currentIndex < size){
                 sb.append(",");
             }
         }
