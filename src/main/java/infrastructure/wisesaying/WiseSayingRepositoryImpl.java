@@ -117,16 +117,19 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 		Files.write(wiseSayingPath, wiseSayingEntity.toJson().getBytes());
 	}
 
-	public void build() throws IOException {
+	public Boolean build() throws IOException {
 		Path wiseSayingPath = Paths.get(FILE_PATH + "data.json");
+		if (wiseSayingEntityLinkedHashMap.isEmpty()) {
+			return Boolean.FALSE;
+		}
 
 		if (!Files.exists(wiseSayingPath)) {
 			Files.createDirectories(wiseSayingPath.getParent());
 			Files.createFile(wiseSayingPath);
 		}
 
-		if (!wiseSayingEntityLinkedHashMap.isEmpty()) {
-			Files.write(wiseSayingPath, WiseSayingEntity.toJsonList(wiseSayingEntityLinkedHashMap).getBytes());
-		}
+		Files.write(wiseSayingPath, WiseSayingEntity.toJsonList(wiseSayingEntityLinkedHashMap).getBytes());
+
+		return Boolean.TRUE;
 	}
 }

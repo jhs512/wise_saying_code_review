@@ -9,7 +9,7 @@ import infrastructure.wisesaying.WiseSayingRepository;
 import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
 
-public class WiseSayingServiceImpl implements WiseSayingService{
+public class WiseSayingServiceImpl implements WiseSayingService {
 	private final WiseSayingRepository wiseSayingRepository;
 
 	public WiseSayingServiceImpl(WiseSayingRepository wiseSayingRepository) {
@@ -41,57 +41,44 @@ public class WiseSayingServiceImpl implements WiseSayingService{
 		return new LinkedList<>();
 	}
 
-	public void delete(Long targetId) {
+	public Optional<Long> delete(Long targetId) {
 		try {
 			Long deletedId = wiseSayingRepository.delete(targetId);
 
-			System.out.println(deletedId + "번 명언이 삭제되었습니다.");
+			return Optional.of(deletedId);
 		} catch (WiseSayingException | IOException e) {
 			System.out.println(e.getMessage());
-		} catch (NumberFormatException e) {
-			System.out.println("숫자만 입력하세요.");
 		}
+		return Optional.empty();
 	}
 
-	public void update(Scanner sc) {
+	public void update(WiseSaying targetWiseSaying, String wiseSaying, String writer) {
 		try {
-			System.out.print("수정?id = ");
-			Long target = sc.nextLong();
-			sc.nextLine();
-
-			Optional<WiseSaying> wiseSaying = wiseSayingRepository.findById(target);
-
-			if (wiseSaying.isEmpty()) {
-				System.out.println(target + "번 명언이 존재하지 않습니다.");
-				return;
-			}
-
-			WiseSaying targetWiseSaying = wiseSaying.get();
-
-			System.out.println("명언 (기존) : " + targetWiseSaying.getWiseSaying());
-			System.out.print("명언 : ");
-			String updateWiseSaying = sc.nextLine();
-
-			System.out.println("작가 (기존) : " + targetWiseSaying.getWriter());
-			System.out.print("작가 : ");
-			String updateWriter = sc.nextLine();
-
-			targetWiseSaying.fetch(updateWiseSaying, updateWriter);
+			targetWiseSaying.fetch(wiseSaying, writer);
 
 			wiseSayingRepository.update(targetWiseSaying);
-		} catch (WiseSayingException e) {
-			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void build() {
+	public Boolean build() {
 		try {
-			wiseSayingRepository.build();
-			System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+			return wiseSayingRepository.build();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return Boolean.FALSE;
+	}
+
+	@Override
+	public WiseSaying findById(Long id) {
+		try {
+			return wiseSayingRepository.findById(id)
+				.orElseThrow(() -> new WiseSayingException(id + "번 명언이 존재하지 않습니다."));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		throw new WiseSayingException(id + "번 명언이 존재하지 않습니다.");
 	}
 }

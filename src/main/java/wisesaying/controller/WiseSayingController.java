@@ -1,6 +1,8 @@
 package wisesaying.controller;
 
+import java.util.InputMismatchException;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Scanner;
 
 import wisesaying.domain.WiseSaying;
@@ -35,26 +37,52 @@ public class WiseSayingController {
 
 		wiseSayingLinkedList.forEach((wiseSaying) -> {
 			System.out.printf("%d / %s / %s \n",
-					wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying());
+				wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying());
 		});
 
 	}
 
 	public void update() {
-		wiseSayingService.update(sc);
+		System.out.print("수정?id = ");
+		Long target = sc.nextLong();
+		sc.nextLine();
+
+		WiseSaying targetWiseSaying = wiseSayingService.findById(target);
+
+		System.out.println("명언 (기존) : " + targetWiseSaying.getWiseSaying());
+		System.out.print("명언 : ");
+		String updateWiseSaying = sc.nextLine();
+
+		System.out.println("작가 (기존) : " + targetWiseSaying.getWriter());
+		System.out.print("작가 : ");
+		String updateWriter = sc.nextLine();
+
+		wiseSayingService.update(targetWiseSaying, updateWiseSaying, updateWriter);
 	}
 
 	public void delete() {
-		System.out.print("삭제?id = ");
+		try {
+			System.out.print("삭제?id = ");
 
-		Long targetId = sc.nextLong();
-		sc.nextLine();
+			Long targetId = sc.nextLong();
+			sc.nextLine();
 
-		wiseSayingService.delete(targetId);
+			Optional<Long> deletedId = wiseSayingService.delete(targetId);
+
+			deletedId.ifPresent((delete) -> {
+				System.out.println(delete + "번 명언이 삭제되었습니다.");
+			});
+		} catch (InputMismatchException e) {
+			System.out.println("숫자만 입력 가능합니다.");
+		}
+
 	}
 
 	public void build() {
-		wiseSayingService.build();
+		Boolean result = wiseSayingService.build();
+		if (result) {
+			System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+		}
 	}
 
 	public void run() {
