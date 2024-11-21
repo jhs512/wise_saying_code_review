@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class WiseSayingControllerTest extends ControllerTestSupporter {
+class WiseSayingControllerImplTest extends ControllerTestSupporter {
 
     @Disabled
     @DisplayName("폴더 경로를 생성합니다.")
@@ -37,7 +37,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.register();
+            wiseSayingControllerImpl.register();
 
             // then
             String result = outputStream.toString();
@@ -61,7 +61,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.printAll();
+            wiseSayingControllerImpl.printAll();
 
             // then
             String result = outputStream.toString();
@@ -84,7 +84,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.delete(baseWiseSaying.getId());
+            wiseSayingControllerImpl.delete(baseWiseSaying.getId());
 
             // then
             String result = outputStream.toString();
@@ -106,7 +106,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.delete(-1L);
+            wiseSayingControllerImpl.delete(-1L);
 
             // then
             String result = outputStream.toString();
@@ -128,7 +128,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.modifyWiseSaying(baseWiseSaying.getId());
+            wiseSayingControllerImpl.modifyWiseSaying(baseWiseSaying.getId());
 
             // then
             String result = outputStream.toString();
@@ -151,7 +151,7 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
 
         try {
             // when
-            wiseSayingController.modifyWiseSaying(-1L);
+            wiseSayingControllerImpl.modifyWiseSaying(-1L);
 
             // then
             String result = outputStream.toString();

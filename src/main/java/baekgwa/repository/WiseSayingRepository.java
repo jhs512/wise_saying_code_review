@@ -11,7 +11,7 @@ public interface WiseSayingRepository {
 
     List<WiseSaying> loadAllWiseSaying() throws IOException;
 
-    void deleteById(Long id) throws IOException, RuntimeException;
+    void deleteById(Long id) throws IOException;
     boolean existById(Long id);
     Optional<WiseSaying> findById(Long id) throws IOException;
     void build() throws IOException;

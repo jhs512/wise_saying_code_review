@@ -54,7 +54,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.register();
+            wiseSayingControllerImpl.register();
 
             // then
             List<WiseSaying> findList = wiseSayingRepository.loadAllWiseSaying();
@@ -77,7 +77,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.createDirectories();
+            wiseSayingControllerImpl.createDirectories();
 
             // then
             Path dirPath = Paths.get(DB_PATH);
@@ -103,7 +103,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.printAll();
+            wiseSayingControllerImpl.printAll();
 
             // then
             String result = outputStream.toString();
@@ -125,7 +125,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.printAll();
+            wiseSayingControllerImpl.printAll();
 
             // then
             String result = outputStream.toString();
@@ -147,7 +147,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.delete(1L);
+            wiseSayingControllerImpl.delete(1L);
 
             // then
             String result = outputStream.toString();
@@ -173,7 +173,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.delete(1L);
+            wiseSayingControllerImpl.delete(1L);
 
             // then
             String result = outputStream.toString();
@@ -193,7 +193,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.modifyWiseSaying(1L);
+            wiseSayingControllerImpl.modifyWiseSaying(1L);
 
             // then
             Optional<WiseSaying> findOptionalData = wiseSayingRepository.findById(1L);
@@ -215,7 +215,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.modifyWiseSaying(1L);
+            wiseSayingControllerImpl.modifyWiseSaying(1L);
 
             // then
             String result = outputStream.toString();
@@ -237,7 +237,7 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
 
         try {
             // when
-            wiseSayingController.build();
+            wiseSayingControllerImpl.build();
 
             // then
             Path dataJsonPath = Paths.get(DB_PATH + BUILD_FILE);

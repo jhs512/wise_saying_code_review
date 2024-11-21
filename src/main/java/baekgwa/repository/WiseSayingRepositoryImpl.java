@@ -3,6 +3,7 @@ package baekgwa.repository;
 import static baekgwa.global.GlobalVariable.*;
 
 import baekgwa.entity.WiseSaying;
+import baekgwa.global.exception.CustomException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,13 +50,8 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
     }
 
     @Override
-    public void deleteById(Long id) throws IOException, RuntimeException {
+    public void deleteById(Long id) throws IOException {
         Path filePath = Paths.get(DB_PATH + id + ".json");
-
-        if (!Files.exists(filePath)) {
-            throw new RuntimeException("파일이 없습니다.", new Throwable(id.toString()));
-        }
-
         Files.delete(filePath);
     }
 

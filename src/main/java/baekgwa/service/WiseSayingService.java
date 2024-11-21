@@ -10,20 +10,20 @@ import java.util.Optional;
 
 public interface WiseSayingService {
 
-    Long registerWiseSaying(RequestDto.Register data);
+    Long registerWiseSaying(RequestDto.Register data) throws IOException;
 
     @Deprecated(since = "13단계", forRemoval = false)
-    List<ResponseDto.FindList> findAllWiseSaying();
+    List<ResponseDto.FindList> findAllWiseSaying() throws IOException;
 
-    Boolean deleteWiseSaying(Long id);
+    void deleteWiseSaying(Long id) throws IOException;
 
-    Optional<FindSayingInfo> findWiseSayingInfo(Long id);
+    FindSayingInfo findWiseSayingInfo(Long id) throws IOException;
 
-    void modifyWiseSaying(ResponseDto.ModifyInfo modifyInfo);
+    void modifyWiseSaying(ResponseDto.ModifyInfo modifyInfo) throws IOException;
 
     void createDirectories() throws IOException;
 
-    void build();
+    void build() throws IOException;
 
-    List<ResponseDto.FindList> search(Map<String, String> orders);
+    List<ResponseDto.FindList> search(Map<String, String> orders) throws IOException;
 }

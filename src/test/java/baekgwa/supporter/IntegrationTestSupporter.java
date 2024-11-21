@@ -1,6 +1,6 @@
 package baekgwa.supporter;
 
-import baekgwa.controller.WiseSayingController;
+import baekgwa.controller.WiseSayingControllerImpl;
 import baekgwa.repository.WiseSayingRepository;
 import baekgwa.repository.WiseSayingRepositoryImpl;
 import baekgwa.service.WiseSayingService;
@@ -13,7 +13,7 @@ import java.io.PrintStream;
 
 public abstract class IntegrationTestSupporter {
 
-    protected WiseSayingController wiseSayingController = null;
+    protected WiseSayingControllerImpl wiseSayingControllerImpl = null;
     protected WiseSayingService wiseSayingService = null;
     protected WiseSayingRepository wiseSayingRepository = null;
     protected BufferedReader bufferedReader = null;
@@ -28,7 +28,7 @@ public abstract class IntegrationTestSupporter {
             OutputStream outputStream
     ) {
         this.bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes())));
-        wiseSayingController = new WiseSayingController(bufferedReader, wiseSayingService);
+        wiseSayingControllerImpl = new WiseSayingControllerImpl(bufferedReader, wiseSayingService);
 
         PrintStream originOut = System.out;
         PrintStream changeStream = new PrintStream(outputStream);

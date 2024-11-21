@@ -1,6 +1,6 @@
 package baekgwa.supporter;
 
-import baekgwa.controller.WiseSayingController;
+import baekgwa.controller.WiseSayingControllerImpl;
 import baekgwa.dto.RequestDto;
 import baekgwa.dto.ResponseDto;
 import baekgwa.dto.ResponseDto.FindList;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public abstract class ControllerTestSupporter {
 
     protected final WiseSaying baseWiseSaying = new WiseSaying(1L, "content", "author");
-    protected WiseSayingController wiseSayingController;
+    protected WiseSayingControllerImpl wiseSayingControllerImpl;
     private BufferedReader bufferedReader = null;
 
     protected void initInput(String input) {
@@ -42,7 +42,7 @@ public abstract class ControllerTestSupporter {
     }
 
     protected void initController() {
-        this.wiseSayingController = new WiseSayingController(
+        this.wiseSayingControllerImpl = new WiseSayingControllerImpl(
                 bufferedReader, new MockWiseSayingService() {
             @Override
             public Long registerWiseSaying(RequestDto.Register data) {

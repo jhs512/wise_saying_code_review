@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Utils {
 
     //EX) 목록?keyword=작자&keywordType=author
-    //out = [작자, author];
+    //out = Map 형식, {key -> value} => {keyword -> 작자}, {keywordType -> author}
     public static Map<String, String> extractKeyword(String commandString) {
         Map<String, String> orders = new HashMap<>();
         try {
