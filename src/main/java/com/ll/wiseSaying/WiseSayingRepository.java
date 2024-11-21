@@ -1,8 +1,5 @@
 package com.ll.wiseSaying;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +13,24 @@ import java.util.List;
  */
 public class WiseSayingRepository {
     private final String DB_FILE = "db/data.json"; // 데이터 파일 경로
-    private final Gson gson;
+
+    //private final Gson gson;
+
     private List<WiseSaying> wiseSayings;
-    private int lastId;
+    private int lastId = 0;  // 마지막으로 생성된 ID
 
     public WiseSayingRepository() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+
+       // gson = new GsonBuilder().setPrettyPrinting().create();
+
         wiseSayings = load();
         lastId = wiseSayings.stream().mapToInt(WiseSaying::getId).max().orElse(0);
     }
 
     // 명언 저장
     public int save(WiseSaying wiseSaying) {
-        wiseSaying.setId(++lastId);
+        wiseSaying.setId(++lastId); // ID 자동 생성
         wiseSayings.add(wiseSaying);
-        saveToFile();
         return wiseSaying.getId();
     }
 
@@ -67,14 +67,39 @@ public class WiseSayingRepository {
         return wiseSayings.stream().filter(w -> w.getId() == id).findFirst().orElse(null);
     }
 
+
+
     // 파일에 명언 데이터 저장
     private void saveToFile() {
-        try (Writer writer = new FileWriter(DB_FILE)) {
+
+      /*  try (Writer writer = new FileWriter(DB_FILE)) {
             gson.toJson(wiseSayings, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
+     */
+        // JSON 저장을 직접 구현 (Gson 없이 저장)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(DB_FILE))) {
+            writer.write("[");
+            for (int i = 0; i < wiseSayings.size(); i++) {
+                WiseSaying wiseSaying = wiseSayings.get(i);
+                writer.write("{");
+                writer.write("\"id\": " + wiseSaying.getId() + ",");
+                writer.write("\"content\": \"" + wiseSaying.getContent().replace("\"", "\\\"") + "\",");
+                writer.write("\"author\": \"" + wiseSaying.getAuthor().replace("\"", "\\\"") + "\"");
+                writer.write("}");
+                if (i < wiseSayings.size() - 1) {
+                    writer.write(",");
+                }
+            }
+            writer.write("]");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
+
 
     // 파일에서 명언 데이터 로드
     private List<WiseSaying> load() {
@@ -83,6 +108,8 @@ public class WiseSayingRepository {
             return new ArrayList<>();
         }
 
+
+        /*
         try (Reader reader = new FileReader(file)) {
             WiseSaying[] array = gson.fromJson(reader, WiseSaying[].class);
             return new ArrayList<>(List.of(array));
@@ -90,5 +117,34 @@ public class WiseSayingRepository {
             e.printStackTrace();
             return new ArrayList<>();
         }
+        */
+
+        // JSON 데이터를 수동으로 로드
+        List<WiseSaying> wiseSayings = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String json = reader.lines().reduce("", (acc, line) -> acc + line).trim();
+            if (json.isEmpty()) {
+                return wiseSayings;
+            }
+
+            json = json.replace("[", "").replace("]", "").trim();
+            if (json.isEmpty()) {
+                return wiseSayings;
+            }
+
+            String[] entries = json.split("\\},\\{");
+            for (String entry : entries) {
+                entry = entry.replace("{", "").replace("}", "");
+                String[] parts = entry.split(",");
+                int id = Integer.parseInt(parts[0].split(":")[1].trim());
+                String content = parts[1].split(":")[1].trim().replace("\"", "");
+                String author = parts[2].split(":")[1].trim().replace("\"", "");
+                wiseSayings.add(new WiseSaying(id, content, author));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return wiseSayings;
     }
 }

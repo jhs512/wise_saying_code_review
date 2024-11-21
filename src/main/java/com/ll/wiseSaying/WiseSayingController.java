@@ -24,6 +24,7 @@ public class WiseSayingController {
             System.out.print("작가 : ");
             String author = scanner.nextLine();
 
+            // ID는 create 메서드 내부에서 자동 생성
             int id = wiseSayingService.create(content, author);
             System.out.println(id + "번 명언이 등록되었습니다.");
         } else if (command.equals("목록")) {
