@@ -88,7 +88,7 @@ public class WiseSayingRepository {
         if(!list.isEmpty()) {
             return list.stream().filter(
                 w -> type.equals("content") ? w.getContent().contains(keyword)
-                : w.getAuthor().contains(type)).collect(Collectors.toList());
+                : w.getAuthor().contains(keyword)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
