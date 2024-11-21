@@ -119,6 +119,8 @@ public class WiseSayingServiceImpl implements WiseSayingService {
                         .filter(data -> data.getContent()
                                 .contains(keyword)) // 'content' 필드에 키워드가 포함된 데이터를 필터링
                         .toList();
+            } else {
+                throw new CustomException("`author`, `content` 외에는 검색이 불가능 합니다.");
             }
         }
         return findLists;
