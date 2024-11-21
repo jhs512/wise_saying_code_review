@@ -46,7 +46,11 @@ public class WiseSayingIntegrationTest extends IntegrationTestSupporter {
     void registerWiseSaying() throws IOException {
         // init // given
         OutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = initController("새로운 명언\n작가 강성욱", outputStream);
+        PrintStream originalOut
+                = initController("""
+                새로운 명언
+                작가 강성욱
+                """, outputStream);
 
         try {
             // when

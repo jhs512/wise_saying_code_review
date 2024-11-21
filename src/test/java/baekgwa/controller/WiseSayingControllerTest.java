@@ -24,7 +24,10 @@ class WiseSayingControllerTest extends ControllerTestSupporter {
     @Test
     void registerTest() {
         //init
-        initInput("새로운 명언\n작가 강성욱");
+        initInput("""
+        새로운 명언
+        작가 강성욱
+        """);
         OutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = initOutput(outputStream);
 

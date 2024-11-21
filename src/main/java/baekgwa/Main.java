@@ -17,7 +17,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         //의존성 주입
-        //Bean 컨테이너의 중요성...ㅜ
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
         WiseSayingService wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
