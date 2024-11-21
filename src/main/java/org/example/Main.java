@@ -1,6 +1,7 @@
 package org.example;
 
 import static org.example.controller.WiseSayingController.createBuildFile;
+import static org.example.controller.WiseSayingController.getListByKeyword;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class Main {
                     WiseSayingController.createWiseSaying(br);
                 } else if (cmd.equals("목록")) {
                     WiseSayingController.getAllWiseSaying();
+                } else if (cmd.startsWith("목록?keywordType")) {
+                    getListByKeyword(cmd);
                 } else if (cmd.startsWith("삭제")) {
                     WiseSayingController.deleteWiseSaying(cmd);
                 } else if (cmd.startsWith("수정")) {

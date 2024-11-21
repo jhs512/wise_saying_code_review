@@ -33,7 +33,23 @@ public class WiseSayingController {
         }
     }
 
-    public static void deleteWiseSaying(String cmd) throws IOException {
+    public static void getListByKeyword(String cmd) {
+        String[] keyword = QueryStringParser.getKeyword(cmd);
+        System.out.println("----------------------");
+        System.out.println("검색타입 : " + keyword[1]);
+        System.out.println("검색어 : " + keyword[0]);
+        System.out.println("----------------------");
+        System.out.println("번호 / 작가 / 명언");
+        System.out.println("--------------------");
+
+        List<WiseSaying> listByKeyword = WiseSayingService.getListByKeyword(keyword[0], keyword[1]);
+        listByKeyword.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+        for (WiseSaying wiseSaying : listByKeyword) {
+            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+    }
+
+    public static void deleteWiseSaying(String cmd) {
         int id = WiseSayingService.removeJsonFile(cmd);
         if (id != -1) {
             System.out.println(id + "번 명언이 삭제되었습니다.");

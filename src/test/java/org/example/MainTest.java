@@ -241,6 +241,63 @@ class MainTest {
     }
 
     @Test
+    @DisplayName("명언 목록 테스트 - 검색")
+    public void getListByKeyword() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            목록?keywordType=content&keyword=과거
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("----------------------")
+            .contains("검색타입 : content")
+            .contains("검색어 : 과거")
+            .contains("----------------------")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = WiseSayingService.getListByKeyword("content", "과거");
+        if (!listOfWiseSaying.isEmpty()) {
+            listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+            for (WiseSaying wiseSaying : listOfWiseSaying) {
+                assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+            }
+        }
+
+        assertThat(result)
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
     @DisplayName("명언 삭제 테스트 - 성공")
     public void deleteWiseSayingTest() throws Exception {
         //given

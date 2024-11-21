@@ -27,10 +27,14 @@ public class WiseSayingService {
     }
 
     public static List<WiseSaying> getListOfWiseSaying() {
-        return WiseSayingRepository.findAll().get();
+        return WiseSayingRepository.findAll();
     }
 
-    public static int removeJsonFile(String cmd) throws IOException {
+    public static List<WiseSaying> getListByKeyword(String keyword, String type) {
+        return WiseSayingRepository.findByKeyword(keyword, type);
+    }
+
+    public static int removeJsonFile(String cmd) {
         int id = QueryStringParser.getId(cmd);
         return WiseSayingRepository.delete(id);
     }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.example.config.ConfigReader;
 import org.example.dto.WiseSaying;
 import org.example.util.FileToWiseSaying;
@@ -18,7 +19,7 @@ public class WiseSayingRepository {
 
     public static int findLastId() {
 
-        String path = ConfigReader.getTxtFilePath("test.save.path");
+        String path = ConfigReader.getTxtFilePath("files.save.path");
         File file = new File(path);
 
         if (file.exists()) {
@@ -45,24 +46,24 @@ public class WiseSayingRepository {
     }
 
     public static int saveWiseSaying(String data, int id) throws IOException {
-        String path = ConfigReader.getJsonFilePath("test.save.path", id);
+        String path = ConfigReader.getJsonFilePath("files.save.path", id);
         save(data, path);
         return id;
     }
 
     public static boolean saveTxtFile(int id) throws IOException {
-        String path = ConfigReader.getTxtFilePath("test.save.path");
+        String path = ConfigReader.getTxtFilePath("files.save.path");
         return save(String.valueOf(id), path);
     }
 
     public static boolean saveBuildFile(String data) throws IOException {
-        String path = ConfigReader.getBuildFilePath("test.save.path");
+        String path = ConfigReader.getBuildFilePath("files.save.path");
         return save(data, path);
     }
 
-    public static Optional<List<WiseSaying>> findAll() {
+    public static List<WiseSaying> findAll() {
 
-        String path = ConfigReader.getProperty("test.save.path");
+        String path = ConfigReader.getProperty("files.save.path");
         File jsonFiles = new File(path);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
@@ -75,16 +76,26 @@ public class WiseSayingRepository {
                 for(File file : files) {
                     list.add(FileToWiseSaying.parseFileToWiseSaying(file).get());
                 }
-                return Optional.of(list);
+                return list;
             }
         }
 
-        return Optional.of(new ArrayList<>());
+        return new ArrayList<>();
+    }
+
+    public static List<WiseSaying> findByKeyword(String keyword, String type) {
+        List<WiseSaying> list = findAll();
+        if(!list.isEmpty()) {
+            return list.stream().filter(
+                w -> type.equals("content") ? w.getContent().contains(keyword)
+                : w.getAuthor().contains(type)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     public static int delete(int id) {
 
-        String path = ConfigReader.getJsonFilePath("test.save.path", id);
+        String path = ConfigReader.getJsonFilePath("files..save.path", id);
         File file = new File(path);
 
         if (file.exists()) {
@@ -95,7 +106,7 @@ public class WiseSayingRepository {
     }
 
     public static Optional<WiseSaying> findById(int id) {
-        String path = ConfigReader.getJsonFilePath("test.save.path", id);
+        String path = ConfigReader.getJsonFilePath("files..save.path", id);
         File file = new File(path);
 
         if (file.exists()) {

@@ -35,8 +35,8 @@ public class ConfigReader {
     }
 
     public static void main(String[] args) {
-        // config.properties 에서 file.save.path 값을 가져옴
-        String path = getProperty("file.save.path");
+        // config.properties 에서 files.save.path 값을 가져옴
+        String path = getProperty("files.save.path");
 
         // 파일 경로 출력
         System.out.println("file save path: " + path);
