@@ -1,10 +1,12 @@
 package baekgwa.supporter;
 
-import baekgwa.controller.WiseSayingControllerImpl;
-import baekgwa.repository.WiseSayingRepository;
-import baekgwa.repository.WiseSayingRepositoryImpl;
-import baekgwa.service.WiseSayingService;
-import baekgwa.service.WiseSayingServiceImpl;
+import static baekgwa.global.database.TestDataSourceConfig.*;
+
+import baekgwa.wisesaying.controller.WiseSayingControllerImpl;
+import baekgwa.wisesaying.repository.WiseSayingRepository;
+import baekgwa.wisesaying.repository.WiseSayingRepositoryImpl;
+import baekgwa.wisesaying.service.WiseSayingService;
+import baekgwa.wisesaying.service.WiseSayingServiceImpl;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -19,15 +21,20 @@ public abstract class IntegrationTestSupporter {
     protected BufferedReader bufferedReader = null;
 
     protected void initServiceAndRepository() {
-        if(wiseSayingRepository == null) wiseSayingRepository = new WiseSayingRepositoryImpl();
-        if(wiseSayingService == null) wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
+        if (wiseSayingRepository == null) {
+            wiseSayingRepository = new WiseSayingRepositoryImpl(DB_PATH, LAST_ID_FILE, BUILD_FILE);
+        }
+        if (wiseSayingService == null) {
+            wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
+        }
     }
 
     protected PrintStream initController(
             String input,
             OutputStream outputStream
     ) {
-        this.bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes())));
+        this.bufferedReader = new BufferedReader(
+                new InputStreamReader(new ByteArrayInputStream(input.getBytes())));
         wiseSayingControllerImpl = new WiseSayingControllerImpl(bufferedReader, wiseSayingService);
 
         PrintStream originOut = System.out;

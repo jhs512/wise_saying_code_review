@@ -1,8 +1,6 @@
-package baekgwa.repository;
+package baekgwa.wisesaying.repository;
 
-import static baekgwa.global.data.GlobalVariable.*;
-
-import baekgwa.entity.WiseSaying;
+import baekgwa.wisesaying.entity.WiseSaying;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +13,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WiseSayingRepositoryImpl implements WiseSayingRepository {
+
+    public final String DB_PATH;
+    public final String LAST_ID_FILE;
+    public final String BUILD_FILE;
+
+    public WiseSayingRepositoryImpl(String DB_PATH, String LAST_ID_FILE, String BUILD_FILE) {
+        this.DB_PATH = DB_PATH;
+        this.LAST_ID_FILE = LAST_ID_FILE;
+        this.BUILD_FILE = BUILD_FILE;
+    }
 
     @Override
     public void saveWiseSaying(WiseSaying wiseSaying) throws IOException {
