@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -64,6 +63,46 @@ public class ControllerTest {
                 .contains("---------------")
                 .contains("1 / 작자미상 / 현재를 사랑하라.")
                 .contains("2 / 작자미상 / 과거에 집착하지 마라.");
+    }
+
+    @Test
+    public void printWise_search_success() throws IOException {
+        Scanner scanner = TestUtil.genScanner("목록?keywordType=content&keyword=현재");
+        addTestCases();
+
+        controller = new WiseController(service, scanner);
+        controller.handleCommand();
+
+        String result = output.toString();
+        assertThat(result)
+                .contains("---------------")
+                .contains("검색타입 : content")
+                .contains("검색어 : 현재")
+                .contains("---------------")
+                .contains("번호 / 작가 / 명언")
+                .contains("---------------")
+                .contains("1 / 작자미상 / 현재를 사랑하라.")
+                .contains("페이지 : [1]");
+    }
+
+    @Test
+    public void printWise_searchAndPage_success() throws IOException {
+        Scanner scanner = TestUtil.genScanner("목록?keywordType=author&keyword=작자미상&page=2");
+        addManyTestCases();
+
+        controller = new WiseController(service, scanner);
+        controller.handleCommand();
+
+        String result = output.toString();
+        assertThat(result)
+                .contains("---------------")
+                .contains("검색타입 : author")
+                .contains("검색어 : 작자미상")
+                .contains("---------------")
+                .contains("번호 / 작가 / 명언")
+                .contains("---------------")
+                .contains("3 / 작자미상 / 현재를 사랑하라.")
+                .contains("페이지 : 1 [2]");
     }
 
     @Test
@@ -147,10 +186,10 @@ public class ControllerTest {
 
         List<Wise> wises = repository.getWises(1);
         assertThat(wises.get(0).toString())
-                .isEqualTo("1 / 작자미상 / 현재를 사랑하라.");
+                .isEqualTo("2 / 작자미상 / 과거에 집착하지 마라.");
 
         assertThat(wises.get(1).toString())
-                .isEqualTo("2 / 작자미상 / 과거에 집착하지 마라.");
+                .isEqualTo("1 / 작자미상 / 현재를 사랑하라.");
     }
 
     private void addTestCase() throws IOException {
@@ -158,6 +197,17 @@ public class ControllerTest {
     }
 
     private void addTestCases() throws IOException {
+        repository.applyWise("현재를 사랑하라.", "작자미상");
+        repository.applyWise("과거에 집착하지 마라.", "작자미상");
+    }
+
+    private void addManyTestCases() throws IOException {
+        repository.applyWise("현재를 사랑하라.", "홍길동");
+        repository.applyWise("과거에 집착하지 마라.", "아무개");
+        repository.applyWise("현재를 사랑하라.", "작자미상");
+        repository.applyWise("과거에 집착하지 마라.", "작자미상");
+        repository.applyWise("현재를 사랑하라.", "작자미상");
+        repository.applyWise("과거에 집착하지 마라.", "작자미상");
         repository.applyWise("현재를 사랑하라.", "작자미상");
         repository.applyWise("과거에 집착하지 마라.", "작자미상");
     }
