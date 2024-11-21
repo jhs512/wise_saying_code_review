@@ -17,7 +17,7 @@ public class WiseSaying {
 	}
 
 	public static WiseSaying createWiseSaying(String wiseSaying, String writer) {
-		return new WiseSaying(writer, writer);
+		return new WiseSaying(wiseSaying, writer);
 	}
 
 	public Long getId() {
