@@ -1,3 +1,5 @@
+import java.nio.file.Path;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,25 +10,9 @@ import wisesaying.service.WiseSayingService;
 import wisesaying.service.WiseSayingServiceImpl;
 
 public class WiseSayingApplication {
-	private static final ConcurrentHashMap<String, Object> container = init();
-	private static final WiseSayingController wiseSayingController
-		= (WiseSayingController)container.get(WiseSayingController.class.getSimpleName());
-
 	public static void main(String[] args) {
-		init();
-		wiseSayingController.run();
-	}
-
-	public static ConcurrentHashMap<String, Object> init() {
-		ConcurrentHashMap<String, Object> container = new ConcurrentHashMap<>();
-		WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
-		WiseSayingService wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
-		WiseSayingController wiseSayingController = new WiseSayingController(wiseSayingService, new Scanner(System.in));
-
-		container.put(WiseSayingRepositoryImpl.class.getSimpleName(), wiseSayingRepository);
-		container.put(WiseSayingServiceImpl.class.getSimpleName(), wiseSayingService);
-		container.put(WiseSayingController.class.getSimpleName(), wiseSayingController);
-		return container;
+		App app = new App();
+		app.run();
 	}
 }
 
