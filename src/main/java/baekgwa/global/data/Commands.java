@@ -1,4 +1,4 @@
-package baekgwa.global;
+package baekgwa.global.data;
 
 public enum Commands {
 

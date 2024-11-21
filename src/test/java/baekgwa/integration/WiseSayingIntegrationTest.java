@@ -1,7 +1,7 @@
 package baekgwa.integration;
 
-import static baekgwa.global.GlobalVariable.BUILD_FILE;
-import static baekgwa.global.GlobalVariable.DB_PATH;
+import static baekgwa.global.data.GlobalVariable.BUILD_FILE;
+import static baekgwa.global.data.GlobalVariable.DB_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

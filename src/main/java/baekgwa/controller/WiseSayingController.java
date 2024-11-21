@@ -13,5 +13,5 @@ public interface WiseSayingController {
     void delete(Long id) throws IOException;
     void modifyWiseSaying(Long id) throws IOException;
     void build() throws IOException;
-    void search(Map<String, String> orders) throws IOException;
+    void search(Map<String, String> requestParams) throws IOException;
 }

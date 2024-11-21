@@ -2,8 +2,8 @@ package baekgwa;
 
 import baekgwa.controller.WiseSayingController;
 import baekgwa.controller.WiseSayingControllerImpl;
-import baekgwa.global.Commands;
-import baekgwa.global.Utils;
+import baekgwa.global.data.Commands;
+import baekgwa.global.util.ServletUtils;
 import baekgwa.global.exception.GlobalExceptionHandlingProxy;
 import baekgwa.repository.WiseSayingRepository;
 import baekgwa.repository.WiseSayingRepositoryImpl;
@@ -39,16 +39,16 @@ public class Main {
             } else if (command.equals(Commands.EXIT.getCommand())) {
                 return;
             } else if (command.startsWith(Commands.DELETE.getCommand())) {
-                Long id = Utils.extractId(command, Commands.DELETE.getCommand());
+                Long id = ServletUtils.extractId(command, Commands.DELETE.getCommand());
                 wiseSayingControllerProxy.delete(id);
             } else if (command.startsWith(Commands.MODIFY.getCommand())) {
-                Long id = Utils.extractId(command, Commands.MODIFY.getCommand());
+                Long id = ServletUtils.extractId(command, Commands.MODIFY.getCommand());
                 wiseSayingControllerProxy.modifyWiseSaying(id);
             } else if (command.equals(Commands.BUILD.getCommand())) {
                 wiseSayingControllerProxy.build();
             } else if (command.startsWith(Commands.SEARCH.getCommand())) {
-                Map<String, String> orders = Utils.extractKeyword(command);
-                wiseSayingControllerProxy.search(orders);
+                Map<String, String> requestParams = ServletUtils.extractRequestParams(command);
+                wiseSayingControllerProxy.search(requestParams);
             }
         }
     }

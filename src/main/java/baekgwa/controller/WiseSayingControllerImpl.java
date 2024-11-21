@@ -3,7 +3,10 @@ package baekgwa.controller;
 import baekgwa.dto.RequestDto;
 import baekgwa.dto.ResponseDto;
 import baekgwa.dto.ResponseDto.FindList;
-import baekgwa.global.GlobalVariable;
+import baekgwa.global.data.domain.Pageable;
+import baekgwa.global.data.domain.PageableResponse;
+import baekgwa.global.data.domain.Search;
+import baekgwa.global.util.ControllerUtils;
 import baekgwa.service.WiseSayingService;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -78,20 +81,46 @@ public class WiseSayingControllerImpl implements WiseSayingController {
     }
 
     @Override
-    public void search(Map<String, String> orders) throws IOException {
-        List<FindList> findLists = wiseSayingService.search(orders);
-        if (orders.containsKey(GlobalVariable.KEYWORD_TYPE) && orders.containsKey(
-                GlobalVariable.KEYWORD)) {
+    public void search(Map<String, String> requestParams) throws IOException {
+        // Step1) Params Converting
+        Pageable pageable = ControllerUtils.createPageable(requestParams);
+        Search searchParams = ControllerUtils.createSearch(requestParams);
+
+        // Step2) Search By Converted Data
+        PageableResponse<ResponseDto.FindList> findData
+                = wiseSayingService.search(searchParams, pageable);
+
+        printSearchData(searchParams, findData);
+        printPage(findData);
+    }
+
+    private static void printSearchData(Search searchParams, PageableResponse<FindList> findData) {
+        if (!searchParams.isEmpty()) {
             //필터링 들어가는 경우, 추가 출력 필요.
             System.out.println("----------------------");
-            System.out.println("검색타입 : " + orders.get(GlobalVariable.KEYWORD_TYPE));
-            System.out.println("검색어 : " + orders.get(GlobalVariable.KEYWORD));
+            System.out.println("검색타입 : " + searchParams.getKeywordType());
+            System.out.println("검색어 : " + searchParams.getKeyword());
             System.out.println("----------------------");
         }
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        for (FindList findList : findLists) {
+        for (FindList findList : findData.getData()) {
             System.out.println(findList);
         }
+    }
+
+    private static void printPage(PageableResponse<FindList> findData) {
+        StringBuilder sb = new StringBuilder("페이지: ");
+        for (int now = 1; now <= findData.getTotalPages(); now++) {
+            if (now == findData.getNowPages()) {
+                sb.append("[").append(now).append("]"); // 현재 페이지는 대괄호로 표시
+            } else {
+                sb.append(now);
+            }
+            if (now < findData.getTotalPages()) {
+                sb.append(" / ");
+            }
+        }
+        System.out.println(sb);
     }
 }

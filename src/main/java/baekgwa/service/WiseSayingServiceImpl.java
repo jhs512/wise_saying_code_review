@@ -2,14 +2,16 @@ package baekgwa.service;
 
 import baekgwa.dto.RequestDto;
 import baekgwa.dto.ResponseDto;
+import baekgwa.dto.ResponseDto.FindList;
 import baekgwa.entity.WiseSaying;
-import baekgwa.global.GlobalVariable;
+import baekgwa.global.data.domain.Pageable;
+import baekgwa.global.data.domain.PageableResponse;
+import baekgwa.global.data.domain.Search;
 import baekgwa.global.exception.CustomException;
 import baekgwa.repository.WiseSayingRepository;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class WiseSayingServiceImpl implements WiseSayingService {
@@ -81,27 +83,32 @@ public class WiseSayingServiceImpl implements WiseSayingService {
         wiseSayingRepository.build();
     }
 
-    //order에 넘어올 수 있는 것들
-    //Pagable 용
-    // key : Page | value : 0~N / (만약 범위를 벗어나면? Exception 발생시켜서 핸들링 하는걸로)
-    //like 연산용
-    // key : keywordType | value : author, content
-    // key : keyword | value : AnyString
+    /**
+     * @param searchParams
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
     @Override
-    public List<ResponseDto.FindList> search(Map<String, String> orders) throws IOException {
+    public PageableResponse<ResponseDto.FindList> search(Search searchParams, Pageable pageable) throws IOException {
         List<ResponseDto.FindList> findLists = findAllWiseSaying();
 
         if (findLists.isEmpty()) {
-            return List.of();
+            return new PageableResponse<>(List.of(), 0, pageable.getPage(), true);
         }
 
-        //1차. like 연산 필터링
-        if (orders.containsKey(GlobalVariable.KEYWORD_TYPE) && !orders.get(
-                GlobalVariable.KEYWORD_TYPE).isEmpty()) {
-            String keywordType = orders.get(GlobalVariable.KEYWORD_TYPE);  // 'author' 또는 'content'
-            String keyword = orders.get(GlobalVariable.KEYWORD);  // 검색할 키워드 값
+        // Step1) Search 객체로 Filtering 진행
+        findLists = filteringBySearch(searchParams, findLists);
 
-            // keywordType에 맞춰 필터링
+        // Step2) Pageable 객체로, PageableResponse 객체로 반환
+        return PageableResponse.filtering(pageable, findLists);
+    }
+
+    private List<FindList> filteringBySearch(Search searchParams, List<FindList> findLists) {
+        if(!searchParams.isEmpty()) {
+            String keywordType = searchParams.getKeywordType();
+            String keyword = searchParams.getKeyword();
+
             if (keywordType.equals("author")) {
                 findLists = findLists.stream()
                         .filter(data -> data.getAuthor()
@@ -114,21 +121,6 @@ public class WiseSayingServiceImpl implements WiseSayingService {
                         .toList();
             }
         }
-
-        //2차. 페이지네이션
-        int page = 0;
-        int pageSize = 5;
-        if (orders.containsKey("Page")) {
-            page = Integer.parseInt(orders.get("Page"));
-        }
-        int startIndex = page * pageSize;
-        int endIndex = Math.min((page + 1) * pageSize, findLists.size());
-
-        if (startIndex >= findLists.size()) {
-            throw new IllegalArgumentException("Page out of range");
-        }
-        findLists = findLists.subList(startIndex, endIndex);
-
         return findLists;
     }
 }

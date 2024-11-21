@@ -3,10 +3,11 @@ package baekgwa.service;
 import baekgwa.dto.RequestDto;
 import baekgwa.dto.ResponseDto;
 import baekgwa.dto.ResponseDto.FindSayingInfo;
+import baekgwa.global.data.domain.Pageable;
+import baekgwa.global.data.domain.PageableResponse;
+import baekgwa.global.data.domain.Search;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface WiseSayingService {
 
@@ -25,5 +26,5 @@ public interface WiseSayingService {
 
     void build() throws IOException;
 
-    List<ResponseDto.FindList> search(Map<String, String> orders) throws IOException;
+    PageableResponse<ResponseDto.FindList> search(Search searchParams, Pageable pageable) throws IOException;
 }

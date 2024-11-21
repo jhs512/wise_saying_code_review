@@ -1,16 +1,16 @@
-package baekgwa.global;
+package baekgwa.global.util;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class ServletUtils {
 
     //EX) 목록?keyword=작자&keywordType=author
     //out = Map 형식, {key -> value} => {keyword -> 작자}, {keywordType -> author}
-    public static Map<String, String> extractKeyword(String commandString) {
-        Map<String, String> orders = new HashMap<>();
+    public static Map<String, String> extractRequestParams(String commandString) {
+        Map<String, String> requestParams = new HashMap<>();
         try {
             String subString = commandString.substring(commandString.indexOf('?') + 1);
 
@@ -19,7 +19,7 @@ public class Utils {
                     .filter(keyValue -> keyValue.length == 2)
                     .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
         } catch (Exception e) {
-            return orders;
+            return requestParams;
         }
     }
 

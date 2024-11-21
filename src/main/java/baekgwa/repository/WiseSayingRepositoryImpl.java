@@ -1,9 +1,8 @@
 package baekgwa.repository;
 
-import static baekgwa.global.GlobalVariable.*;
+import static baekgwa.global.data.GlobalVariable.*;
 
 import baekgwa.entity.WiseSaying;
-import baekgwa.global.exception.CustomException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
