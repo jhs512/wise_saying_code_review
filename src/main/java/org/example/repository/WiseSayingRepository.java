@@ -1,7 +1,5 @@
 package org.example.repository;
 
-import static org.example.util.FileToWiseSaying.parseFileToWiseSaying;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,9 +15,17 @@ import org.example.util.FileToWiseSaying;
 
 public class WiseSayingRepository {
 
-    public static int findLastId() {
+    private final ConfigReader configReader;
+    private final FileToWiseSaying fileToWiseSaying;
 
-        String path = ConfigReader.getTxtFilePath("files.save.path");
+    public WiseSayingRepository(ConfigReader configReader, FileToWiseSaying fileToWiseSaying) {
+        this.configReader = configReader;
+        this.fileToWiseSaying = fileToWiseSaying;
+    }
+
+    public int findLastId() {
+
+        String path = configReader.getTxtFilePath("base.save.path");
         File file = new File(path);
 
         if (file.exists()) {
@@ -33,7 +39,7 @@ public class WiseSayingRepository {
         return 1;
     }
 
-    public static boolean save(String data, String path) throws IOException {
+    public boolean save(String data, String path) throws IOException {
         File file = new File(path);
         file.getParentFile().mkdirs();
 
@@ -45,25 +51,25 @@ public class WiseSayingRepository {
         }
     }
 
-    public static int saveWiseSaying(String data, int id) throws IOException {
-        String path = ConfigReader.getJsonFilePath("files.save.path", id);
+    public int saveWiseSaying(String data, int id) throws IOException {
+        String path = configReader.getJsonFilePath("base.save.path", id);
         save(data, path);
         return id;
     }
 
-    public static boolean saveTxtFile(int id) throws IOException {
-        String path = ConfigReader.getTxtFilePath("files.save.path");
+    public boolean saveTxtFile(int id) throws IOException {
+        String path = configReader.getTxtFilePath("base.save.path");
         return save(String.valueOf(id), path);
     }
 
-    public static boolean saveBuildFile(String data) throws IOException {
-        String path = ConfigReader.getBuildFilePath("files.save.path");
+    public boolean saveBuildFile(String data) throws IOException {
+        String path = configReader.getBuildFilePath("base.save.path");
         return save(data, path);
     }
 
-    public static List<WiseSaying> findAll() {
+    public List<WiseSaying> findAll() {
 
-        String path = ConfigReader.getProperty("files.save.path");
+        String path = configReader.getProperty("base.save.path");
         File jsonFiles = new File(path);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
@@ -74,7 +80,7 @@ public class WiseSayingRepository {
                 List<WiseSaying> list = new ArrayList<>();
 
                 for(File file : files) {
-                    list.add(FileToWiseSaying.parseFileToWiseSaying(file).get());
+                    list.add(fileToWiseSaying.parseFileToWiseSaying(file).get());
                 }
                 return list;
             }
@@ -83,7 +89,7 @@ public class WiseSayingRepository {
         return new ArrayList<>();
     }
 
-    public static List<WiseSaying> findByKeyword(String keyword, String type) {
+    public List<WiseSaying> findByKeyword(String keyword, String type) {
         List<WiseSaying> list = findAll();
         if(!list.isEmpty()) {
             return list.stream().filter(
@@ -93,9 +99,9 @@ public class WiseSayingRepository {
         return new ArrayList<>();
     }
 
-    public static int delete(int id) {
+    public int delete(int id) {
 
-        String path = ConfigReader.getJsonFilePath("files..save.path", id);
+        String path = configReader.getJsonFilePath("base.save.path", id);
         File file = new File(path);
 
         if (file.exists()) {
@@ -105,12 +111,12 @@ public class WiseSayingRepository {
         return -1;
     }
 
-    public static Optional<WiseSaying> findById(int id) {
-        String path = ConfigReader.getJsonFilePath("files..save.path", id);
+    public Optional<WiseSaying> findById(int id) {
+        String path = configReader.getJsonFilePath("base.save.path", id);
         File file = new File(path);
 
         if (file.exists()) {
-            return parseFileToWiseSaying(file);
+            return fileToWiseSaying.parseFileToWiseSaying(file);
         }
         return Optional.empty();
     }

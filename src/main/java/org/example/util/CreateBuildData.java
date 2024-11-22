@@ -8,8 +8,14 @@ import org.example.config.ConfigReader;
 
 public class CreateBuildData {
 
-    public static String createBuildData() {
-        String path = ConfigReader.getProperty("files.save.path");
+    private final ConfigReader configReader;
+
+    public CreateBuildData(ConfigReader configReader) {
+        this.configReader = configReader;
+    }
+
+    public String createBuildData() {
+        String path = configReader.getProperty("base.save.path");
         File jsonFiles = new File(path);
         StringBuilder jsonContents = new StringBuilder();
 

@@ -9,7 +9,7 @@ import org.example.dto.WiseSaying;
 
 public class FileToWiseSaying {
 
-    public static Optional<WiseSaying> parseFileToWiseSaying(File file) {
+    public Optional<WiseSaying> parseFileToWiseSaying(File file) {
         String[] values = new String[3];
         int cnt = 0;
 

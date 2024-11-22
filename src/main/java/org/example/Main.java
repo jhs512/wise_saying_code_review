@@ -1,12 +1,10 @@
 package org.example;
 
-import static org.example.controller.WiseSayingController.createBuildFile;
-import static org.example.controller.WiseSayingController.getListByKeyword;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.example.controller.WiseSayingController;
+import org.example.util.DependencyContainer;
 
 public class Main {
 
@@ -17,13 +15,17 @@ public class Main {
 
     public static class App {
         private final BufferedReader br;
+        private final WiseSayingController wiseSayingController;
+        DependencyContainer container = new DependencyContainer();
 
         public App() {
-            this(new BufferedReader(new InputStreamReader(System.in)));
+            br = new BufferedReader(new InputStreamReader(System.in));
+            this.wiseSayingController = container.createWiseSayingController();
         }
 
         public App(BufferedReader br) {
             this.br = br;
+            this.wiseSayingController = container.createWiseSayingController();
         }
 
         public void run() throws IOException {
@@ -38,17 +40,19 @@ public class Main {
                     System.out.println("앱이 종료 되었습니다.");
                     break;
                 } else if (cmd.equals("등록")) {
-                    WiseSayingController.createWiseSaying(br);
-                } else if (cmd.equals("목록")) {
-                    WiseSayingController.getAllWiseSaying();
-                } else if (cmd.startsWith("목록?keywordType")) {
-                    getListByKeyword(cmd);
-                } else if (cmd.startsWith("삭제")) {
-                    WiseSayingController.deleteWiseSaying(cmd);
+                    wiseSayingController.createWiseSaying(br);
+                } else if (cmd.startsWith("목록")) {
+                    if (cmd.startsWith("목록?keywordType")) {
+                        wiseSayingController.getListByKeyword(cmd);
+                    } else {
+                        wiseSayingController.getAllWiseSaying(cmd);
+                    }
+                }  else if (cmd.startsWith("삭제")) {
+                    wiseSayingController.deleteWiseSaying(cmd);
                 } else if (cmd.startsWith("수정")) {
-                    WiseSayingController.updateWiseSaying(cmd, br);
+                    wiseSayingController.updateWiseSaying(cmd, br);
                 } else if (cmd.equals("빌드")) {
-                    createBuildFile();
+                    wiseSayingController.createBuildFile();
                 } else {
                     System.out.println("올바르지 않은 명령어 입니다.");
                 }

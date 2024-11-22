@@ -10,30 +10,46 @@ import org.example.util.QueryStringParser;
 
 public class WiseSayingController {
 
-    public static void createWiseSaying(BufferedReader br) throws IOException {
+    private final WiseSayingService wiseSayingService;
+    private final QueryStringParser queryStringParser;
+
+    public WiseSayingController(WiseSayingService wiseSayingService, QueryStringParser queryStringParser) {
+        this.wiseSayingService = wiseSayingService;
+        this.queryStringParser = queryStringParser;
+    }
+
+    public void createWiseSaying(BufferedReader br) throws IOException {
         System.out.print("명언 : ");
         String content = br.readLine();
         System.out.print("작가 : ");
         String author = br.readLine();
 
-        int wiseSayingId = WiseSayingService.createWiseSaying(content, author);
-        boolean txtFile = WiseSayingService.createTxtFile(wiseSayingId);
+        int wiseSayingId = wiseSayingService.createWiseSaying(content, author);
+        boolean txtFile = wiseSayingService.createTxtFile(wiseSayingId);
         if (wiseSayingId != -1 && txtFile) {
             System.out.println(wiseSayingId + "번 명언이 등록되었습니다.");
         }
     }
 
-    public static void getAllWiseSaying(String cmd) {
+    public void getAllWiseSaying(String cmd) {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("--------------------");
-        List<WiseSaying> listOfWiseSaying = WiseSayingService.getListOfWiseSaying();
+
+        // 명언 출력
+        int page = queryStringParser.getPage(cmd);
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(page);
         for (WiseSaying wiseSaying : listOfWiseSaying) {
             System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
+
+        // 페이지 출력
+        System.out.print("페이지 : ");
+        System.out.println(wiseSayingService.getPageList(page, "", ""));
     }
 
-    public static void getListByKeyword(String cmd) {
-        String[] keyword = QueryStringParser.getKeyword(cmd);
+    public void getListByKeyword(String cmd) {
+        String[] keyword = queryStringParser.getKeyword(cmd);
+        int page = queryStringParser.getPage(cmd);
         System.out.println("----------------------");
         System.out.println("검색타입 : " + keyword[1]);
         System.out.println("검색어 : " + keyword[0]);
@@ -41,23 +57,27 @@ public class WiseSayingController {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("--------------------");
 
-        List<WiseSaying> listByKeyword = WiseSayingService.getListByKeyword(keyword[0], keyword[1]);
+        List<WiseSaying> listByKeyword = wiseSayingService.getListByKeyword(keyword[0], keyword[1], page);
         for (WiseSaying wiseSaying : listByKeyword) {
             System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
+
+        // 페이지 출력
+        System.out.print("페이지 : ");
+        System.out.println(wiseSayingService.getPageList(page, keyword[0], keyword[1]));
     }
 
-    public static void deleteWiseSaying(String cmd) {
-        int id = WiseSayingService.removeJsonFile(cmd);
+    public void deleteWiseSaying(String cmd) {
+        int id = wiseSayingService.removeJsonFile(cmd);
         if (id != -1) {
             System.out.println(id + "번 명언이 삭제되었습니다.");
         } else {
-            System.out.println(QueryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
+            System.out.println(queryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
         }
     }
 
-    public static void updateWiseSaying(String cmd, BufferedReader br) throws IOException {
-        Optional<WiseSaying> wiseSaying = WiseSayingService.getWiseSaying(QueryStringParser.getId(cmd));
+    public void updateWiseSaying(String cmd, BufferedReader br) throws IOException {
+        Optional<WiseSaying> wiseSaying = wiseSayingService.getWiseSaying(queryStringParser.getId(cmd));
 
         if (wiseSaying.isPresent()) {
             System.out.println("명언(기존) : " + wiseSaying.get().getContent());
@@ -68,14 +88,14 @@ public class WiseSayingController {
             System.out.print("작가 : ");
             String author = br.readLine();
 
-            WiseSayingService.updateJsonFile(wiseSaying.get().getId(), content, author);
+            wiseSayingService.updateJsonFile(wiseSaying.get().getId(), content, author);
         } else {
-            System.out.println(QueryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
+            System.out.println(queryStringParser.getId(cmd) + "번 명언은 존재하지 않습니다.");
         }
     }
 
-    public static void createBuildFile() throws IOException {
-        if (WiseSayingService.createDataJsonFile()) {
+    public void createBuildFile() throws IOException {
+        if (wiseSayingService.createDataJsonFile()) {
             System.out.println("data.json 파일의 내용이 갱신되었습니다.");
         }
     }

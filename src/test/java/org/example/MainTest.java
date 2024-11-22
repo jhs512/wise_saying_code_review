@@ -12,16 +12,27 @@ import org.example.Main.App;
 import org.example.config.ConfigReader;
 import org.example.dto.WiseSaying;
 import org.example.service.WiseSayingService;
+import org.example.util.DependencyContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
 
+    private final WiseSayingService wiseSayingService;
+    private final ConfigReader configReader;
+
+    MainTest() {
+        DependencyContainer dependencyContainer = new DependencyContainer();
+        this.wiseSayingService = dependencyContainer.createWiseSayingService();
+        this.configReader = new ConfigReader();
+    }
+
+
     @AfterEach
     public void cleanUp() throws IOException {
         // 디렉토리 삭제 전에 파일이나 디렉토리 내용이 있다면 삭제
-        File directory = new File(ConfigReader.getProperty("test.save.path"));
+        File directory = new File(configReader.getProperty("test.save.path"));
         if (directory.exists()) {
             // 디렉토리 내 모든 파일 삭제
             for (File file : Objects.requireNonNull(directory.listFiles())) {
@@ -62,88 +73,6 @@ class MainTest {
         } else {
             throw new IOException("Failed to delete " + directory.getName());
         }
-    }
-
-    @Test
-    @DisplayName("입력 출력 테스트 1")
-    public void inputAndOutputTest1() throws Exception {
-
-        // given
-        String cmd = "종료";
-        BufferedReader br = TestUtil.genBufferedReader(cmd);
-
-        // 출력 스트림 캡처
-        ByteArrayOutputStream output = TestUtil.setOutToByteArray();  // 출력 캡처 준비
-
-        // when
-        // 입력값 읽기 및 출력
-        String input = br.readLine();
-        System.out.println(input);
-
-        // then
-        String result = output.toString().trim();  // 출력된 내용 가져오기
-//        System.err.println(result);  // 실제 출력된 내용 확인
-
-        // 종료 명령어 입력 후 출력 결과 확인
-        assertThat(result).isEqualTo("종료");
-
-        // cleanup
-        TestUtil.clearSetOutToByteArray(output);  // System.out 복원
-    }
-
-    @Test
-    @DisplayName("입력 출력 테스트 2")
-    public void inputAndOutputTest2() throws Exception {
-
-        // given
-        String cmd = """
-            목록
-            종료
-            """;
-        BufferedReader br = TestUtil.genBufferedReader(cmd);
-        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
-
-        // when
-        String input;
-        while((input = br.readLine()) != null) {
-            System.out.println(input);
-        }
-        String result = output.toString().trim();
-
-        // then
-        assertThat(result).contains("목록").contains("종료");
-
-        TestUtil.clearSetOutToByteArray(output);
-    }
-
-    @Test
-    @DisplayName("입력 출력 테스트 3")
-    public void inputAndOutputTest3() throws Exception {
-
-        // given
-        String cmd = """
-            목록
-            종료
-            """;
-        BufferedReader br = TestUtil.genBufferedReader(cmd);
-        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
-
-        // when
-        String input;
-        String[] inputs = {"목록", "종료"};
-        int idx = 0;
-        while((input = br.readLine()) != null) {
-            System.out.println(input);
-            assertThat(input).isEqualTo(inputs[idx++]);
-        }
-
-        String result = output.toString().trim();
-        System.out.println(result);
-
-        // then
-        assertThat(result).contains("목록").contains("종료");
-
-        TestUtil.clearSetOutToByteArray(output);
     }
 
     @Test
@@ -199,10 +128,9 @@ class MainTest {
         TestUtil.clearSetOutToByteArray(output);
     }
 
-
     @Test
-    @DisplayName("명언 목록 테스트")
-    public void getAllWiseSayingTest() throws Exception {
+    @DisplayName("명언 목록 테스트 - 파일이 없을때")
+    public void getAllWiseSayingTest1() throws Exception {
 
         // given
         String cmd = """
@@ -222,17 +150,52 @@ class MainTest {
             .contains("== 명언 앱 ==")
             .contains("명령) ")
             .contains("번호 / 작가 / 명언")
+            .contains("--------------------")
+            .contains("명령) ")
+            .contains("페이지 : [1]")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 목록 테스트2 - 파일이 1개 일때")
+    public void getAllWiseSayingTest2() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            목록
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("번호 / 작가 / 명언")
             .contains("--------------------");
 
-        List<WiseSaying> listOfWiseSaying = WiseSayingService.getListOfWiseSaying();
-        if (!listOfWiseSaying.isEmpty()) {
-            listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
-            for (WiseSaying wiseSaying : listOfWiseSaying) {
-                assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
-            }
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(1);
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
 
         assertThat(result)
+            .contains("페이지 : [1]")
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
 
@@ -241,7 +204,208 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("명언 목록 테스트 - 검색")
+    @DisplayName("명언 목록 테스트3 - 파일이 10개 이상 일때")
+    public void getAllWiseSayingTest3() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            목록
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(1);
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        assertThat(result)
+            .contains("페이지 : [1] / 2")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 목록 테스트4 - 파일이 10개 이상 일때 2페이지")
+    public void getAllWiseSayingTest4() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            목록?page=2
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(2);
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        assertThat(result)
+            .contains("페이지 : 1 / [2]")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 목록 테스트5 - 파일이 6개 일때 2페이지")
+    public void getAllWiseSayingTest5() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            현재를 사랑하라.
+            작자미상
+            목록?page=2
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(2);
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        assertThat(result)
+            .contains("페이지 : 1 / [2]")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 검색 목록 테스트 - 검색, 페이지가 주어지지 않았을때")
     public void getListByKeyword() throws Exception {
 
         // given
@@ -281,7 +445,7 @@ class MainTest {
             .contains("번호 / 작가 / 명언")
             .contains("--------------------");
 
-        List<WiseSaying> listOfWiseSaying = WiseSayingService.getListByKeyword("content", "과거");
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListByKeyword("content", "과거", 1);
         if (!listOfWiseSaying.isEmpty()) {
             listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
             for (WiseSaying wiseSaying : listOfWiseSaying) {
@@ -290,6 +454,185 @@ class MainTest {
         }
 
         assertThat(result)
+            .contains("페이지 : [1]")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 검색 목록 테스트2 - 검색 파일이 없을때")
+    public void getListByKeyword2() throws Exception {
+
+        // given
+        String cmd = """
+            목록?keywordType=content&keyword=과거
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("명령) ")
+            .contains("----------------------")
+            .contains("검색타입 : content")
+            .contains("검색어 : 과거")
+            .contains("----------------------")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListByKeyword("content", "과거", 1);
+        listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        assertThat(result)
+            .contains("페이지 : [1]")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 검색 목록 테스트3 - 검색 결과 5개 이상일 때 1페이지")
+    public void getListByKeyword3() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            목록?keywordType=content&keyword=과거&page=1
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("----------------------")
+            .contains("검색타입 : content")
+            .contains("검색어 : 과거")
+            .contains("----------------------")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListByKeyword("content", "과거", 1);
+        listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+        for (WiseSaying wiseSaying : listOfWiseSaying) {
+            assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        assertThat(result)
+            .contains("페이지 : [1]")
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+    @Test
+    @DisplayName("명언 검색 목록 테스트4 - 검색 결과 5개 이상일 때 2페이지")
+    public void getListByKeyword4() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            목록?keywordType=content&keyword=과거&page=2
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("----------------------")
+            .contains("검색타입 : content")
+            .contains("검색어 : 과거")
+            .contains("----------------------")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------")
+            .contains("페이지 : 1 / [2]")
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
 
@@ -323,6 +666,8 @@ class MainTest {
             .contains("1번 명언이 삭제되었습니다.")
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(output);
     }
 
     @Test
@@ -347,6 +692,8 @@ class MainTest {
             .contains("명령) ")
             .contains("번 명언은 존재하지 않습니다.")
             .contains("앱이 종료 되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(output);
     }
 
     @Test
@@ -384,6 +731,8 @@ class MainTest {
             .contains("작가 : ")
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(output);
     }
 
     @Test
@@ -410,7 +759,7 @@ class MainTest {
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
 
-
+        TestUtil.clearSetOutToByteArray(output);
     }
 
     @Test
@@ -471,6 +820,64 @@ class MainTest {
             .contains("명령) ")
             .contains("앱이 종료 되었습니다.");
 
+        TestUtil.clearSetOutToByteArray(output);
+    }
+
+
+    @Test
+    @DisplayName("명언 목록 테스트 - 페이징")
+    public void getListByPage() throws Exception {
+
+        // given
+        String cmd = """
+            등록
+            현재를 사랑하라.
+            작자미상
+            등록
+            과거에 집착하지 마라.
+            작자미상
+            목록?keywordType=content&keyword=과거
+            종료
+            """;
+        BufferedReader br = TestUtil.genBufferedReader(cmd);
+        ByteArrayOutputStream output = TestUtil.setOutToByteArray();
+
+        // when
+        App app = new App(br);
+        app.run();
+        String result = output.toString().trim();
+
+        // then
+        assertThat(result)
+            .contains("== 명언 앱 ==")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("명령) ")
+            .contains("명언 : ")
+            .contains("작가 : ")
+            .contains("번 명언이 등록되었습니다.")
+            .contains("----------------------")
+            .contains("검색타입 : content")
+            .contains("검색어 : 과거")
+            .contains("----------------------")
+            .contains("번호 / 작가 / 명언")
+            .contains("--------------------");
+
+        List<WiseSaying> listOfWiseSaying = wiseSayingService.getListByKeyword("content", "과거", 1);
+        if (!listOfWiseSaying.isEmpty()) {
+            listOfWiseSaying.sort((ws1, ws2) -> Integer.compare(ws2.getId(), ws1.getId()));
+            for (WiseSaying wiseSaying : listOfWiseSaying) {
+                assertThat(result).contains(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+            }
+        }
+
+        assertThat(result)
+            .contains("명령) ")
+            .contains("앱이 종료 되었습니다.");
+
+        // cleanup
         TestUtil.clearSetOutToByteArray(output);
     }
 

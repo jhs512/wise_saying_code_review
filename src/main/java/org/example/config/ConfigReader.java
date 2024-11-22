@@ -8,7 +8,7 @@ import java.util.Properties;
 public class ConfigReader {
 
     // 설정 파일에서 값을 읽어오는 메서드
-    public static String getProperty(String key) {
+    public String getProperty(String key) {
         Properties properties = new Properties();
 
         // config.properties 파일 읽기
@@ -22,23 +22,15 @@ public class ConfigReader {
         return properties.getProperty(key);
     }
 
-    public static String getJsonFilePath(String key, int id) {
+    public String getJsonFilePath(String key, int id) {
         return getProperty(key) + id + ".json";
     }
 
-    public static String getTxtFilePath(String key) {
+    public String getTxtFilePath(String key) {
         return getProperty(key) + "lastId.txt";
     }
 
-    public static String getBuildFilePath(String key) {
+    public String getBuildFilePath(String key) {
         return getProperty(key) + "data.json";
-    }
-
-    public static void main(String[] args) {
-        // config.properties 에서 files.save.path 값을 가져옴
-        String path = getProperty("files.save.path");
-
-        // 파일 경로 출력
-        System.out.println("file save path: " + path);
     }
 }
