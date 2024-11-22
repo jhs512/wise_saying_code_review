@@ -3,21 +3,23 @@ package WiseSayingService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class WiseSayingPage {
     private int page;
     private int totalPage;
-    private List<String> output;
+    private List<String> output = new ArrayList<>();
 
     public WiseSayingPage() {
         page = 1;
         totalPage = 1;
+        output = new ArrayList<>();
     }
 
     public void SetPage(String str) {
         String s = WiseSayingQuery.GetQueryContent(str, "page");
-        if (s == "") page = 1;
-        else page = CalPage(Integer.parseInt(s));
+        if (Objects.equals(s, "")) page = 1;
+        else page = Integer.parseInt(s);
     }
 
     public void SetTotalPage(int n) {
@@ -34,27 +36,30 @@ public class WiseSayingPage {
         page = Math.min(totalPage, page);
     }
 
-    public List<String[]> CalNullType(List<String[]> list) {
-        page = Math.min(totalPage, page);
-        return list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page - 1) * 5).limit((page) * 5).toList();
+    public List<String[]> CalNullType(List<String[]> list,String str) {
+        SetPage(str);
+        SetTotalPage(list.size());
+        CheckPage();
+        return list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page - 1) * 5L).limit((page) * 5L).toList();
     }
 
-    public List<String[]> CalNotNullType(String type, String keyword, List<String[]> list) {
+    public List<String[]> CalNotNullType(String type, String keyword,String str, List<String[]> list) {
         if (type.equals("content"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
         else if (type.equals("author"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
+        SetPage(str);
         SetTotalPage(list.size());
         CheckPage();
         return list.stream().skip((page - 1) * 5).limit((page) * 5).toList();
 
     }
 
-    public String[] GetPageOutput(String type, String keyword, List<String[]> list) {
-        if ((type == "") || (keyword == "")) {
-            list = CalNullType(list);
+    public String[] GetPageOutput(String type, String keyword,String str, List<String[]> list) {
+        if ((Objects.equals(type, "")) || (Objects.equals(keyword, ""))) {
+            list = CalNullType(list,str);
         } else {
-            list = CalNotNullType(type, keyword, list);
+            list = CalNotNullType(type, keyword,str, list);
         }
 
         for (String[] i : list) {

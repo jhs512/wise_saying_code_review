@@ -5,8 +5,6 @@ import WiseSayingRepository.JsonArray;
 
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 
 
@@ -35,11 +33,9 @@ public class WiseSayingService {
 
     public String[] WiseList(String str) {
         WiseSayingPage page = new WiseSayingPage();
-        page.SetPage(str);
-        page.SetTotalPage(wise.size());
         String type = WiseSayingQuery.GetType(str);
         String keyword = WiseSayingQuery.GetKeyword(str);
-        return page.GetPageOutput(type,keyword,wise);
+        return page.GetPageOutput(type,keyword,str,wise);
     }
 
     public String WiseDelete(String str) {
