@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="WiseSayingControllerTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2024-11-22T05:35:23" hostname="BOOK-G6IN76RPI5" time="0.284">
+  <properties/>
+  <testcase name="종료 테스트" classname="WiseSayingControllerTest" time="0.124"/>
+  <testcase name="목록 테스트" classname="WiseSayingControllerTest" time="0.044"/>
+  <testcase name="삭제 예외처리 테스트" classname="WiseSayingControllerTest" time="0.012"/>
+  <testcase name="등록 테스트" classname="WiseSayingControllerTest" time="0.011"/>
+  <testcase name="수정 예외처리 테스트" classname="WiseSayingControllerTest" time="0.006"/>
+  <testcase name="삭제 테스트" classname="WiseSayingControllerTest" time="0.01"/>
+  <testcase name="명언 수정 테스트" classname="WiseSayingControllerTest" time="0.01"/>
+  <testcase name="검색 테스트1" classname="WiseSayingControllerTest" time="0.014"/>
+  <testcase name="검색 테스트2" classname="WiseSayingControllerTest" time="0.011"/>
+  <testcase name="페이징 테스트2" classname="WiseSayingControllerTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
