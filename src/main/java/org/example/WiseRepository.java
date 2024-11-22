@@ -172,10 +172,9 @@ public class WiseRepository {
                         return !name.startsWith("data") && name.endsWith("json");
                     })
                     .forEach(file -> {
-                        try {
-                            wises.add(jsonToWise(file));
-                        } catch (IOException e) {
-                            //읽어들이지 않고 일단 스킵
+                        Wise w = jsonToWise(file);
+                        if(w != null) {
+                            wises.add(w);
                         }
                     });
             wises.sort(Comparator.comparingInt(wise -> wise.index));
@@ -189,7 +188,7 @@ public class WiseRepository {
         }
     }
 
-    private Wise jsonToWise(Path file) throws IOException {
+    private Wise jsonToWise(Path file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toString()))) {
             HashMap<String, String> jsonMap = new HashMap<>();
             String line = reader.readLine();
@@ -210,6 +209,8 @@ public class WiseRepository {
             String content = jsonMap.get("content");
 
             return new Wise(Integer.parseInt(id), author, content);
+        } catch (IOException e) {
+            return null;
         }
     }
 
