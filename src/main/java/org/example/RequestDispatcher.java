@@ -12,8 +12,8 @@ public class RequestDispatcher {
         else if(request.equals("등록")) {
             wiseSayingController.addWiseSaying();
         }
-        else if(request.equals("목록")) {
-            wiseSayingController.showWiseSayingList();
+        else if(request.startsWith("목록")) {
+            wiseSayingController.getWiseSayings(request);
         }
         else if(request.startsWith("삭제")) {
             wiseSayingController.deleteWiseSaying(request);

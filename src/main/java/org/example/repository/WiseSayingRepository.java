@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static javax.swing.text.html.HTML.Tag.S;
+
 
 public class WiseSayingRepository {
     public static List<WiseSaying> wiseSayingList = new ArrayList<>();
@@ -127,12 +129,29 @@ public class WiseSayingRepository {
     public WiseSayingDTO findById(int id) {
         for(WiseSaying wiseSaying : wiseSayingList) {
             if(wiseSaying.getId() == id) {
-                String content = wiseSaying.getContent();
-                String author = wiseSaying.getAuthor();
-                return new WiseSayingDTO(id, content, author);
+                return new WiseSayingDTO(wiseSaying);
             }
         }
         return null;
+    }
+
+    public List<WiseSayingDTO> findByContent(String content) {
+        List<WiseSayingDTO> list = new ArrayList<>();
+        for(WiseSaying wiseSaying : wiseSayingList) {
+            if(wiseSaying.getContent().contains(content)) {
+                list.add(new WiseSayingDTO(wiseSaying));
+            }
+        }
+        return list;
+    }
+    public List<WiseSayingDTO> findByAuthor(String author) {
+        List<WiseSayingDTO> list = new ArrayList<>();
+        for(WiseSaying wiseSaying : wiseSayingList) {
+            if(wiseSaying.getAuthor().contains(author)) {
+                list.add(new WiseSayingDTO(wiseSaying));
+            }
+        }
+        return list;
     }
 
     public void setConfig(Config config) {
@@ -151,4 +170,7 @@ public class WiseSayingRepository {
         FileUtil.deleteFile(Paths.get(LAST_ID_PATH));
         return;
     }
+
+
+
 }

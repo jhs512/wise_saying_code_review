@@ -6,19 +6,33 @@ import org.example.dto.WiseSayingDTO;
 import org.example.entity.WiseSaying;
 import org.example.service.WiseSayingService;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class WiseSayingController {
     WiseSayingService wiseSayingService = new WiseSayingService();
     static private Scanner scanner;
 
-    private int getRequestParamId(String request) {
-        String[] parseArr = request.split("id=");
-        if(parseArr.length!=2)
-            return -1; // 이부분 나중에는 throw로 가자
+    private Map<String, String> parseRequestParams(String params) {
+        Map<String, String> paramMap = new HashMap<>();
+        String[] paramArr = params.split("&");
 
-        return Integer.parseInt(parseArr[1]);
+        for (String param : paramArr) {
+            String[] kv = param.split("=");
+            paramMap.put(kv[0],kv[1]);
+        }
+        return paramMap;
+    }
+
+    private Map<String, String> getRequestParams(String request) {
+        Map<String, String> paramMap = new HashMap<>();
+
+        String[] parseArr = request.split("\\?");
+        if(parseArr.length!=2)
+            return null; // 이부분 나중에는 throw로 가자
+
+        String requestParams = parseArr[1];
+
+        return parseRequestParams(requestParams);
     }
 
     public void build() {
@@ -40,8 +54,9 @@ public class WiseSayingController {
         System.out.printf("%d번 명언이 등록되었습니다.%n",id);
     }
 
-    public void showWiseSayingList() {
-        List<WiseSayingDTO> list = wiseSayingService.getWiseSayingList();
+    public void getWiseSayings(String request) {
+        Map<String, String> paramMap = getRequestParams(request);
+        List<WiseSayingDTO> list = wiseSayingService.getWiseSayingList(paramMap);
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
@@ -53,12 +68,12 @@ public class WiseSayingController {
 
 
     public void deleteWiseSaying(String request) {
-        int id = getRequestParamId(request);
-        if(id==-1) {
+        String id = getRequestParams(request).get("id");
+        if(id==null) {
             return;
         }
 
-        WiseSayingDTO deleted = wiseSayingService.delete(id);
+        WiseSayingDTO deleted = wiseSayingService.delete(Integer.parseInt(id));
 
         if(deleted == null) {
             System.out.println(id+"번 명언은 존재하지 않습니다.");
@@ -68,12 +83,12 @@ public class WiseSayingController {
     }
 
     public void updateWiseSaying(String request) {
-        int id = getRequestParamId(request);
-        if(id==-1) {
+        String id = getRequestParams(request).get("id");
+        if(id==null) {
             return;
         }
 
-        WiseSayingDTO wiseSayingDTO = getWiseSaying(id);
+        WiseSayingDTO wiseSayingDTO = getWiseSaying(Integer.parseInt(id));
         if(wiseSayingDTO == null) {
             System.out.println(id+"번 명언은 존재하지 않습니다.");
             return;
