@@ -7,31 +7,42 @@ import util.TestUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AppTest {
     private static final String TEST_JSON_FILE = "src/test/java/resources/test_data.json";
     private static final String TEST_LAST_ID_FILE = "src/test/java/resources/test_lastId.txt";
 
+    private static final String WRONG_COMMAND = "잘못된 명령어";
+    private static final String REGISTER = "등록";
+    private static final String LIST = "목록";
+    private static final String MODIFY = "수정";
+    private static final String DELETE = "삭제";
+
     private Scanner scanner;
     ByteArrayOutputStream outputStream;
-    static List<String> testCommandList = new ArrayList<>();
+    static Map<String, String> testCommandMap = new HashMap<>();
 
     @BeforeAll
     static void setUpAll(){
-        testCommandList.add("""
+        testCommandMap.put(WRONG_COMMAND, """
                 wrong command
                 종료
                 """);
-        testCommandList.add("""
+        testCommandMap.put(REGISTER,"""
                 등록
                 테스트명언1
                 테스트작가1
                 종료
                 """);
-        testCommandList.add("""
+        testCommandMap.put(LIST,"""
+                등록
+                테스트명언1
+                테스트작가1
+                목록
+                종료
+                """);
+        testCommandMap.put(MODIFY,"""
                 등록
                 테스트명언1
                 테스트작가1
@@ -40,7 +51,7 @@ public class AppTest {
                 목록
                 종료
                 """);
-        testCommandList.add("""
+        testCommandMap.put(DELETE,"""
                 등록
                 테스트명언1
                 테스트작가1
@@ -71,29 +82,36 @@ public class AppTest {
     }
 
 
-    private void runTest(int order){
-        scanner = TestUtil.genScanner(testCommandList.get(order));
+    private void runTest(String command){
+        scanner = TestUtil.genScanner(testCommandMap.get(command));
         WiseSayingController wiseSayingController = new WiseSayingController(scanner, TEST_JSON_FILE, TEST_LAST_ID_FILE);
         wiseSayingController.run();
     }
 
     @Test
     void testWrongCommand() {
-        runTest(0);
+        runTest(WRONG_COMMAND);
         String result = outputStream.toString();
         assertTrue(result.contains("== 잘못된 명령어입니다. =="));
     }
 
     @Test
     void testRegister() {
-        runTest(1);
+        runTest(REGISTER);
         String result = outputStream.toString();
         assertTrue(result.contains("1번 명언이 등록되었습니다."));
     }
 
     @Test
+    void testList() {
+        runTest(LIST);
+        String result = outputStream.toString();
+        assertTrue(result.contains("테스트명언1"));
+    }
+
+    @Test
     void testModify(){
-        runTest(2);
+        runTest(MODIFY);
         String result = outputStream.toString();
         assertTrue(result.contains("1번 명언이 등록되었습니다."));
         assertTrue(result.contains("테스트명언(수정)"));
@@ -101,7 +119,7 @@ public class AppTest {
 
     @Test
     void testDelete(){
-        runTest(3);
+        runTest(DELETE);
         String result = outputStream.toString();
         assertTrue(result.contains("1번 명언이 삭제되었습니다."));
     }
