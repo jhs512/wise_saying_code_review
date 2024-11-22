@@ -1,13 +1,19 @@
 package wisesaying.service;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import infrastructure.wisesaying.WiseSayingRepository;
 import wisesaying.domain.WiseSaying;
 import wisesaying.exception.WiseSayingException;
+import wisesaying.service.response.WiseSayingPageResponse;
+import wisesaying.util.WiseSayingCondition;
 
 public class WiseSayingServiceImpl implements WiseSayingService {
 	private final WiseSayingRepository wiseSayingRepository;
@@ -29,16 +35,30 @@ public class WiseSayingServiceImpl implements WiseSayingService {
 		return savedId;
 	}
 
-	public LinkedList<WiseSaying> findAll() {
+	public WiseSayingPageResponse findAll(WiseSayingCondition wiseSayingCondition) {
 		try {
 			Optional<LinkedList<WiseSaying>> findAll = wiseSayingRepository.findAll();
 			LinkedList<WiseSaying> wiseSayingLinkedList = findAll.orElseGet(() -> new LinkedList<>());
 
-			return wiseSayingLinkedList;
+			Long totalPage = (long)(wiseSayingLinkedList.size() % 5);
+
+			LinkedList<WiseSaying> collect = wiseSayingLinkedList.stream().filter(
+					wiseSaying ->
+						(wiseSayingCondition.wiseSaying() == null || wiseSaying.getWiseSaying()
+							.equals(wiseSayingCondition.wiseSaying())) &&
+							(wiseSayingCondition.writer() == null || wiseSaying.getWriter()
+								.equals(wiseSayingCondition.writer()))
+				)
+				.skip(wiseSayingCondition.pageNum() == null ? 0 : (wiseSayingCondition.pageNum() - 1) * 5)
+				.limit(5)
+				.collect(Collectors.toCollection(LinkedList::new));
+
+			return new WiseSayingPageResponse(wiseSayingCondition.pageNum(), totalPage, collect);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new LinkedList<>();
+		return WiseSayingPageResponse.createEmptyPageResponse();
 	}
 
 	public Optional<Long> delete(Long targetId) {

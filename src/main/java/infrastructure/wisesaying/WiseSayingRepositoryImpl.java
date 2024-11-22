@@ -69,11 +69,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 	}
 
 	public Optional<WiseSaying> findById(Long id) throws IOException {
-		Path wiseSayingPath = Paths.get(FILE_PATH + id + ".json");
-
-		String json = Files.readString(wiseSayingPath);
-
-		WiseSayingEntity wiseSayingEntity = WiseSayingEntity.fromJson(json);
+		WiseSayingEntity wiseSayingEntity = wiseSayingEntityLinkedHashMap.get(id);
 
 		if (Objects.isNull(wiseSayingEntity)) {
 			return Optional.empty();

@@ -1,12 +1,18 @@
 package wisesaying.controller;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import wisesaying.domain.WiseSaying;
 import wisesaying.service.WiseSayingService;
+import wisesaying.service.response.WiseSayingPageResponse;
+import wisesaying.util.WiseSayingCondition;
 
 public class WiseSayingController {
 	private final WiseSayingService wiseSayingService;
@@ -31,15 +37,17 @@ public class WiseSayingController {
 		System.out.println(message);
 	}
 
-	public void findAll() {
-		LinkedList<WiseSaying> wiseSayingLinkedList = wiseSayingService.findAll();
+	public void findAll(String select) {
+		WiseSayingCondition wiseSayingCondition = queryStringAsCondition(select);
+		WiseSayingPageResponse wiseSayingPageResponse = wiseSayingService.findAll(wiseSayingCondition);
 		System.out.println("번호 / 작가 / 명언");
 
-		wiseSayingLinkedList.forEach((wiseSaying) -> {
+		wiseSayingPageResponse.getWiseSayingLinkedList().forEach((wiseSaying) -> {
 			System.out.printf("%d / %s / %s \n",
 				wiseSaying.getId(), wiseSaying.getWriter(), wiseSaying.getWiseSaying());
 		});
 
+		System.out.printf("페이지 : %d / [%d]\n", wiseSayingPageResponse.getPageNum(), wiseSayingPageResponse.getPageSize());
 	}
 
 	public void update() {
@@ -103,25 +111,40 @@ public class WiseSayingController {
 				break;
 			}
 
-			switch (select) {
-				case "등록":
-					add();
-					break;
-				case "목록":
-					findAll();
-					break;
-				case "삭제":
-					delete();
-					break;
-				case "수정":
-					update();
-					break;
-				case "빌드":
-					build();
-					break;
-				default:
-					System.out.println("잘못된 명령입니다.");
+			if (select.equals("등록")) {
+				add();
+			} else if (select.contains("목록")) {
+				findAll(select);
+			} else if (select.equals("삭제")) {
+				delete();
+			} else if (select.equals("수정")) {
+				update();
+			} else if (select.equals("빌드")) {
+				build();
+			} else {
+				System.out.println("잘못된 명령입니다.");
 			}
 		}
+	}
+
+	public WiseSayingCondition queryStringAsCondition(String select) {
+		Predicate<String[]> predicate = parts ->
+			(parts[0].equals("page") && Long.parseLong(parts[1]) > 0) ||
+				(parts[0].equals("writer") || !parts[1].trim().isEmpty()) ||
+				(parts[0].equals("wisesaying") || !parts[1].trim().isEmpty());
+
+		if (select.contains("?")) {
+			String substring = select.substring(select.indexOf("?") + 1);
+			Map<String, String> map = Arrays.stream(substring.split("&"))
+				.map(param -> param.split("="))
+				.filter(predicate)
+				.collect(Collectors.toMap(
+					parts -> parts[0],
+					parts -> parts.length > 1 ? parts[1] : ""
+				));
+
+			return WiseSayingCondition.createCondition(map);
+		}
+		return new WiseSayingCondition();
 	}
 }
