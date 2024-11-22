@@ -19,9 +19,8 @@ public class testCode {
         assert str.contains("작가 :");
         for(int i = 1; i<8; i++)
             assert str.contains(i+"번 명언 등록");
-
-
     }
+
     @Test
     public void testExit() {
         String input = """

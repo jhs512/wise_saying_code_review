@@ -1,3 +1,7 @@
+package WiseSayingController;
+
+import WiseSayingService.WiseSayingService;
+
 import java.util.Scanner;
 
 

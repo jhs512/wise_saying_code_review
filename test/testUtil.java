@@ -1,5 +1,7 @@
+import WiseSayingController.WiseSayingController;
+import WiseSayingService.WiseSayingService;
+
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class testUtil {
@@ -28,13 +30,7 @@ public class testUtil {
             throw new RuntimeException(e);
         }
     }
-    public static ArrayList<String[]> StringtoStringArr(String str){
-        ArrayList<String[]> arr = new ArrayList<>();
-        for(String i: str.split("\n"))
-                arr.add(i.split(" "));
 
-        return arr;
-    }
     public static String Run(String input){
         input = input.replace(" ","\n");
         ByteArrayOutputStream output = setOutToByteArray();
