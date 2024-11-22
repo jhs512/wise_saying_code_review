@@ -24,18 +24,42 @@ import wisesaying.TestUtil;
 import wisesaying.domain.WiseSaying;
 import wisesaying.service.WiseSayingService;
 import wisesaying.service.WiseSayingServiceImpl;
+import wisesaying.service.response.WiseSayingPageResponse;
+import wisesaying.util.WiseSayingCondition;
 
 class WiseSayingControllerTest {
 	WiseSayingRepository wiseSayingRepository;
 	WiseSayingService wiseSayingService;
 
-	static final String INPUT_ADD_SUCCESS = "등록\n명언1\n작가1\n종료\n";
-	static final String INPUT_UPDATE_SUCCESS = "수정\n1\n명언수정1\n작가수정1\n종료\n";
-	static final String INPUT_UPDATE_TYPE_MISMATCH_FAIL = "수정\nㄴ\n종료";
-	static final String INPUT_DELETE_SUCCESS = "삭제\n1\n종료";
-	static final String INPUT_DELETE_TYPE_MISMATCH_FAIL = "삭제\nㄴ\n종료";
-	static final String INPUT_FINDALL_SUCCESS = "목록\n종료";
-	static final String INPUT_BUILD_SUCCESS = "빌드\n종료";
+	static final String INPUT_ADD_SUCCESS =
+		"등록\n"
+		+ "명언1\n"
+		+ "작가1\n"
+		+ "종료\n";
+	static final String INPUT_UPDATE_SUCCESS =
+		"수정\n"
+		+ "1\n"
+		+ "명언수정1\n"
+		+ "작가수정1\n"
+		+ "종료\n";
+	static final String INPUT_UPDATE_TYPE_MISMATCH_FAIL =
+		"수정\n"
+		+ "ㄴ\n"
+		+ "종료";
+	static final String INPUT_DELETE_SUCCESS =
+		"삭제\n"
+		+ "1\n"
+		+ "종료";
+	static final String INPUT_DELETE_TYPE_MISMATCH_FAIL =
+		"삭제\n"
+		+ "ㄴ\n"
+		+ "종료";
+	static final String INPUT_FINDALL_SUCCESS =
+		"목록?page=2\n"
+		+ "종료";
+	static final String INPUT_BUILD_SUCCESS =
+		"빌드"
+		+ "\n종료";
 
 	@BeforeEach
 	void setUp() {
@@ -146,7 +170,7 @@ class WiseSayingControllerTest {
 		String givenWiseSaying = "명언";
 		String givenWriter = "작가";
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 13; i++) {
 			wiseSayingRepository.add(WiseSaying.createWiseSaying(givenWiseSaying + i+1, givenWriter + i+1));
 		}
 
@@ -160,11 +184,15 @@ class WiseSayingControllerTest {
 
 		StringBuilder sb = new StringBuilder();
 
-		LinkedList<WiseSaying> wiseSayingLinkedList = wiseSayingRepository.findAll().orElse(new LinkedList<>());
-		wiseSayingLinkedList.forEach(
+		WiseSayingPageResponse wiseSayingPageResponse = wiseSayingService.findAll(
+			new WiseSayingCondition(2L, null, null));
+
+		wiseSayingPageResponse.getWiseSayingLinkedList().forEach(
 			(wiseSaying) ->
 				sb.append(wiseSaying.getId() + " / " + wiseSaying.getWriter() + " / " + wiseSaying.getWiseSaying() + " \n")
 		);
+
+		sb.append("페이지 : " + wiseSayingPageResponse.getPageNum() + " / [" + wiseSayingPageResponse.getPageSize() + "]");
 
 		String wiseSayingListString = sb.toString();
 		String output = byteArrayOutputStream.toString().trim();
@@ -196,5 +224,4 @@ class WiseSayingControllerTest {
 
 		assertTrue(output.contains("data.json 파일의 내용이 갱신되었습니다."));
 	}
-
 }
