@@ -1,30 +1,21 @@
 package org.example.service;
 
-import org.example.App;
 import org.example.config.Config;
 import org.example.dto.WiseSayingDTO;
 import org.example.entity.WiseSaying;
 import org.example.repository.WiseSayingRepository;
 
-import java.util.Scanner;
+import java.util.List;
 
 public class WiseSayingService {
     WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
-    private final Scanner scanner = new Scanner(System.in);
 
     public int add(String content, String author) {
         return wiseSayingRepository.save(content, author);
     }
 
-    public int delete(int id) {
-        for(int i = 0; i< App.wiseSayingList.size(); i++) {
-            WiseSaying ws = App.wiseSayingList.get(i);
-            if(ws.getId() == id) {
-                wiseSayingRepository.remove(i);
-                return 0;
-            }
-        }
-        return -1;
+    public WiseSayingDTO delete(int id) {
+        return wiseSayingRepository.remove(id);
     }
 
     public void update(WiseSayingDTO wiseSayingDTO) {
@@ -32,6 +23,7 @@ public class WiseSayingService {
     }
 
     public void build() {
+
         wiseSayingRepository.build();
     }
 
@@ -39,8 +31,19 @@ public class WiseSayingService {
         return wiseSayingRepository.findById(id);
     }
 
-    public void postConstruct(Config config) {
-        wiseSayingRepository.init(config);
+    public void bindingConfig(Config config) {
+        wiseSayingRepository.setConfig(config);
+    }
+
+    public List<WiseSayingDTO> getWiseSayingList() {
+        return wiseSayingRepository.findAll();
+    }
+
+    public void clearAllWiseSayings() {
+        wiseSayingRepository.removeAll();
+    }
+
+    public void loadData() {
         wiseSayingRepository.load();
     }
 }

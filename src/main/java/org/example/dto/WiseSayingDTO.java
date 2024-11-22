@@ -1,5 +1,7 @@
 package org.example.dto;
 
+import org.example.entity.WiseSaying;
+
 public class WiseSayingDTO {
     private int id;
     private String content;
@@ -12,9 +14,21 @@ public class WiseSayingDTO {
         this.author = author;
     }
 
+    @Override
+    public String toString() {
+        return id + " / " + author + " / " + content;
+    }
+
+
     public WiseSayingDTO(String content, String author) {
         this.content = content;
         this.author = author;
+    }
+
+    public WiseSayingDTO(WiseSaying wiseSaying) {
+        this.id = wiseSaying.getId();
+        this.content = wiseSaying.getContent();
+        this.author = wiseSaying.getAuthor();
     }
 
     public WiseSayingDTO() {

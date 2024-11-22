@@ -9,14 +9,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static org.example.App.wiseSayingList;
 
 public class WiseSayingRepository {
+    public static List<WiseSaying> wiseSayingList = new ArrayList<>();
+
     private static int id = 1;
     private static String LAST_ID_PATH;
     private static String JSON_PATH;
+
+    private int findIdxById(int id) {
+        for(int i=0;i<wiseSayingList.size();i++) {
+            WiseSaying wiseSaying = wiseSayingList.get(i);
+            if(wiseSaying.getId()==id) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public int save(String content, String author) {
         WiseSaying wiseSaying = new WiseSaying(id, author, content);
@@ -32,12 +46,19 @@ public class WiseSayingRepository {
         return id++;
     }
 
-    public void remove(int idx) {
-        WiseSaying removedWiseSaying =  wiseSayingList.remove(idx);
+    public WiseSayingDTO remove(int removedId) {
+        int idx = findIdxById(removedId);
+        if(idx==-1) {
+            return null;
+        }
+        //App
+        WiseSaying removedWiseSaying = wiseSayingList.remove(idx);
 
         // Persistence
         String path = JSON_PATH + removedWiseSaying.getId() + ".json";
         FileUtil.deleteFile(Paths.get(path));
+
+        return new WiseSayingDTO(removedWiseSaying);
     }
 
 
@@ -60,6 +81,7 @@ public class WiseSayingRepository {
         Path lastIdPath = Paths.get(LAST_ID_PATH);
 
         if (!Files.exists(lastIdPath)) {
+            id=1;
             return;
         }
 
@@ -88,7 +110,6 @@ public class WiseSayingRepository {
 
         for(WiseSaying wiseSaying : wiseSayingList) {
             if(wiseSaying.getId() == wiseSayingDTO.getId()) {
-                // org.example.App
                 wiseSaying.setContent(content);
                 wiseSaying.setAuthor(author);
 
@@ -102,6 +123,7 @@ public class WiseSayingRepository {
         }
     }
 
+
     public WiseSayingDTO findById(int id) {
         for(WiseSaying wiseSaying : wiseSayingList) {
             if(wiseSaying.getId() == id) {
@@ -113,8 +135,20 @@ public class WiseSayingRepository {
         return null;
     }
 
-    public void init(Config config) {
+    public void setConfig(Config config) {
         LAST_ID_PATH = config.getLastIdPath();
         JSON_PATH = config.getJsonPath();
+    }
+
+    public List<WiseSayingDTO> findAll() {
+        return wiseSayingList.stream().map(WiseSayingDTO::new).toList();
+    }
+
+    public void removeAll() {
+        for(int id_=1; id_<id; id_++) {
+            remove(id_);
+        }
+        FileUtil.deleteFile(Paths.get(LAST_ID_PATH));
+        return;
     }
 }

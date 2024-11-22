@@ -32,11 +32,6 @@ public class WiseSaying {
         this.content = content;
     }
 
-    @Override
-    public String toString() {
-        return id + " / " + author + " / " + content;
-    }
-
 
     public String generateJson(String indent) {
         return  indent + "{\n" +

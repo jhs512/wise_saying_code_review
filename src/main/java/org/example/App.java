@@ -2,26 +2,11 @@ package org.example;
 
 import org.example.config.Config;
 import org.example.controller.WiseSayingController;
-import org.example.entity.WiseSaying;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    public static List<WiseSaying> wiseSayingList = new ArrayList<>();
-    private final Config config;
-    public static void showWiseSayingList() {
-        System.out.println("번호 / 작가 / 명언");
-        System.out.println("----------------------");
+    public final Config config;
 
-        for(int i=wiseSayingList.size()-1; i>=0; i--) {
-            WiseSaying ws = wiseSayingList.get(i);
-            System.out.println(ws.toString());
-        }
-    }
-
-    private final Scanner scanner = new Scanner(System.in);
     private final RequestDispatcher requestDispatcher = new RequestDispatcher();
     private final WiseSayingController wiseSayingController = new WiseSayingController();
 
@@ -30,13 +15,23 @@ public class App {
     }
 
     public void run() {
+        Scanner scanner = new Scanner(System.in);
+        wiseSayingController.bindingConfig(config);
+        wiseSayingController.loadData();
+        wiseSayingController.setScanner(scanner);
         System.out.println("== 명언 앱 ==");
-        wiseSayingController.postConstruct(config);
-
-        while(true) {
+        String request="";
+        while(!request.equals("종료")) {
             System.out.print("명령) ");
-            String request = scanner.nextLine();
+            request = scanner.nextLine();
             requestDispatcher.dispatch(request);
         }
+//        wiseSayingController.deleteAllWiseSayings();
+    }
+
+
+    public void clear() {
+        wiseSayingController.bindingConfig(config);
+        wiseSayingController.deleteAllWiseSayings();
     }
 }
