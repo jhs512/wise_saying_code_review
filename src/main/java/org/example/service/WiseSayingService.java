@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.model.PageResult;
 import org.example.model.WiseSayingItem;
 import org.example.repository.WiseSayingRepository;
 
@@ -18,8 +19,8 @@ public class WiseSayingService {
     }
 
 
-    public List<String> search() {
-        return wiseSayingRepository.findAll();
+    public PageResult search(String currentPage) {
+        return wiseSayingRepository.findAll(currentPage);
     }
 
 

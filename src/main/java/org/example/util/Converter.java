@@ -1,10 +1,8 @@
-package org.example.converter;
+package org.example.util;
 
 import org.example.model.WiseSayingItem;
 
-import java.lang.runtime.ObjectMethods;
 import java.util.List;
-import java.util.Map;
 
 public class Converter {
 

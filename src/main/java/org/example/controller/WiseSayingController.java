@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.handler.ErrorHandler;
+import org.example.model.PageResult;
 import org.example.model.WiseSayingItem;
 import org.example.service.WiseSayingService;
 
@@ -44,16 +45,27 @@ public class WiseSayingController {
                         String keyword = keywords[1];
                         List<String> list = wiseSayingService.findByKeywords(keywordType, keyword);
                         list.forEach(System.out::println);
-                    } else {
+                    } else if (input.startsWith("목록?page=")){
+                        String currentPage = input.substring(8);
                         System.out.println("번호 / 작가 / 명언");
                         System.out.println("---------------");
-                        List<String> list = wiseSayingService.search();
-                        list.forEach(System.out::println);
+                        PageResult result = wiseSayingService.search(currentPage);
+
+                        result.getItems().forEach(System.out::println);
+                        System.out.println("---------------");
+                        System.out.println("페이지 : [" + result.getCurrenPage() + "] / " +result.getTotalPage());
+                    } else if (input.equals("목록")) {
+                        System.out.println("번호 / 작가 / 명언");
+                        System.out.println("---------------");
+                        PageResult result = wiseSayingService.search("");
+
+                        result.getItems().forEach(System.out::println);
+                        System.out.println("---------------");
+                        System.out.println("페이지 : [" + result.getCurrenPage() + "] / " +result.getTotalPage());
                     }
 
 
                 } else if (input.startsWith("삭제?id=")) {
-                    // 6은 추후 상수화
                     String id = input.substring(6);
                     String removedId = wiseSayingService.remove(id);
                     System.out.println(removedId +  "번 명언이 삭제되었습니다.");

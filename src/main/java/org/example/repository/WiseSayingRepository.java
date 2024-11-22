@@ -1,6 +1,7 @@
 package org.example.repository;
 
-import org.example.converter.Converter;
+import org.example.util.Converter;
+import org.example.model.PageResult;
 import org.example.model.WiseSayingItem;
 
 import java.io.File;
@@ -33,27 +34,46 @@ public class WiseSayingRepository {
         return id;
     }
 
-    public List<String> findAll() {
+    //todo page 기능 도입
+    public PageResult findAll(String currentPage) {
 
-        return loadFiles().stream()
+        List<WiseSayingItem> items = loadFiles();
+        int pageSize = 5;
+        int totalPage = (items.size() + pageSize - 1) / pageSize;
+
+        if (currentPage.equals("")) {
+            currentPage = "1";
+        }
+
+        int parsedCurrentPage = Integer.parseInt(currentPage);
+
+        if (parsedCurrentPage < 1 || parsedCurrentPage > totalPage) {
+            throw new IllegalArgumentException("페이지 숫자가 유효하지 않습니다, 전체 페이지 수 : " + totalPage);
+        }
+
+        List<String> result = items.stream()
+                .skip((Long.parseLong(currentPage) - 1) * pageSize)
+                .limit(pageSize)
                 .map(item -> item.getId() + " / "
-                + item.getAuthor() + " / "
-                + item.getWiseSaying())
+                        + item.getAuthor() + " / "
+                        + item.getWiseSaying())
                 .collect(Collectors.toList());
 
+        return PageResult.of(result, totalPage, currentPage);
     }
 
     public WiseSayingItem findById(String id) {
         return loadFile(id);
     }
 
-    public List<String> findByKeywords (String keywordType, String keyword) {
+    public List<String> findByKeywords(String keywordType, String keyword) {
         return loadFiles(keywordType, keyword).stream()
                 .map(item -> item.getId() + " / "
                         + item.getWiseSaying() + " / "
                         + item.getAuthor())
                 .collect(Collectors.toList());
     }
+
 
     private WiseSayingItem loadFile(String id) {
         String fileName = id + EXTENSION_JSON.getData();
@@ -89,7 +109,7 @@ public class WiseSayingRepository {
                 }
             }
         }
-        items.sort(Comparator.comparingLong(WiseSayingItem::getId));
+        items.sort(Comparator.comparingLong(WiseSayingItem::getId).reversed());
         return items;
     }
 

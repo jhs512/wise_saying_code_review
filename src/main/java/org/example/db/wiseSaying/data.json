@@ -8,5 +8,40 @@
     "id": 4,
     "content": "명언1",
     "author": "사람1"
+  },
+  {
+    "id": 5,
+    "content": "사과",
+    "author": "곽영규"
+  },
+  {
+    "id": 6,
+    "content": "멜론",
+    "author": "곽영규"
+  },
+  {
+    "id": 7,
+    "content": "복숭아",
+    "author": "곽영규"
+  },
+  {
+    "id": 8,
+    "content": "딸기",
+    "author": "곽영규"
+  },
+  {
+    "id": 9,
+    "content": "참외",
+    "author": "곽영규"
+  },
+  {
+    "id": 10,
+    "content": "오렌지",
+    "author": "곽영규"
+  },
+  {
+    "id": 11,
+    "content": "11",
+    "author": "11"
   }
 ]

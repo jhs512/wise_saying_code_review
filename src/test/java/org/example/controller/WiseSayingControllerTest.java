@@ -88,7 +88,7 @@ class WiseSayingControllerTest {
 
     @Test
     @DisplayName("수정 명령 정상 작동")
-    void update_test () {
+    void update_test() {
         ByteArrayOutputStream out = TestUtil.setOutToByteArray();
         Scanner scanner = TestUtil.genScanner(
                 """
@@ -107,7 +107,7 @@ class WiseSayingControllerTest {
 
     @Test
     @DisplayName("없는 id 로 수정 시 정상 예외 처리")
-    void update_exception_test () {
+    void update_exception_test() {
         ByteArrayOutputStream out = TestUtil.setOutToByteArray();
         Scanner scanner = TestUtil.genScanner(
                 """
@@ -122,7 +122,7 @@ class WiseSayingControllerTest {
 
     @Test
     @DisplayName("빌드 명령 정상 작동")
-    void build_test () {
+    void build_test() {
         ByteArrayOutputStream out = TestUtil.setOutToByteArray();
         Scanner scanner = TestUtil.genScanner(
                 """
@@ -135,6 +135,35 @@ class WiseSayingControllerTest {
         assertTrue(result.contains("내용이 갱신되었습니다."));
     }
 
+    @Test
+    @DisplayName("목록 명령 쳤을 때 첫 페이지 출력")
+    void paging_test() {
+        ByteArrayOutputStream out = TestUtil.setOutToByteArray();
+        Scanner scanner = TestUtil.genScanner(
+                """
+                        목록
+                        종료
+                        """
+        );
+        appConfig.wiseSayingController(scanner).run();
+        String result = out.toString().trim();
+        assertTrue(result.contains("[1]"));
+    }
+
+    @Test
+    @DisplayName("?page= 명령어 입력했을 때 정상 작동")
+    void paging_test2() {
+        ByteArrayOutputStream out = TestUtil.setOutToByteArray();
+        Scanner scanner = TestUtil.genScanner(
+                """
+                        목록?page=2
+                        종료
+                        """
+        );
+        appConfig.wiseSayingController(scanner).run();
+        String result = out.toString().trim();
+        assertTrue(result.contains("[2]"));
+    }
 
 
 
