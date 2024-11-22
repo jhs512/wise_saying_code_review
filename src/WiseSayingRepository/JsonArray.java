@@ -9,11 +9,11 @@ public class JsonArray {
         jl.add(json);
     }
 
-    private String GetGap(int n){
+    private String getGap(int n){
         return "    ".repeat(n);
     }
     private void creatString(String s,int num){
-            str = str+GetGap(num)+s+"\n";
+            str = str+ getGap(num)+s+"\n";
     }
 
     public String toString(){
@@ -47,7 +47,7 @@ public class JsonArray {
 
         return str;
     }
-    public ArrayList<String[]> LoadTextToArrayList(String str){
+    public ArrayList<String[]> loadTextToArrayList(String str){
         ArrayList<String[]> arr = new ArrayList<>();
         str =str.replace("\n",""); str =str.replace("[","");
         str =str.replace("{",""); str =str.replace("]","");
@@ -62,8 +62,6 @@ public class JsonArray {
                 if(replace.length() >0){
                     save[count++] = replace;
                 }
-
-
             }
             arr.add(save);
         }

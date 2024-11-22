@@ -2,8 +2,8 @@ package WiseSayingService;
 
 public class WiseSayingQuery {
 
-    public static String GetQueryContent(String strOri,String strSearch){
-        String[] strs = SeparateString(strOri);
+    public static String getQueryContent(String strOri, String strSearch){
+        String[] strs = separateString(strOri);
         if(strs == null) return "";
         for(String i : strs){
             if(i.contains(strSearch)){
@@ -12,7 +12,7 @@ public class WiseSayingQuery {
         }
         return "";
     }
-    public static String[] SeparateString(String str){
+    public static String[] separateString(String str){
         String[] a = str.split("\\?");
         if(a.length <2) return null;
         return a[1].split("&");
@@ -27,16 +27,16 @@ public class WiseSayingQuery {
         return true;
     }
 
-    public static String GetKeyword(String str) {return GetQueryContent(str,"keyword");}
+    public static String getKeyword(String str) {return getQueryContent(str,"keyword");}
 
-    public static String GetType(String str) {
-        return GetQueryContent(str,"keywordType");
+    public static String getType(String str) {
+        return getQueryContent(str,"keywordType");
     }
 
-    public static int GetId(String str) {
-        String s = GetQueryContent(str,"id");
+    public static int getId(String str) {
+        String s = getQueryContent(str,"id");
         if(s == "" || !isDigit(s)) return -1;
-        return Integer.parseInt(GetQueryContent(str,"id"));
+        return Integer.parseInt(getQueryContent(str,"id"));
     }
 
 

@@ -12,13 +12,13 @@ public class WiseSayingService {
 
     private ArrayList<String[]> wise = new ArrayList<>();
 
-    public boolean ChkId(int id) {
+    public boolean chkId(int id) {
         if ((id >= wise.size()) || (id <0)) return true;
         return false;
     }
 
 
-    public String WiseInert(String wiseWord, String name) {
+    public String wiseInert(String wiseWord, String name) {
         String[] content = new String[3];
         content[0] = "" + (wise.size() + 1);
         content[1] = wiseWord;
@@ -27,20 +27,20 @@ public class WiseSayingService {
         return wise.size() + "번 명언 등록";
     }
 
-    public int WiseExit() {
+    public int wiseExit() {
         return -1;
     }
 
-    public String[] WiseList(String str) {
+    public String[] wiseList(String str) {
         WiseSayingPage page = new WiseSayingPage();
-        String type = WiseSayingQuery.GetType(str);
-        String keyword = WiseSayingQuery.GetKeyword(str);
-        return page.GetPageOutput(type,keyword,str,wise);
+        String type = WiseSayingQuery.getType(str);
+        String keyword = WiseSayingQuery.getKeyword(str);
+        return page.getPageOutput(type,keyword,str,wise);
     }
 
-    public String WiseDelete(String str) {
-        int id = WiseSayingQuery.GetId(str) - 1;
-        if (ChkId(id)) return (id + 1) + "번은 존재 하지않음";
+    public String wiseDelete(String str) {
+        int id = WiseSayingQuery.getId(str) - 1;
+        if (chkId(id)) return (id + 1) + "번은 존재 하지않음";
         String[] save = wise.get(id);
         if (save[1].equals("d_1241")) return save[0] + "번은 존재 하지않음.";
         save[1] = "d_1241";
@@ -48,10 +48,10 @@ public class WiseSayingService {
         return "삭제완료";
     }
 
-    public String[] WiseChange(String str, String wiseWord, String name) {
-        int id = WiseSayingQuery.GetId(str) - 1;
+    public String[] wiseChange(String str, String wiseWord, String name) {
+        int id = WiseSayingQuery.getId(str) - 1;
         String[] s = new String[1];
-        if (ChkId(id)) {
+        if (chkId(id)) {
             s[0] = (id + 1) + "번은 존재 하지않음";
             return s;
         }
@@ -67,7 +67,7 @@ public class WiseSayingService {
 
     }
 
-    public String WiseBuild() {
+    public String wiseBuild() {
         JsonArray personArray = new JsonArray();
         for (String[] i : wise) {
             Json json = new Json();
@@ -79,9 +79,9 @@ public class WiseSayingService {
         File.File.save(personArray);
         return "빌드완료";
     }
-    public String WiseLoad(){
+    public String wiseLoad(){
         JsonArray personArray = new JsonArray();
-        wise = personArray.LoadTextToArrayList(File.File.load());
+        wise = personArray.loadTextToArrayList(File.File.load());
         return "정상 로드";
     }
 }

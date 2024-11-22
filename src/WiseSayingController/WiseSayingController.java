@@ -17,14 +17,14 @@ public class WiseSayingController {
         this.service = service;
         scanner = sc;
     }
-    public void StrPrint(String str, boolean IsLineBreak){
+    public void strPrint(String str, boolean IsLineBreak){
         if(IsLineBreak)
             System.out.println(str);
         else
             System.out.print(str);
 
     }
-    public void StrPrint(String[] str, boolean IsLineBreak){
+    public void strPrint(String[] str, boolean IsLineBreak){
         for(String i : str) {
             if(i  == null) continue;
             if (IsLineBreak)
@@ -34,43 +34,43 @@ public class WiseSayingController {
         }
 
     }
-    public void PrintTitle(){
-        StrPrint("번호 / 작가 / 명언",true);
-        StrPrint("-----------------", true);
+    public void printTitle(){
+        strPrint("번호 / 작가 / 명언",true);
+        strPrint("-----------------", true);
     }
-    public String GetString(String str){
-        StrPrint(str,false);
+    public String getString(String str){
+        strPrint(str,false);
         if(!scanner.hasNextLine()) return "종료";
         String result = scanner.nextLine();;
         return result;
     }
 
-    public int CheckInputContent(){
-        String str = GetString("명령)");
+    public int checkInputContent(){
+        String str = getString("명령)");
         if(str.equals("등록")) {
-            StrPrint(service.WiseInert(GetString("명언 : "), GetString("작가 : ")),true);
+            strPrint(service.wiseInert(getString("명언 : "), getString("작가 : ")),true);
             return 0;
         };
 
         if (str.equals("종료")){
-            StrPrint("종료",true);
-            return service.WiseExit();
+            strPrint("종료",true);
+            return service.wiseExit();
         }
         else if (str.contains("목록")){
-            PrintTitle();
-            StrPrint(service.WiseList(str),true);
+            printTitle();
+            strPrint(service.wiseList(str),true);
         }
         else if (str.contains("삭제")) {
-            StrPrint(service.WiseDelete(str),true);
+            strPrint(service.wiseDelete(str),true);
         }
         else if (str.contains("수정")){
-            StrPrint(service.WiseChange(str,GetString("명언 : "),GetString("작가 : ")),true);
+            strPrint(service.wiseChange(str, getString("명언 : "), getString("작가 : ")),true);
         }
         else if (str.equals("빌드")) {
-            StrPrint(service.WiseBuild(),true);
+            strPrint(service.wiseBuild(),true);
         }
         else if (str.equals("로드")) {
-            StrPrint(service.WiseLoad(),true);
+            strPrint(service.wiseLoad(),true);
         }
         return 0;
     }
@@ -79,7 +79,7 @@ public class WiseSayingController {
     public void run(){
         int chk = 0;
         while(chk == 0) {
-            chk = CheckInputContent();
+            chk = checkInputContent();
         }
     }
 

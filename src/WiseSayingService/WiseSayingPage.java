@@ -16,50 +16,50 @@ public class WiseSayingPage {
         output = new ArrayList<>();
     }
 
-    public void SetPage(String str) {
-        String s = WiseSayingQuery.GetQueryContent(str, "page");
+    public void setPage(String str) {
+        String s = WiseSayingQuery.getQueryContent(str, "page");
         if (Objects.equals(s, "")) page = 1;
         else page = Integer.parseInt(s);
     }
 
-    public void SetTotalPage(int n) {
-        totalPage = CalPage(n);
+    public void setTotalPage(int n) {
+        totalPage = calPage(n);
     }
 
-    public int CalPage(int num) {
+    public int calPage(int num) {
         float n = num;
         return (int) Math.max(Math.ceil(n / 5), 1);
 
     }
 
-    public void CheckPage() {
+    public void checkPage() {
         page = Math.min(totalPage, page);
     }
 
-    public List<String[]> CalNullType(List<String[]> list,String str) {
-        SetPage(str);
-        SetTotalPage(list.size());
-        CheckPage();
+    public List<String[]> calNullType(List<String[]> list, String str) {
+        setPage(str);
+        setTotalPage(list.size());
+        checkPage();
         return list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page - 1) * 5L).limit((page) * 5L).toList();
     }
 
-    public List<String[]> CalNotNullType(String type, String keyword,String str, List<String[]> list) {
+    public List<String[]> calNotNullType(String type, String keyword, String str, List<String[]> list) {
         if (type.equals("content"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
         else if (type.equals("author"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
-        SetPage(str);
-        SetTotalPage(list.size());
-        CheckPage();
+        setPage(str);
+        setTotalPage(list.size());
+        checkPage();
         return list.stream().skip((page - 1) * 5).limit((page) * 5).toList();
 
     }
 
-    public String[] GetPageOutput(String type, String keyword,String str, List<String[]> list) {
+    public String[] getPageOutput(String type, String keyword, String str, List<String[]> list) {
         if ((Objects.equals(type, "")) || (Objects.equals(keyword, ""))) {
-            list = CalNullType(list,str);
+            list = calNullType(list,str);
         } else {
-            list = CalNotNullType(type, keyword,str, list);
+            list = calNotNullType(type, keyword,str, list);
         }
 
         for (String[] i : list) {
@@ -68,10 +68,10 @@ public class WiseSayingPage {
         }
         output.add("--------------");
         output.add("페이지 : [" +page +"] / "+totalPage);
-        return ToStringArr(output);
+        return toStringArr(output);
     }
 
-    public String[] ToStringArr(List<String> output) {
+    public String[] toStringArr(List<String> output) {
         String[] arr = new String[output.size()];
         for(int i = 0; i< output.size(); i++){
             arr[i] = output.get(i);

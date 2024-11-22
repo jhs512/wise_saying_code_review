@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 
 
 //등록 종료 목록 삭제 수정 빌드
-public class testCode {
+public class TestCode {
     @Test
     public void testInsert() {
         String input = """
@@ -14,7 +14,7 @@ public class testCode {
                 등록 6 6
                 등록 7 7
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("명언 :");
         assert str.contains("작가 :");
         for(int i = 1; i<8; i++)
@@ -26,7 +26,7 @@ public class testCode {
         String input = """
                 종료
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("종료");
 
     }
@@ -47,7 +47,7 @@ public class testCode {
                 목록?keyword=a&keywordType=author
                 목록?keyword=a&keywordType=author&page=2
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("번호 / 작가 / 명언");
         assert str.contains("7 / 7a / 7");
         assert str.contains("1 / 1a / 1");
@@ -67,7 +67,7 @@ public class testCode {
                 삭제?id=-1
                 삭제?id=asd
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("삭제완료");
         assert str.contains("10번은 존재 하지않음");
         assert str.contains("2번은 존재 하지않음");
@@ -85,7 +85,7 @@ public class testCode {
                 삭제?id=2
                 수정?id=2 2c 2
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("명언(기존) : 삭제된 명언입니다.");
         assert str.contains("명언 : 2c");
         assert str.contains("명언 : 2b");
@@ -102,7 +102,7 @@ public class testCode {
                 등록 3a 3
                 빌드
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("빌드완료");
     }
     @Test
@@ -111,7 +111,7 @@ public class testCode {
                 로드
                 목록
                 """;
-        String str = testUtil.Run(input);
+        String str = TestUtil.Run(input);
         assert str.contains("번호 / 작가 / 명언");
         assert str.contains("3 / 3a / 3");
         assert str.contains("2 / 2a / 2");
