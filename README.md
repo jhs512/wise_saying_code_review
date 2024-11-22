@@ -1,1 +1,1 @@
-# wise_saying_code_review
+# wise-saying-app
