@@ -57,17 +57,8 @@ public class WiseSayingService {
         }
         String[] save = wise.get(id);
         String[] output = new String[4];
-        if (save[1].equals("d_1241")) {
-            output[0] = "명언(기존) : 삭제된 명언입니다.";
-            save[2] = wiseWord;
-            output[1] = "작가(기존) : 삭제된 명언입니다.";
-            save[1] = name;
-        } else {
-            output[0] = "명언(기존) : " + save[2];
-            save[2] = wiseWord;
-            output[1] = "작가(기존) : " + save[1];
-            save[1] = name;
-        }
+        output[0] = save[1].equals("d_1241") ? "명언(기존) : 삭제된 명언입니다.":"명언(기존) : " + save[2];
+        output[1] = save[1].equals("d_1241") ?  "작가(기존) : 삭제된 명언입니다." : "작가(기존) : " + save[1];
         output[2] = "명언 : " + wiseWord;
         save[2] = wiseWord;
         output[3] = "작가 : " + name;
