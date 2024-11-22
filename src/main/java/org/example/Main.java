@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.example.controller.WiseSayingController;
-import org.example.util.DependencyContainer;
+import org.example.config.DependencyContainer;
 
 public class Main {
 

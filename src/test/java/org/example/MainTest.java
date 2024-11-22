@@ -12,7 +12,7 @@ import org.example.Main.App;
 import org.example.config.ConfigReader;
 import org.example.dto.WiseSaying;
 import org.example.service.WiseSayingService;
-import org.example.util.DependencyContainer;
+import org.example.config.DependencyContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

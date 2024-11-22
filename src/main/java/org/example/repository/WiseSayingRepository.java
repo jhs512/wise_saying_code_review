@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.config.ConfigReader;
 import org.example.dto.WiseSaying;
-import org.example.util.FileToWiseSaying;
+import org.example.config.FileToWiseSaying;
 
 public class WiseSayingRepository {
 

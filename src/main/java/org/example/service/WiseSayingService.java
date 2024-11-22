@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import org.example.dto.WiseSaying;
 import org.example.repository.WiseSayingRepository;
-import org.example.util.CreateBuildData;
-import org.example.util.CreateJsonData;
-import org.example.util.QueryStringParser;
+import org.example.config.CreateBuildData;
+import org.example.config.CreateJsonData;
+import org.example.config.QueryStringParser;
 
 public class WiseSayingService {
 

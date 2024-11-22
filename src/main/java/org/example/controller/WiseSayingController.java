@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.example.dto.WiseSaying;
 import org.example.service.WiseSayingService;
-import org.example.util.QueryStringParser;
+import org.example.config.QueryStringParser;
 
 public class WiseSayingController {
 

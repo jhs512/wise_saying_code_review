@@ -1,6 +1,5 @@
-package org.example.util;
+package org.example.config;
 
-import org.example.config.ConfigReader;
 import org.example.controller.WiseSayingController;
 import org.example.repository.WiseSayingRepository;
 import org.example.service.WiseSayingService;
