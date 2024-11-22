@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.object.WiseSaying;
+import org.example.entity.WiseSaying;
 import org.example.repository.WiseSayingRepository;
 import java.util.Map;
 import java.util.Optional;
