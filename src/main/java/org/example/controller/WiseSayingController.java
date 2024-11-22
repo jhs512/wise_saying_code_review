@@ -10,10 +10,11 @@ import java.util.Scanner;
 public class WiseSayingController {
 
     private final WiseSayingService wiseSayingService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
-    public WiseSayingController(WiseSayingService wiseSayingService) {
+    public WiseSayingController(WiseSayingService wiseSayingService, Scanner scanner) {
         this.wiseSayingService = wiseSayingService;
+        this.scanner = scanner;
     }
 
     public void run() {
@@ -50,12 +51,13 @@ public class WiseSayingController {
 
                 } else if (input.startsWith("수정?id=")) {
                     String id = input.substring(6);
-                    WiseSayingItem item = wiseSayingService.findOne(id);
+                    WiseSayingItem item = wiseSayingService.findById(id);
 
                     System.out.println("명언(기존) : " + item.getWiseSaying());
                     System.out.print("명언 : ");
                     String newWiseSaying = scanner.nextLine();
                     wiseSayingService.updateWiseSaying(id, newWiseSaying);
+                    System.out.println("수정이 완료되었습니다.");
 
                     System.out.println("작가(기존) : " + item.getAuthor());
                     System.out.print("작가 : ");

@@ -43,11 +43,11 @@ public class Converter {
         for (int i = 0; i < items.size(); i++) {
             WiseSayingItem item = items.get(i);
 
-            jsonBuilder.append("\t{").append("\n");
-            jsonBuilder.append("\t\t\"id\": ").append(item.getId()).append(",").append("\n");
-            jsonBuilder.append("\t\t\"content\": \"").append(item.getWiseSaying()).append("\",").append("\n");
-            jsonBuilder.append("\"author\": \"").append(item.getAuthor()).append("\"\n");
-            jsonBuilder.append("\t}");
+            jsonBuilder.append("  {").append("\n");
+            jsonBuilder.append("    \"id\": ").append(item.getId()).append(",").append("\n");
+            jsonBuilder.append("    \"content\": \"").append(item.getWiseSaying()).append("\",").append("\n");
+            jsonBuilder.append("    \"author\": \"").append(item.getAuthor()).append("\"\n");
+            jsonBuilder.append("  }");
 
             if (i < items.size() - 1) {
                 jsonBuilder.append(",");

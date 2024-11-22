@@ -4,6 +4,8 @@ import org.example.controller.WiseSayingController;
 import org.example.repository.WiseSayingRepository;
 import org.example.service.WiseSayingService;
 
+import java.util.Scanner;
+
 public class AppConfig {
 
     public WiseSayingRepository wiseSayingRepository() {
@@ -14,7 +16,7 @@ public class AppConfig {
         return new WiseSayingService(wiseSayingRepository());
     }
 
-    public WiseSayingController wiseSayingController() {
-        return new WiseSayingController(wiseSayingService());
+    public WiseSayingController wiseSayingController(Scanner scanner) {
+        return new WiseSayingController(wiseSayingService(), scanner);
     }
 }

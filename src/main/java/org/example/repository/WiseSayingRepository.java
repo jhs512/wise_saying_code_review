@@ -33,17 +33,17 @@ public class WiseSayingRepository {
         return id;
     }
 
-    public List<String> findAllFromDb() {
+    public List<String> findAll() {
 
         return loadFiles().stream()
                 .map(item -> item.getId() + " / "
-                        + item.getAuthor() + " / "
-                        + item.getWiseSaying())
+                + item.getAuthor() + " / "
+                + item.getWiseSaying())
                 .collect(Collectors.toList());
 
     }
 
-    public WiseSayingItem findOneFromDb(String id) {
+    public WiseSayingItem findById(String id) {
         return loadFile(id);
     }
 
@@ -55,7 +55,7 @@ public class WiseSayingRepository {
         try {
             jsonString = Files.readString(path);
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException("해당 id의 명언은 존재하지 않습니다.", e);
         }
         Converter converter = new Converter();
         return converter.parseToJava(jsonString);
@@ -114,7 +114,8 @@ public class WiseSayingRepository {
             dataJsonStore.put(Long.parseLong(id), item);
 
         }
-        WiseSayingItem item = findOneFromDb(id);
+
+        WiseSayingItem item = findById(id);
         item.changeWiseSaying(wiseSaying);
         saveFile(item);
     }
@@ -128,7 +129,7 @@ public class WiseSayingRepository {
             dataJsonStore.put(Long.parseLong(id), item);
         }
 
-        WiseSayingItem item = findOneFromDb(id);
+        WiseSayingItem item = findById(id);
         item.changeAuthor(author);
         saveFile(item);
     }

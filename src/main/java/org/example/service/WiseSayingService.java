@@ -19,7 +19,7 @@ public class WiseSayingService {
 
 
     public List<String> search() {
-        return wiseSayingRepository.findAllFromDb();
+        return wiseSayingRepository.findAll();
     }
 
 
@@ -27,8 +27,8 @@ public class WiseSayingService {
         return wiseSayingRepository.remove(id);
     }
 
-    public WiseSayingItem findOne(String id) {
-        return wiseSayingRepository.findOneFromDb(id);
+    public WiseSayingItem findById(String id) {
+        return wiseSayingRepository.findById(id);
     }
 
     public void updateAuthor(String id, String author) {
@@ -37,11 +37,6 @@ public class WiseSayingService {
 
     public void updateWiseSaying(String id, String wiseSaying) {
         wiseSayingRepository.updateWiseSaying(id, wiseSaying);
-    }
-
-
-    public void saveLastFileNumber() {
-        wiseSayingRepository.saveLastFileNumber();
     }
 
     // 모든 명언을 모아 data 파일 생성
