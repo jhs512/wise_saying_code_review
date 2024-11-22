@@ -47,6 +47,14 @@ public class WiseSayingRepository {
         return loadFile(id);
     }
 
+    public List<String> findByKeywords (String keywordType, String keyword) {
+        return loadFiles(keywordType, keyword).stream()
+                .map(item -> item.getId() + " / "
+                        + item.getWiseSaying() + " / "
+                        + item.getAuthor())
+                .collect(Collectors.toList());
+    }
+
     private WiseSayingItem loadFile(String id) {
         String fileName = id + EXTENSION_JSON.getData();
         Path path = Path.of(DB_DIRECTORY_PATH.getData() + "/" + fileName);
@@ -78,6 +86,34 @@ public class WiseSayingRepository {
                     Converter converter = new Converter();
                     WiseSayingItem item = converter.parseToJava(jsonString);
                     items.add(item);
+                }
+            }
+        }
+        items.sort(Comparator.comparingLong(WiseSayingItem::getId));
+        return items;
+    }
+
+    private List<WiseSayingItem> loadFiles(String keywordType, String keyword) {
+        // listFiles() 는 순서가 보장되지 않는다.
+        File[] files = new File(DB_DIRECTORY_PATH.getData()).listFiles();
+        String jsonString = "";
+        List<WiseSayingItem> items = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().endsWith(".json") && !file.getName().startsWith("data")) {
+                    try {
+                        jsonString = Files.readString(file.toPath());
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException("파일을 읽어올 수 없습니다. 경로와 이름을 확인해주세요.", e);
+                    }
+                    Converter converter = new Converter();
+                    WiseSayingItem item = converter.parseToJava(jsonString);
+                    if (keywordType.equals("content") && item.getWiseSaying().contains(keyword)) {
+                        items.add(item);
+                    } else if (keywordType.equals("author") && item.getAuthor().contains(keyword)) {
+                        items.add(item);
+                    }
                 }
             }
         }

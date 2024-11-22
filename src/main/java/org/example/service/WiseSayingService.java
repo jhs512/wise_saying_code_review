@@ -43,4 +43,8 @@ public class WiseSayingService {
     public void build() {
         wiseSayingRepository.saveAllWiseSaying();
     }
+
+    public List<String> findByKeywords(String keywordType, String keyword) {
+        return wiseSayingRepository.findByKeywords(keywordType, keyword);
+    }
 }

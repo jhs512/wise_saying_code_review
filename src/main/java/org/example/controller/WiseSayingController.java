@@ -37,17 +37,26 @@ public class WiseSayingController {
                     scanner.close();
                     break;
 
-                } else if (input.equals("목록")) {
-                    System.out.println("번호 / 작가 / 명언");
-                    System.out.println("---------------");
-                    List<String> list = wiseSayingService.search();
-                    list.forEach(System.out::println);
+                } else if (input.startsWith("목록")) {
+                    if (input.startsWith("목록?keywordType=")) {
+                        String[] keywords = input.split("keywordType=")[1].split("&keyword=");
+                        String keywordType = keywords[0];
+                        String keyword = keywords[1];
+                        List<String> list = wiseSayingService.findByKeywords(keywordType, keyword);
+                        list.forEach(System.out::println);
+                    } else {
+                        System.out.println("번호 / 작가 / 명언");
+                        System.out.println("---------------");
+                        List<String> list = wiseSayingService.search();
+                        list.forEach(System.out::println);
+                    }
+
 
                 } else if (input.startsWith("삭제?id=")) {
                     // 6은 추후 상수화
                     String id = input.substring(6);
-                    wiseSayingService.remove(id);
-                    System.out.println(id +  "번 명언이 삭제되었습니다.");
+                    String removedId = wiseSayingService.remove(id);
+                    System.out.println(removedId +  "번 명언이 삭제되었습니다.");
 
                 } else if (input.startsWith("수정?id=")) {
                     String id = input.substring(6);
