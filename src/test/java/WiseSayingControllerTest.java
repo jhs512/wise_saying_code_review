@@ -3,10 +3,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 public class WiseSayingControllerTest {
@@ -17,7 +14,7 @@ public class WiseSayingControllerTest {
 
     @Test
     @DisplayName("등록")
-    public void t3() throws IOException, ParseException {
+    public void t1() throws IOException, ParseException {
         final String out = AppTest.run("""
                 등록
                 현재를 사랑하라.
@@ -31,30 +28,59 @@ public class WiseSayingControllerTest {
     }
 
     @Test
-    public void testProcessInputAndPrint() {
-        // 가짜 입력 설정
-        String fakeInput = "JUnit5 is awesome!";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(fakeInput.getBytes());
-        System.setIn(inputStream);
+    @DisplayName("목록")
+    public void t2() throws IOException, ParseException {
+        final String out = AppTest.run("""
+                목록
+                목록
+                """);
 
-        // 출력 캡처 설정
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-        PrintStream originalOut = System.out; // 기존 출력 스트림 백업
-        System.setOut(printStream);
+        assertThat(out)
+                .contains("번호 / 작가 / 명언")
+                .contains("----------------------")
+                .contains("2 / 작자미상 / 과거에 집착하지 마라.")
+                .contains("1 / 작자미상 / 현재를 사랑하라.");
+    }
 
-        // 테스트 실행
-        InputProcessor inputProcessor = new InputProcessor();
-        inputProcessor.processInputAndPrint();
+    @Test
+    @DisplayName("삭제")
+    public void t3() throws IOException, ParseException {
+        final String out = AppTest.run("""
+                삭제?id=1
+                삭제?id=1
+                """);
 
-        // 검증: AssertJ를 사용한 출력 내용 검증
-        String output = outputStream.toString();
-        assertThat(output)
-                .contains("Enter your input:")
-                .contains("You entered: JUnit5 is awesome!");
+        assertThat(out)
+                .contains("1번 명언이 삭제되었습니다.")
+                .contains("1번 명언은 존재하지 않습니다.");
+    }
 
-        // System.in과 System.out 복원
-        System.setIn(System.in);
-        System.setOut(originalOut);
+    @Test
+    @DisplayName("수정")
+    public void t4() throws IOException, ParseException {
+        final String out = AppTest.run("""
+                수정?id=1
+                미래를 봐라
+                홍길동
+                목록
+                """);
+
+        assertThat(out)
+                .contains("명언(기존) :")
+                .contains("명언 :")
+                .contains("작가(기존) : ")
+                .contains("작가 : ")
+                .contains("번호 / 작가 / 명언");
+    }
+
+    @Test
+    @DisplayName("빌드")
+    public void t5() throws IOException, ParseException {
+        final String out = AppTest.run("""
+                빌드
+                """);
+
+        assertThat(out)
+                .contains("data.json 파일의 내용이 갱신되었습니다.");
     }
 }
