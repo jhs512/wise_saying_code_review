@@ -1,14 +1,12 @@
-package Repository;
+import WiseSayingRepository.JsonArray;
 
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Util {
-    public static class File{
+public class File {
         final static  String url = ".\\db\\wiseSaying\\data.json";
         static public void save(JsonArray jarr) {
             try {
@@ -51,5 +49,5 @@ public class Util {
             }
         }
 
-    }
+
 }

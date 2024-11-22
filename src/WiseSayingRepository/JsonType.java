@@ -1,4 +1,4 @@
-package Repository;
+package WiseSayingRepository;
 
 public class JsonType{
     String name;

@@ -1,23 +1,15 @@
-package Controller;
-
-import Service.Service;
-
 import java.util.Scanner;
 
 
 
-public class Controller{
+public class WiseSayingController {
     private Scanner scanner;
-    private Service service;
-
-    public Controller(){
-        scanner = new Scanner(System.in);
-    }
-    public Controller(Service service){
+    private WiseSayingService service;
+    public WiseSayingController(WiseSayingService service){
         scanner = new Scanner(System.in);
         this.service = service;
     }
-    public Controller(Service service,Scanner sc){
+    public WiseSayingController(WiseSayingService service, Scanner sc){
         this.service = service;
         scanner = sc;
     }
@@ -44,6 +36,7 @@ public class Controller{
     }
     public String GetString(String str){
         StrPrint(str,false);
+        if(!scanner.hasNextLine()) return "종료";
         String result = scanner.nextLine();;
         return result;
     }
@@ -55,7 +48,10 @@ public class Controller{
             return 0;
         };
 
-        if (str.equals("종료")) return service.WiseExit();
+        if (str.equals("종료")){
+            StrPrint("종료",true);
+            return service.WiseExit();
+        }
         else if (str.contains("목록")){
             PrintTitle();
             StrPrint(service.WiseList(str),true);

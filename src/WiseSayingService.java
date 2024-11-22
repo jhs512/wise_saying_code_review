@@ -1,20 +1,15 @@
-package Service;
-import Repository.Json;
-import Repository.JsonArray;
-import Repository.Util;
+import WiseSayingRepository.Json;
+import WiseSayingRepository.JsonArray;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 
-public class Service {
+public class WiseSayingService {
 
-    public ArrayList<String[]> wise = new ArrayList<>();
-    public String[] SeparateString(String str){
-        String[] a = str.split("\\?");
-        if(a.length <2) return null;
-        return a[1].split("&");
-    }
+    private ArrayList<String[]> wise = new ArrayList<>();
+
     public boolean isDigit(String str){
         for(char c : str.toCharArray()){
             if(!Character.isDigit(c)){
@@ -23,6 +18,12 @@ public class Service {
         }
         return true;
     }
+    public String[] SeparateString(String str){
+        String[] a = str.split("\\?");
+        if(a.length <2) return null;
+        return a[1].split("&");
+    }
+
 
     public String GetQueryContent(String strOri,String strSearch){
         String[] strs = SeparateString(strOri);
@@ -39,12 +40,9 @@ public class Service {
         if(s == "" || !isDigit(s)) return -1;
         return Integer.parseInt(GetQueryContent(str,"id"));
     }
-
-
     public String GetKeyword(String str) {
         return GetQueryContent(str,"keyword");
     }
-
     public String GetType(String str) {
         return GetQueryContent(str,"keywordType");
     }
@@ -59,7 +57,7 @@ public class Service {
         return Integer.parseInt(s);
 
     }
-    public int GetPage(int num) {
+    public int CheckPage(int num) {
         float n = num;
         return (int) Math.ceil(n/5);
 
@@ -88,7 +86,7 @@ public class Service {
 
         int i = 0;
         if ((type == "") || (keyword == "")) {
-            totalPage = Math.max(GetPage(wise.size()),1);
+            totalPage = Math.max(CheckPage(wise.size()),1);
             page = Math.min(totalPage,page);
             List<String[]> arr =  wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page-1)*5).limit((page)*5).toList();
             for (String[] j : arr) {
@@ -100,7 +98,7 @@ public class Service {
             List<String[]> arr1 = new ArrayList<>();
             if (type.equals("content")) arr1 = wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
             else if (type.equals("author"))  arr1 =  wise.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
-            totalPage = Math.max(GetPage(arr1.size()),1);
+            totalPage = Math.max(CheckPage(arr1.size()),1);
             page = Math.min(totalPage,page);
             List<String[]> arr =  arr1.stream().skip((page-1)*5).limit((page)*5).toList();
             for (String[] j : arr) {
@@ -162,12 +160,12 @@ public class Service {
             json.put("content", i[2]);
             personArray.put(json);
         }
-        Util.File.save(personArray);
+        File.save(personArray);
         return "빌드완료";
     }
     public String WiseLoad(){
         JsonArray personArray = new JsonArray();
-        wise = personArray.LoadTextToArrayList(Util.File.load());
+        wise = personArray.LoadTextToArrayList(File.load());
         return "정상 로드";
     }
 }

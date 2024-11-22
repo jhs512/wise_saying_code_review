@@ -1,6 +1,3 @@
-import Controller.Controller;
-import Service.Service;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,8 +38,8 @@ public class testUtil {
     public static String Run(String input){
         input = input.replace(" ","\n");
         ByteArrayOutputStream output = setOutToByteArray();
-        Service service = new Service();
-        Controller c = new Controller(service, genScanner(input));
+        WiseSayingService service = new WiseSayingService();
+        WiseSayingController c = new WiseSayingController(service, genScanner(input));
         c.run();
         clearSetOutToByteArray(output);
         System.out.println(output.toString());

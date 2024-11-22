@@ -1,6 +1,5 @@
-package Repository;
+package WiseSayingRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class JsonArray {
