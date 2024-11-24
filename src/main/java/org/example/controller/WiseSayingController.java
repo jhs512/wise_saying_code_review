@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.App;
 import org.example.config.Config;
+import org.example.dto.Pageable;
 import org.example.dto.WiseSayingDTO;
 import org.example.entity.WiseSaying;
 import org.example.service.WiseSayingService;
@@ -56,7 +57,8 @@ public class WiseSayingController {
 
     public void getWiseSayings(String request) {
         Map<String, String> paramMap = getRequestParams(request);
-        List<WiseSayingDTO> list = wiseSayingService.getWiseSayingList(paramMap);
+        Pageable pageable = new Pageable();
+        List<WiseSayingDTO> list = wiseSayingService.getWiseSayingList(paramMap, pageable);
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 

@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.config.Config;
+import org.example.dto.Pageable;
 import org.example.dto.WiseSayingDTO;
 import org.example.entity.WiseSaying;
 import org.example.util.FileUtil;
@@ -9,12 +10,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static javax.swing.text.html.HTML.Tag.S;
 
 
 public class WiseSayingRepository {
@@ -135,23 +133,46 @@ public class WiseSayingRepository {
         return null;
     }
 
-    public List<WiseSayingDTO> findByContent(String content) {
-        List<WiseSayingDTO> list = new ArrayList<>();
-        for(WiseSaying wiseSaying : wiseSayingList) {
+    public List<WiseSayingDTO> findByContent(String content, Pageable pageable) {
+        int totalDataCount = wiseSayingList.size();
+        pageable.setTotalDataCount(totalDataCount);
+
+        int cnt = 0;
+        List<WiseSayingDTO> result = new ArrayList<>();
+        for(int i=0; i<totalDataCount; i++) {
+            WiseSaying wiseSaying = wiseSayingList.get(i);
             if(wiseSaying.getContent().contains(content)) {
-                list.add(new WiseSayingDTO(wiseSaying));
+                cnt++;
+                if(cnt >= pageable.getOffset()) {
+                    result.add(new WiseSayingDTO(wiseSaying));
+                }
+                if(cnt > pageable.getOffset() + pageable.getLimit()) {
+                    break;
+                }
             }
         }
-        return list;
+        return result;
     }
-    public List<WiseSayingDTO> findByAuthor(String author) {
-        List<WiseSayingDTO> list = new ArrayList<>();
-        for(WiseSaying wiseSaying : wiseSayingList) {
+
+    public List<WiseSayingDTO> findByAuthor(String author, Pageable pageable) {
+        int totalDataCount = wiseSayingList.size();
+        pageable.setTotalDataCount(totalDataCount);
+
+        int cnt = 0;
+        List<WiseSayingDTO> result = new ArrayList<>();
+        for(int i=0; i<totalDataCount; i++) {
+            WiseSaying wiseSaying = wiseSayingList.get(i);
             if(wiseSaying.getAuthor().contains(author)) {
-                list.add(new WiseSayingDTO(wiseSaying));
+                cnt++;
+                if(cnt >= pageable.getOffset()) {
+                    result.add(new WiseSayingDTO(wiseSaying));
+                }
+                if(cnt > pageable.getOffset() + pageable.getLimit()) {
+                    break;
+                }
             }
         }
-        return list;
+        return result;
     }
 
     public void setConfig(Config config) {
@@ -159,9 +180,23 @@ public class WiseSayingRepository {
         JSON_PATH = config.getJsonPath();
     }
 
-    public List<WiseSayingDTO> findAll() {
-        return wiseSayingList.stream().map(WiseSayingDTO::new).toList();
+    public List<WiseSayingDTO> findAll(Pageable pageable) {
+        int totalDataCount = wiseSayingList.size();
+        pageable.setTotalDataCount(totalDataCount);
+
+        int cnt = 0;
+        List<WiseSayingDTO> result = new ArrayList<>();
+        for(WiseSaying wiseSaying : wiseSayingList) {
+            if(cnt >= pageable.getOffset()) {
+                result.add(new WiseSayingDTO(wiseSaying));
+            }
+            if(cnt > pageable.getOffset() + pageable.getLimit()) {
+                break;
+            }
+        }
+        return result;
     }
+
 
     public void removeAll() {
         for(int id_=1; id_<id; id_++) {
@@ -170,7 +205,4 @@ public class WiseSayingRepository {
         FileUtil.deleteFile(Paths.get(LAST_ID_PATH));
         return;
     }
-
-
-
 }
