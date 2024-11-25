@@ -10,10 +10,10 @@ import org.example.service.WiseSayingService;
 public class DependencyContainer {
 
     public ConfigReader createConfigReader() {
-        return new ConfigReader();
+        return new ConfigReader("src/main/resources/config.properties");
     }
 
-    public FileParser createFileToWiseSaying() {
+    public FileParser createFileParser() {
         return new FileParser();
     }
 
@@ -27,7 +27,7 @@ public class DependencyContainer {
 
     public WiseSayingRepository createWiseSayingRepository() {
         ConfigReader configReader = createConfigReader();
-        FileParser fileToWiseSaying = createFileToWiseSaying();
+        FileParser fileToWiseSaying = createFileParser();
         return new WiseSayingRepository(configReader, fileToWiseSaying);
     }
 

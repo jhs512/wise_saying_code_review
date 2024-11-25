@@ -24,7 +24,7 @@ public class WiseSayingRepository {
 
     public int getNextId() throws IOException {
 
-        String path = configReader.getTxtFilePath("base.save.path");
+        String path = configReader.getTxtFilePath();
         File file = new File(path);
 
         if (file.exists()) {
@@ -51,24 +51,24 @@ public class WiseSayingRepository {
     }
 
     public int saveWiseSaying(String data, int id) throws IOException {
-        String path = configReader.getJsonFilePath("base.save.path", id);
+        String path = configReader.getJsonFilePath(id);
         save(data, path);
         return id;
     }
 
     public boolean saveTxtFile(int id) throws IOException {
-        String path = configReader.getTxtFilePath("base.save.path");
+        String path = configReader.getTxtFilePath();
         return save(String.valueOf(id), path);
     }
 
     public boolean saveBuildFile(String data) throws IOException {
-        String path = configReader.getBuildFilePath("base.save.path");
+        String path = configReader.getBuildFilePath();
         return save(data, path);
     }
 
     public List<WiseSaying> findAll() {
 
-        String path = configReader.getProperty("base.save.path");
+        String path = configReader.getBasePath();
         File jsonFiles = new File(path);
 
         if (jsonFiles.exists() && jsonFiles.isDirectory()) {
@@ -101,7 +101,7 @@ public class WiseSayingRepository {
 
     public int delete(int id) {
 
-        String path = configReader.getJsonFilePath("base.save.path", id);
+        String path = configReader.getJsonFilePath(id);
         File file = new File(path);
 
         if (file.exists() && file.delete()) {
@@ -111,7 +111,7 @@ public class WiseSayingRepository {
     }
 
     public Optional<WiseSaying> findById(int id) {
-        String path = configReader.getJsonFilePath("base.save.path", id);
+        String path = configReader.getJsonFilePath(id);
         File file = new File(path);
 
         if (file.exists()) {

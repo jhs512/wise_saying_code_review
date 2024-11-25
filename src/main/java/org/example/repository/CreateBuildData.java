@@ -15,7 +15,7 @@ public class CreateBuildData {
     }
 
     public String createBuildData() {
-        String path = configReader.getProperty("base.save.path");
+        String path = configReader.getBasePath();
         File jsonFiles = new File(path);
         StringBuilder jsonContents = new StringBuilder();
 

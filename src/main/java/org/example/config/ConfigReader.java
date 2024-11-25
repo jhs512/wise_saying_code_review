@@ -7,30 +7,33 @@ import java.util.Properties;
 
 public class ConfigReader {
 
-    // 설정 파일에서 값을 읽어오는 메서드
-    public String getProperty(String key) {
-        Properties properties = new Properties();
+    private final Properties properties;
 
-        // config.properties 파일 읽기
-        try (InputStream inputStream = new FileInputStream(
-            "src/main/resources/config.properties")) {
-            properties.load(inputStream); // properties 파일 로드
+    public ConfigReader(String propertyFilePath) {
+        properties = new Properties();
+
+        try (InputStream inputStream = new FileInputStream(propertyFilePath)) {
+            properties.load(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("파일 로드 실패", e);
         }
+    }
 
+    // 설정 파일에서 값을 읽어오는 메서드
+    public String getBasePath() {
+        String key = System.getProperty("config.path.key", "base.save.path");
         return properties.getProperty(key);
     }
 
-    public String getJsonFilePath(String key, int id) {
-        return getProperty(key) + id + ".json";
+    public String getJsonFilePath(int id) {
+        return getBasePath() + id + ".json";
     }
 
-    public String getTxtFilePath(String key) {
-        return getProperty(key) + "lastId.txt";
+    public String getTxtFilePath() {
+        return getBasePath() + "lastId.txt";
     }
 
-    public String getBuildFilePath(String key) {
-        return getProperty(key) + "data.json";
+    public String getBuildFilePath() {
+        return getBasePath() + "data.json";
     }
 }

@@ -14,25 +14,27 @@ import org.example.domain.WiseSaying;
 import org.example.service.WiseSayingService;
 import org.example.config.DependencyContainer;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
 
-    private final WiseSayingService wiseSayingService;
-    private final ConfigReader configReader;
+    private WiseSayingService wiseSayingService;
+    private ConfigReader configReader;
 
-    MainTest() {
+    @BeforeEach
+    public void setUp() {
         DependencyContainer dependencyContainer = new DependencyContainer();
         this.wiseSayingService = dependencyContainer.createWiseSayingService();
-        this.configReader = new ConfigReader();
+        System.setProperty("config.path.key", "test.save.path");
+        this.configReader = new ConfigReader("src/main/resources/config.properties");
     }
-
 
     @AfterEach
     public void cleanUp() throws IOException {
         // 디렉토리 삭제 전에 파일이나 디렉토리 내용이 있다면 삭제
-        File directory = new File(configReader.getProperty("test.save.path"));
+        File directory = new File(configReader.getBasePath());
         if (directory.exists()) {
             // 디렉토리 내 모든 파일 삭제
             for (File file : Objects.requireNonNull(directory.listFiles())) {
@@ -51,10 +53,7 @@ class MainTest {
             } else {
                 throw new IOException("Failed to delete " + directory.getName());
             }
-
         }
-
-
     }
 
     // 디렉토리 및 그 안의 파일을 삭제하는 메서드
@@ -882,7 +881,5 @@ class MainTest {
         // cleanup
         TestUtil.clearSetOutToByteArray(output);
     }
-
-
 
 }
