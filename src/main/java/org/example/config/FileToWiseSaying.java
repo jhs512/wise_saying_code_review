@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
-import org.example.dto.WiseSaying;
+import org.example.domain.WiseSaying;
 
 public class FileToWiseSaying {
 

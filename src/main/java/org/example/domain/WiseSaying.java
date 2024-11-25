@@ -1,10 +1,10 @@
-package org.example.dto;
+package org.example.domain;
 
 public class WiseSaying {
 
-    int id;
-    String content;
-    String author;
+    private int id;
+    private String content;
+    private String author;
 
     public WiseSaying(int id, String content, String author) {
         this.id = id;
@@ -20,16 +20,13 @@ public class WiseSaying {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    @Override
+    public String toString() {
+        return id + " / " + author + " / " + content;
     }
 
 }

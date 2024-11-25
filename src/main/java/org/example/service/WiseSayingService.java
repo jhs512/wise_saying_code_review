@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.example.dto.WiseSaying;
+import org.example.domain.WiseSaying;
 import org.example.repository.WiseSayingRepository;
 import org.example.config.CreateBuildData;
 import org.example.config.CreateJsonData;

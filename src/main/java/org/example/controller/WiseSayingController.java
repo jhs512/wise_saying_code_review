@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import org.example.dto.WiseSaying;
+import org.example.domain.WiseSaying;
 import org.example.service.WiseSayingService;
 import org.example.config.QueryStringParser;
 
@@ -38,9 +38,7 @@ public class WiseSayingController {
         // 명언 출력
         int page = queryStringParser.getPage(cmd);
         List<WiseSaying> listOfWiseSaying = wiseSayingService.getListOfWiseSaying(page);
-        for (WiseSaying wiseSaying : listOfWiseSaying) {
-            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
-        }
+        listOfWiseSaying.forEach(System.out::println);
 
         // 페이지 출력
         System.out.print("페이지 : ");
@@ -58,9 +56,7 @@ public class WiseSayingController {
         System.out.println("--------------------");
 
         List<WiseSaying> listByKeyword = wiseSayingService.getListByKeyword(keyword[0], keyword[1], page);
-        for (WiseSaying wiseSaying : listByKeyword) {
-            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
-        }
+        listByKeyword.forEach(System.out::println);
 
         // 페이지 출력
         System.out.print("페이지 : ");

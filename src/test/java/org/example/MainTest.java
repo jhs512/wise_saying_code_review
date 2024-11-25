@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import org.example.Main.App;
 import org.example.config.ConfigReader;
-import org.example.dto.WiseSaying;
+import org.example.domain.WiseSaying;
 import org.example.service.WiseSayingService;
 import org.example.config.DependencyContainer;
 import org.junit.jupiter.api.AfterEach;
