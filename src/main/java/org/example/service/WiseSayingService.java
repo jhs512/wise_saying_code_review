@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import org.example.domain.WiseSaying;
 import org.example.repository.WiseSayingRepository;
-import org.example.config.CreateBuildData;
-import org.example.config.CreateJsonData;
-import org.example.config.QueryStringParser;
+import org.example.repository.CreateBuildData;
+import org.example.repository.CreateJsonData;
+import org.example.repository.QueryStringParser;
 
 public class WiseSayingService {
 
@@ -28,7 +28,7 @@ public class WiseSayingService {
     }
 
     public int createWiseSaying(String content, String author) throws IOException {
-        int id = wiseSayingRepository.findLastId();
+        int id = wiseSayingRepository.getNextId();
         return createJsonFile(id, content, author);
     }
 

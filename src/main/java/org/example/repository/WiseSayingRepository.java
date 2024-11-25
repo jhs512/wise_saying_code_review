@@ -11,19 +11,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.config.ConfigReader;
 import org.example.domain.WiseSaying;
-import org.example.config.FileToWiseSaying;
 
 public class WiseSayingRepository {
 
     private final ConfigReader configReader;
-    private final FileToWiseSaying fileToWiseSaying;
+    private final FileParser fileParser;
 
-    public WiseSayingRepository(ConfigReader configReader, FileToWiseSaying fileToWiseSaying) {
+    public WiseSayingRepository(ConfigReader configReader, FileParser fileToWiseSaying) {
         this.configReader = configReader;
-        this.fileToWiseSaying = fileToWiseSaying;
+        this.fileParser = fileToWiseSaying;
     }
 
-    public int findLastId() {
+    public int getNextId() throws IOException {
 
         String path = configReader.getTxtFilePath("base.save.path");
         File file = new File(path);
@@ -32,7 +31,7 @@ public class WiseSayingRepository {
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
                 return Integer.parseInt(reader.readLine()) + 1;
             } catch (IOException e) {
-                System.out.println("파일 읽기 에러" + e.getMessage());
+                throw new IOException("파일 읽기 중 에러 발생: " + e.getMessage(), e);
             }
         }
 
@@ -47,7 +46,7 @@ public class WiseSayingRepository {
             fileWriter.write(data);
             return true;
         } catch (IOException e) {
-            throw new IOException(e.getMessage());
+            throw new IOException("파일 저장 중 에러 발생: " + e.getMessage(), e);
         }
     }
 
@@ -80,7 +79,8 @@ public class WiseSayingRepository {
                 List<WiseSaying> list = new ArrayList<>();
 
                 for(File file : files) {
-                    list.add(fileToWiseSaying.parseFileToWiseSaying(file).get());
+                    Optional<WiseSaying> wiseSaying = fileParser.parseFileToWiseSaying(file);
+                    wiseSaying.ifPresent(list::add);
                 }
                 return list;
             }
@@ -104,8 +104,7 @@ public class WiseSayingRepository {
         String path = configReader.getJsonFilePath("base.save.path", id);
         File file = new File(path);
 
-        if (file.exists()) {
-            file.delete();
+        if (file.exists() && file.delete()) {
             return id;
         }
         return -1;
@@ -116,7 +115,7 @@ public class WiseSayingRepository {
         File file = new File(path);
 
         if (file.exists()) {
-            return fileToWiseSaying.parseFileToWiseSaying(file);
+            return fileParser.parseFileToWiseSaying(file);
         }
         return Optional.empty();
     }

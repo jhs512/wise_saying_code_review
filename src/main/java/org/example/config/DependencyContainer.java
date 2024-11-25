@@ -1,6 +1,9 @@
 package org.example.config;
 
 import org.example.controller.WiseSayingController;
+import org.example.repository.CreateBuildData;
+import org.example.repository.FileParser;
+import org.example.repository.QueryStringParser;
 import org.example.repository.WiseSayingRepository;
 import org.example.service.WiseSayingService;
 
@@ -10,8 +13,8 @@ public class DependencyContainer {
         return new ConfigReader();
     }
 
-    public FileToWiseSaying createFileToWiseSaying() {
-        return new FileToWiseSaying();
+    public FileParser createFileToWiseSaying() {
+        return new FileParser();
     }
 
     public QueryStringParser createQueryStringParser() {
@@ -24,7 +27,7 @@ public class DependencyContainer {
 
     public WiseSayingRepository createWiseSayingRepository() {
         ConfigReader configReader = createConfigReader();
-        FileToWiseSaying fileToWiseSaying = createFileToWiseSaying();
+        FileParser fileToWiseSaying = createFileToWiseSaying();
         return new WiseSayingRepository(configReader, fileToWiseSaying);
     }
 

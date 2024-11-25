@@ -1,9 +1,10 @@
-package org.example.config;
+package org.example.repository;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
+import org.example.config.ConfigReader;
 
 public class CreateBuildData {
 

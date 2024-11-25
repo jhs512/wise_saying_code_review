@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.repository;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Optional;
 import org.example.domain.WiseSaying;
 
-public class FileToWiseSaying {
+public class FileParser {
 
     public Optional<WiseSaying> parseFileToWiseSaying(File file) {
         String[] values = new String[3];
