@@ -7,18 +7,21 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WiseSayingService {
 
-    WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
+    private final WiseSayingRepository wiseSayingRepository = new WiseSayingRepository();
+    private final String CONTENT = "content";
+    private final String AUTHOR = "author";
+    private final String ID = "id";
 
-    public void init(List<WiseSaying> list, int id) throws IOException, ParseException {
-
-        id = wiseSayingRepository.selectLastId();
+    public void getData(List<WiseSaying> list) throws IOException, ParseException {
         JSONArray arr = wiseSayingRepository.selectData();
 
-        if (arr != null){
+        if (arr != null) {
             for (Object o : arr) {
 
                 JSONObject obj = (JSONObject) o;
@@ -49,21 +52,49 @@ public class WiseSayingService {
         wiseSayingRepository.insertLastId(id);
     }
 
-    public void selectList(List<WiseSaying> list, String[] rules) {
+    public void selectList(List<WiseSaying> list, Map<String, String> map) {
 
-        for (int i = list.size() - 1; i >= 0; i--) {
-            for (int j = 0; j < rules.length; j++) {
-                WiseSaying wiseSaying = list.get(i);
+        String keywordType = map.get("keywordType");
+        String keyword = map.get("keyword");
+        List<WiseSaying> tmpList;
 
-                switch (rules[j].trim()) {
-                    case "번호" -> System.out.print(wiseSaying.getId());
-                    case "명언" -> System.out.print(wiseSaying.getContent());
-                    case "작가" -> System.out.print(wiseSaying.getAuthor());
-                }
-                if (j < rules.length - 1) System.out.print(" / ");
-            }
-            System.out.println();
+
+        if (CONTENT.equals(keywordType)) {
+            tmpList = new ArrayList<>(list).stream()
+                    .filter(e -> e.getContent().contains(keyword))
+                    .toList();
+        } else if (AUTHOR.equals(keywordType)) {
+            tmpList = new ArrayList<>(list).stream()
+                    .filter(e -> e.getAuthor().contains(keyword))
+                    .toList();
+        } else {
+            tmpList = new ArrayList<>(list);
         }
+
+        int view = 5;
+        int paging = (tmpList.size()%view > 0) ? (tmpList.size()/view) + 1: (tmpList.size()/view);
+        int page = Integer.parseInt(map.getOrDefault("page", "1"));
+        if (page > paging) page = paging;
+
+        int start = (tmpList.size() > 5) ? tmpList.size()-1-((page-1)*view): tmpList.size()-1;
+        int end = tmpList.size()-1-(view*page);
+        if (end < -1) end = -1;
+
+        for (int i = start; i > end; i--) {
+            WiseSaying wiseSaying = tmpList.get(i);
+            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
+        }
+
+        System.out.println("----------------------");
+        System.out.print("페이지 : ");
+
+        for (int i = 1; i<=paging; i++) {
+            if (page == i) System.out.print("[" +i + "]");
+            else  System.out.print(i);
+
+            if (i != paging) System.out.print(" / ");
+        }
+        System.out.println();
     }
 
     public void deleteData(int id) {
@@ -95,5 +126,9 @@ public class WiseSayingService {
         }
 
         wiseSayingRepository.build(arr);
+    }
+
+    public int getLastId() throws IOException, ParseException {
+        return wiseSayingRepository.selectLastId();
     }
 }

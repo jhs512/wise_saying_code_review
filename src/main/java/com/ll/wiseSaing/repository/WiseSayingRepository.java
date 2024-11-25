@@ -9,10 +9,10 @@ import java.io.*;
 
 public class WiseSayingRepository  {
 
-    static final String PATH = "D:\\son\\project\\programmers\\db\\wiseSaying\\";
-    Reader reader;
-    File file;
-    BufferedWriter bw;
+    private static final String PATH = "D:\\son\\project\\programmers\\db\\wiseSaying\\";
+    private Reader reader;
+    private File file;
+    private BufferedWriter bw;
 
     public JSONArray selectData() throws IOException, ParseException {
         file = new File(PATH+"data.json");
