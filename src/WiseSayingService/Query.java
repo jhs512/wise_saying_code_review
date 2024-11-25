@@ -32,7 +32,7 @@ public class Query {
     public static int getQueryContentInteger(String str,String type){
         String s = calQueryContent(str,type);
         if(s == "" || !isDigit(s)) return -1;
-        return Integer.parseInt(calQueryContent(str,type));
+        return Integer.parseInt(s);
     }
 
 

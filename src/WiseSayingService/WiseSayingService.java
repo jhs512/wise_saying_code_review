@@ -34,13 +34,13 @@ public class WiseSayingService {
 
     public String[] wiseList(String str) {
         WiseSayingPage page = new WiseSayingPage();
-        String type = Query.getQueryContent(str,KEYWORD_TYPE.toString());
-        String keyword = Query.getQueryContent(str,KEYWORD.toString());
+        String type = Query.getQueryContent(str,KEYWORD_TYPE.getString());
+        String keyword = Query.getQueryContent(str,KEYWORD.getString());
         return page.getPageOutput(type,keyword,str,wise);
     }
 
     public String wiseDelete(String str) {
-        int id = Query.getQueryContentInteger(str,ID.toString()) - 1;
+        int id = Query.getQueryContentInteger(str,ID.getString()) - 1;
         if (chkId(id)) return (id + 1) + "번은 존재 하지않음";
         String[] save = wise.get(id);
         if (save[1].equals("d_1241")) return save[0] + "번은 존재 하지않음.";
@@ -50,7 +50,7 @@ public class WiseSayingService {
     }
 
     public String[] wiseChange(String str, String wiseWord, String name) {
-        int id = Query.getQueryContentInteger(str,ID.toString()) - 1;
+        int id = Query.getQueryContentInteger(str,ID.getString()) - 1;
         String[] s = new String[1];
         if (chkId(id)) {
             s[0] = (id + 1) + "번은 존재 하지않음";

@@ -8,7 +8,7 @@ import static EnumCollect.wiseSayingEnum.*;
 
 public class WiseSayingPage extends  Page{
     public List<String[]> calNullType(List<String[]> list, String str) {
-        setPage(str,"page");
+        setPage(str,PAGE.getString());
         setTotalPage(list.size());
         checkPage();
         return list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page - 1) * 5L).limit((page) * 5L).toList();
@@ -19,7 +19,7 @@ public class WiseSayingPage extends  Page{
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
         else if (type.equals("author"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
-        setPage(str,ID.getString());
+        setPage(str,PAGE.getString());
         setTotalPage(list.size());
         checkPage();
         return list.stream().skip((page - 1) * 5).limit((page) * 5).toList();
