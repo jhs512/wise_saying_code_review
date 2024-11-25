@@ -1,1 +1,1 @@
-# wise_saying_code_review
+명언 게시판 프로젝트
