@@ -6,6 +6,7 @@ import WiseSayingRepository.JsonArray;
 
 import java.util.ArrayList;
 
+import static EnumCollect.wiseSayingEnum.*;
 
 
 public class WiseSayingService {
@@ -33,13 +34,13 @@ public class WiseSayingService {
 
     public String[] wiseList(String str) {
         WiseSayingPage page = new WiseSayingPage();
-        String type = WiseSayingQuery.getType(str);
-        String keyword = WiseSayingQuery.getKeyword(str);
+        String type = WiseSayingQuery.getQueryContent(str,KEYWORD_TYPE.toString());
+        String keyword = WiseSayingQuery.getQueryContent(str,KEYWORD.toString());
         return page.getPageOutput(type,keyword,str,wise);
     }
 
     public String wiseDelete(String str) {
-        int id = WiseSayingQuery.getId(str) - 1;
+        int id = WiseSayingQuery.getQueryContentInteger(str,ID.toString()) - 1;
         if (chkId(id)) return (id + 1) + "번은 존재 하지않음";
         String[] save = wise.get(id);
         if (save[1].equals("d_1241")) return save[0] + "번은 존재 하지않음.";
@@ -49,7 +50,7 @@ public class WiseSayingService {
     }
 
     public String[] wiseChange(String str, String wiseWord, String name) {
-        int id = WiseSayingQuery.getId(str) - 1;
+        int id = WiseSayingQuery.getQueryContentInteger(str,ID.toString()) - 1;
         String[] s = new String[1];
         if (chkId(id)) {
             s[0] = (id + 1) + "번은 존재 하지않음";

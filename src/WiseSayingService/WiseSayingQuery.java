@@ -2,11 +2,11 @@ package WiseSayingService;
 
 public class WiseSayingQuery {
 
-    public static String getQueryContent(String strOri, String strSearch){
+    public static String calQueryContent(String strOri, String type){
         String[] strs = separateString(strOri);
         if(strs == null) return "";
         for(String i : strs){
-            if(i.contains(strSearch)){
+            if(i.contains(type)){
                 return i.split("=")[1];
             };
         }
@@ -26,17 +26,13 @@ public class WiseSayingQuery {
         }
         return true;
     }
-
-    public static String getKeyword(String str) {return getQueryContent(str,"keyword");}
-
-    public static String getType(String str) {
-        return getQueryContent(str,"keywordType");
+    public static String getQueryContent(String strOri, String type){
+        return calQueryContent(strOri,type);
     }
-
-    public static int getId(String str) {
-        String s = getQueryContent(str,"id");
+    public static int getQueryContentInteger(String str,String type){
+        String s = calQueryContent(str,type);
         if(s == "" || !isDigit(s)) return -1;
-        return Integer.parseInt(getQueryContent(str,"id"));
+        return Integer.parseInt(calQueryContent(str,type));
     }
 
 
