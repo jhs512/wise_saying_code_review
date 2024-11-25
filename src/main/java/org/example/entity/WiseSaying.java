@@ -19,6 +19,8 @@ public class WiseSaying implements Serializable {
         this.content = content;
     }
 
+    public void setAuthor(String author) { this.author = author; }
+
     public int getId(){return id;}
 
     public String getContent(){

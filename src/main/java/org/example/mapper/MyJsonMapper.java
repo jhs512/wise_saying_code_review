@@ -24,7 +24,7 @@ public class MyJsonMapper {
     }
 
     private Map<Integer, WiseSaying> makeWiseSayingListFromString(String text){
-        Map<Integer, WiseSaying> result = new TreeMap<>();
+        Map<Integer, WiseSaying> result = new TreeMap<>(Comparator.reverseOrder());
         String arrayText = text.length() >= 2 ? text.substring(1, text.length() - 1) : "";
 
         StringBuilder sb = new StringBuilder();
@@ -48,7 +48,7 @@ public class MyJsonMapper {
 
             if(parsingWiseSaying && current != '{'){
                 sb.append(current);
-            }else if(!parsingWiseSaying){
+            } else if(!parsingWiseSaying && current != ','){
                 WiseSaying wiseSaying = makeWiseSaying(sb.toString());
                 result.put(wiseSaying.getId(), wiseSaying);
                 sb.setLength(0);
@@ -59,15 +59,22 @@ public class MyJsonMapper {
     }
 
     private WiseSaying makeWiseSaying(String json){
-        String[] jsonArray = json.split(":");
-        String id = jsonArray[0];
-        String content = jsonArray[2];
-        String author = jsonArray[4];
+        String[] jsonArray = json.split(",");
+        String[] id = jsonArray[0].split(":");
+        String[] content = jsonArray[1].split(":");
+        String[] author = jsonArray[2].split(":");
 
-        if (!wiseSayingFieldList.containsAll(Set.of(id, content, author))) {
+        if (!wiseSayingFieldList.containsAll(
+                Set.of(
+                        id[0].replaceAll("\"", ""),
+                        content[0].replaceAll("\"", ""),
+                        author[0].replaceAll("\"", "")))) {
             throw new IllegalStateException();
         }else{
-            return new WiseSaying(Integer.parseInt(jsonArray[1]), jsonArray[3], jsonArray[5]);
+            return new WiseSaying(
+                    Integer.parseInt(id[1]),
+                    content[1].replaceAll("\"", ""),
+                    author[1].replaceAll("\"", ""));
         }
     }
 

@@ -1,13 +1,10 @@
 package org.example.repository;
 
-import org.example.dto.RequestPageDto;
 import org.example.entity.WiseSaying;
 import org.example.mapper.MyJsonMapper;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class WiseSayingRepository {
     private static final MyJsonMapper MAPPER = new MyJsonMapper();
@@ -49,32 +46,6 @@ public class WiseSayingRepository {
     public Map<Integer, WiseSaying> getWiseSayingMap(){
         return wiseSayingMap;
     }
-
-    public Map<Integer, WiseSaying> getWiseSayingMap(RequestPageDto requestPageDto) {
-        return getWiseSayingMap().values().stream()
-                .filter(wiseSaying -> {
-                    Optional<RequestPageDto.KeywordType> optionalKeywordType = requestPageDto.getKeywordType();
-                    Optional<String> optionalKeyword = requestPageDto.getKeyword();
-
-                    if(optionalKeywordType.isEmpty() && optionalKeyword.isEmpty()){
-                        return true;
-                    }else if(optionalKeywordType.isEmpty() ^ optionalKeyword.isEmpty()) {
-                        throw new IllegalStateException();
-                    }else{
-                        RequestPageDto.KeywordType keywordType = optionalKeywordType.get();
-                        String keyword = optionalKeyword.get();
-
-                        if (keywordType == RequestPageDto.KeywordType.AUTHOR) {
-                            return wiseSaying.getAuthor().equalsIgnoreCase(keyword);
-                        } else if (keywordType == RequestPageDto.KeywordType.CONTENT) {
-                            return wiseSaying.getContent().contains(keyword);
-                        }
-
-                        return false;
-                    }
-                }).collect(Collectors.toMap(WiseSaying::getId, Function.identity()));
-    }
-
 
     public Optional<WiseSaying> getWiseSayingById(int id){
         return Optional.ofNullable(wiseSayingMap.get(id));
