@@ -1,19 +1,19 @@
 package org.example.controller;
 
 import org.example.AppConfig;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.example.constatnt.Constant;
+import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Scanner;
 
+import static org.example.constatnt.Constant.TEST_DB_DIRECTORY_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WiseSayingControllerTest {
-    AppConfig appConfig = new AppConfig();
 
+    AppConfig appConfig = new AppConfig(TEST_DB_DIRECTORY_PATH.getData());
     @Test
     @DisplayName("등록 명령 정상 작동")
     void register_test() {
@@ -164,7 +164,6 @@ class WiseSayingControllerTest {
         String result = out.toString().trim();
         assertTrue(result.contains("[2]"));
     }
-
 
 
 }

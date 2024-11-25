@@ -18,7 +18,13 @@ import static org.example.constatnt.Constant.*;
 public class WiseSayingRepository {
 
     private static long id = 0L;
+    // 임시 저장소
     private static final Map<Long, WiseSayingItem> dataJsonStore = new HashMap<>();
+    private final String filePath;
+
+    public WiseSayingRepository(String filePath) {
+        this.filePath = filePath;
+    }
 
     public long save(String wiseSaying, String author) {
 
@@ -77,7 +83,7 @@ public class WiseSayingRepository {
 
     private WiseSayingItem loadFile(String id) {
         String fileName = id + EXTENSION_JSON.getData();
-        Path path = Path.of(DB_DIRECTORY_PATH.getData() + "/" + fileName);
+        Path path = Path.of(filePath + "/" + fileName);
         String jsonString = "";
 
         try {
@@ -91,7 +97,7 @@ public class WiseSayingRepository {
 
     private List<WiseSayingItem> loadFiles() {
         // listFiles() 는 순서가 보장되지 않는다.
-        File[] files = new File(DB_DIRECTORY_PATH.getData()).listFiles();
+        File[] files = new File(filePath).listFiles();
         String jsonString = "";
         List<WiseSayingItem> items = new ArrayList<>();
 
@@ -115,7 +121,7 @@ public class WiseSayingRepository {
 
     private List<WiseSayingItem> loadFiles(String keywordType, String keyword) {
         // listFiles() 는 순서가 보장되지 않는다.
-        File[] files = new File(DB_DIRECTORY_PATH.getData()).listFiles();
+        File[] files = new File(filePath).listFiles();
         String jsonString = "";
         List<WiseSayingItem> items = new ArrayList<>();
 
@@ -143,7 +149,7 @@ public class WiseSayingRepository {
 
     public String remove(String id) {
         String fileName = id + EXTENSION_JSON.getData();
-        File file = new File(DB_DIRECTORY_PATH.getData(), fileName);
+        File file = new File(filePath, fileName);
 
 
         // 임시 저장소에는 id 값이 있으면 삭제
@@ -192,7 +198,7 @@ public class WiseSayingRepository {
 
     private int loadLastNumber() {
 
-        File file = new File(DB_DIRECTORY_PATH.getData(), LAST_ID_FILE_NAME.getData() + EXTENSION_TXT.getData());
+        File file = new File(filePath, LAST_ID_FILE_NAME.getData() + EXTENSION_TXT.getData());
 
         if (!file.exists()) {
             return 0;
@@ -211,7 +217,7 @@ public class WiseSayingRepository {
 
     public void saveLastFileNumber() {
 
-        File file = new File(DB_DIRECTORY_PATH.getData(), LAST_ID_FILE_NAME.getData() + EXTENSION_TXT.getData());
+        File file = new File(filePath, LAST_ID_FILE_NAME.getData() + EXTENSION_TXT.getData());
         long lastId = loadLastNumber();
         if (lastId == 0) {
             // 초기 작동 시 id = 1 주입
@@ -230,7 +236,7 @@ public class WiseSayingRepository {
 
     private void saveFile(WiseSayingItem item) {
 
-        File file = new File(DB_DIRECTORY_PATH.getData(), item.getId() + EXTENSION_JSON.getData());
+        File file = new File(filePath, item.getId() + EXTENSION_JSON.getData());
         Converter converter = new Converter();
         String json = converter.singleConvertToJson(item);
 
@@ -242,7 +248,7 @@ public class WiseSayingRepository {
     }
 
     public void saveAllWiseSaying() {
-        File file = new File(DB_DIRECTORY_PATH.getData(), ALL_DATA_FILE_NAME.getData() + EXTENSION_JSON.getData());
+        File file = new File(filePath, ALL_DATA_FILE_NAME.getData() + EXTENSION_JSON.getData());
         Converter converter = new Converter();
         List<WiseSayingItem> wiseSayingItems = loadFiles();
         String jsonString = converter.multipleConvertToJson(wiseSayingItems);

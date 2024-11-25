@@ -3,6 +3,7 @@ package org.example.constatnt;
 public enum Constant {
 
     DB_DIRECTORY_PATH("src/main/java/org/example/db/wiseSaying"),
+    TEST_DB_DIRECTORY_PATH("src/test/java/org/example/db/wiseSaying"),
     LAST_ID_FILE_NAME("lastId"),
     EXTENSION_TXT(".txt"),
     EXTENSION_JSON(".json"),

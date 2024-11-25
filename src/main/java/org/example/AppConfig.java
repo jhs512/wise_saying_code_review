@@ -8,8 +8,14 @@ import java.util.Scanner;
 
 public class AppConfig {
 
+    private final String filePath;
+
+    public AppConfig(String filePath) {
+        this.filePath = filePath;
+    }
+
     public WiseSayingRepository wiseSayingRepository() {
-        return new WiseSayingRepository();
+        return new WiseSayingRepository(filePath);
     }
 
     public WiseSayingService wiseSayingService() {
