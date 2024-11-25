@@ -1,25 +1,30 @@
 package com.llwiseSaying.Service;
 
 import com.llwiseSaying.Repository.WiseSayingRepository;
-import com.llwiseSaying.Util.ConvertData;
 import com.llwiseSaying.Util.Vaildation;
 import com.llwiseSaying.WiseSaying;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.llwiseSaying.Config.Config;
 public class WiseSayingService {
 
     private final int PAGESIZE=5;
     private Map<Integer, WiseSaying> wiseSayings;
     private int id;
 
-    public  WiseSayingRepository wiseSayingRepository=new WiseSayingRepository();
-    Vaildation vaildation=new Vaildation();
-    ConvertData convertData=new ConvertData();
+    public  WiseSayingRepository wiseSayingRepository;
+    Vaildation vaildation;
+    ConvertData convertData;
 
+    public WiseSayingService() {
+        wiseSayingRepository=new WiseSayingRepository();
+        vaildation=new Vaildation();
+        convertData=new ConvertData();
+        init();
+    }
 
     public void init() {
         id= wiseSayingRepository.loadId();

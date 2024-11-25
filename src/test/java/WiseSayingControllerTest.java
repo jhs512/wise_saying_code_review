@@ -1,6 +1,7 @@
 
 import com.llwiseSaying.App;
-import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+import com.llwiseSaying.Config.Config;
+import com.llwiseSaying.Config.TestDatabaseConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,17 +19,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WiseSayingControllerTest {
 
     ByteArrayOutputStream output;
+    App app;
 
     @BeforeEach
     void beforeInit(){
         output = AppUtil.setOutToByteArray();
-        DBdirectoryPath="db/test/wiseSaying";
+        app=new App();
+        TestDatabaseConfig config=new TestDatabaseConfig();
+        app.wiseSayingController.wiseSayingService.wiseSayingRepository.setConfig(config);
     }
 
     @AfterEach()
     void afterInit() {
         AppUtil.clearSetOutToByteArray(output);
-        DBdirectoryPath="db/wiseSaying";
+
     }
 
     @Test
@@ -46,7 +50,6 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
         app.run();
         String capturedOutput = output.toString();
 
@@ -72,7 +75,6 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
         app.run();
         String capturedOutput = output.toString();
 
@@ -100,7 +102,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -128,7 +130,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -156,7 +158,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -180,7 +182,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -204,7 +206,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -231,7 +233,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -257,7 +259,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 
@@ -277,7 +279,7 @@ public class WiseSayingControllerTest {
 
         AppUtil.setSystemIn(simulatedInput);
 
-        App app=new App();
+
         app.run();
         String capturedOutput = output.toString();
 

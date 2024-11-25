@@ -1,6 +1,9 @@
-package com.llwiseSaying.Util;
+package com.llwiseSaying.Service;
+
+import com.llwiseSaying.Util.Vaildation;
 
 public class ConvertData {
+
     Vaildation vaildation=new Vaildation();
     public int splitDeleteAndModifyCmd(String cmd) {
         vaildation.vaildationKeyword(cmd,"\\?");

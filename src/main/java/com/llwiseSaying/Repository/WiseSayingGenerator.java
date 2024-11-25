@@ -8,20 +8,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+import com.llwiseSaying.Config.Config;
+
 
 public class WiseSayingGenerator {
 
+    private  Config config;
+    public WiseSayingGenerator(Config config) {
+        this.config=config;
+    }
+
     public void wirteFile(WiseSaying wiseSaying) {
         int id=wiseSaying.getId();
-        String filePath =  DBdirectoryPath +"/"+String.valueOf(id)+".json";
+        String filePath =  config.getDBPath() +"/"+String.valueOf(id)+config.getDBExtension();
         String content =makeJsonContent(wiseSaying);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(content); // 데이터 쓰기
 
         } catch (IOException e) {
-            System.out.println(String.valueOf(id)+".json파일 작성 예외 발생");
+            System.out.println(String.valueOf(id)+"데이터베이스 파일 작성 예외 발생");
         }
     }
 
@@ -65,8 +71,8 @@ public class WiseSayingGenerator {
 
     public void deleteFile(int id) {
 
-        String fileNameToDelete=String.valueOf(id)+".json";
-        File fileToDelete = new File(DBdirectoryPath, fileNameToDelete);
+        String fileNameToDelete=String.valueOf(id)+config.getDBExtension();
+        File fileToDelete = new File(config.getDBPath(), fileNameToDelete);
 
         fileToDelete.delete();
     }

@@ -12,11 +12,10 @@ public class App {
     State state; //exit or process
     public static BufferedReader br;
 
-    WiseSayingController wiseSayingController;
+    public WiseSayingController wiseSayingController=new WiseSayingController();
 
     public void run() throws IOException {
         br=new BufferedReader(new InputStreamReader(System.in));
-        wiseSayingController=new WiseSayingController();
 
         System.out.println("== 명언 앱 ==");
         System.out.println("명령어 -> 종료, 등록, 목록, 삭제, 수정");

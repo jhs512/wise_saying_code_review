@@ -1,17 +1,32 @@
 package com.llwiseSaying.Repository;
 
 import com.llwiseSaying.WiseSaying;
+import com.llwiseSaying.Config.Config;
+import com.llwiseSaying.Config.DatabaseConfig;
 
 import java.util.Map;
 
 public class WiseSayingRepository {
 
-    IdGenerator idGenerator=new IdGenerator();
-    WiseSayingGenerator wiseSayingGenerator=new WiseSayingGenerator();
-    LoadWiseSayingList loadWiseSayingList=new LoadWiseSayingList();
-    DatabaseReset databaseReset=new DatabaseReset();
 
-    public static String DBdirectoryPath = "db/wiseSaying";
+
+    Config config;
+    IdGenerator idGenerator;
+    WiseSayingGenerator wiseSayingGenerator;
+    LoadWiseSayingList loadWiseSayingList;
+    DatabaseReset databaseReset;
+
+    public WiseSayingRepository() {
+        this.config=new DatabaseConfig();
+        idGenerator=new IdGenerator(config);
+        wiseSayingGenerator=new WiseSayingGenerator(config);
+        loadWiseSayingList=new LoadWiseSayingList(config);
+        databaseReset=new DatabaseReset(config);
+    }
+
+    public void setConfig(Config config) {
+        this.config=config;
+    }
 
     ///////////////////////////////////////////////////////
 

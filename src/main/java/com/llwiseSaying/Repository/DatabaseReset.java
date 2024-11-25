@@ -1,15 +1,20 @@
 package com.llwiseSaying.Repository;
 
 import java.io.File;
+import com.llwiseSaying.Config.Config;
 
-import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
 
 
 public class DatabaseReset {
 
+    private  Config config;
+    public DatabaseReset(Config config) {
+        this.config=config;
+    }
+
     public void reset() {
 
-        File directory = new File(DBdirectoryPath);
+        File directory = new File(config.getDBPath());
 
         if (deleteDirectory(directory)) {
             System.out.println("데이터베이스가 성공적으로 삭제되었습니다!");

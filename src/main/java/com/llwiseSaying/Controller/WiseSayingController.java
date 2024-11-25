@@ -1,5 +1,6 @@
 package com.llwiseSaying.Controller;
 
+import com.llwiseSaying.Config.Config;
 import com.llwiseSaying.Service.WiseSayingService;
 import com.llwiseSaying.State;
 import com.llwiseSaying.WiseSaying;
@@ -12,14 +13,16 @@ import java.util.List;
 
 public class WiseSayingController {
 
-
-    public WiseSayingService wiseSayingService=new WiseSayingService();
+    Config config;
+    public WiseSayingService wiseSayingService;
 
     private String inputValue;
 
 
     public WiseSayingController() {
-        init();
+
+        wiseSayingService=new WiseSayingService();
+
     }
 
     public State run(String inputValue) throws IOException {
@@ -27,23 +30,31 @@ public class WiseSayingController {
         State state=State.PROCESS;
         this.inputValue=inputValue;
 
-        if(inputValue ==null) { state=State.EXIT; }
-        if(inputValue.equals("종료")) { exitProcess(); state= State.EXIT;}
-        if(inputValue.equals("등록")) { enrollProcess(); }
-        if(inputValue.startsWith("목록")) { viewProcess(); }
-        if(inputValue.startsWith("삭제")) { deleteProcess(); }
-        if(inputValue.startsWith("수정")) { modifyProcess(); }
-        if(inputValue.equals("초기화")) { resetProcess(); state=State.EXIT; }
-        if(inputValue.equals("샘플만들기")) { makeDummyData(); }
+        try {
+            if (inputValue == null) { state = State.EXIT; }
+            if (inputValue.equals("종료")) {
+                exitProcess();
+                state = State.EXIT;
+            }
+            if (inputValue.equals("등록")) { enrollProcess(); }
+            if (inputValue.startsWith("목록")) { viewProcess(); }
+            if (inputValue.startsWith("삭제")) { deleteProcess(); }
+            if (inputValue.startsWith("수정")) { modifyProcess(); }
+            if (inputValue.equals("초기화")) {
+                resetProcess();
+                state = State.EXIT;
+            }
+            if (inputValue.equals("샘플만들기")) { makeDummyData(); }
 
+        } catch (IllegalArgumentException | IOException e) {
+            System.out.println(e.getMessage());
+
+        }
         return state;
 
     }
 
-    void init() {
 
-        wiseSayingService.init();
-    }
 
     void enrollProcess() throws IOException {
         System.out.print("명언 : ");
@@ -67,13 +78,7 @@ public class WiseSayingController {
 
         String cmd=inputValue;
         HashMap<String,String> searchCondition;
-        try {
-            searchCondition=parseCmd(cmd);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
-
+        searchCondition=parseCmd(cmd);
 
         int page=Integer.parseInt(searchCondition.get("page"));
         String keywordType=searchCondition.get("keywordType");
@@ -139,41 +144,32 @@ public class WiseSayingController {
     void deleteProcess() {
         String cmd=inputValue;
 
-        try {
-            int id=wiseSayingService.containId(cmd);
-            //삭제하며 삭제된 일련번호 반환
-            wiseSayingService.deleteWiseSaying(id);
-            System.out.println(id+"번 명언이 삭제되었습니다.");
-
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        int id=wiseSayingService.containId(cmd);
+        //삭제하며 삭제된 일련번호 반환
+        wiseSayingService.deleteWiseSaying(id);
+        System.out.println(id+"번 명언이 삭제되었습니다.");
 
     }
 
-    void modifyProcess() {
+    void modifyProcess() throws IOException {
         String cmd=inputValue;
 
-        try {
-            int id=wiseSayingService.containId(cmd);
-            WiseSaying modifyWiseSaying=wiseSayingService.findWiseSaying(id);
 
-            System.out.println("명언(기존) : "+ modifyWiseSaying.getContent());
-            System.out.print("명언 : ");
-            String content= br.readLine();
+        int id=wiseSayingService.containId(cmd);
+        WiseSaying modifyWiseSaying=wiseSayingService.findWiseSaying(id);
 
-            System.out.println("작가(기존) : " + modifyWiseSaying.getWriter());
-            System.out.print("작가 : ");
-            String writer= br.readLine();
+        System.out.println("명언(기존) : "+ modifyWiseSaying.getContent());
+        System.out.print("명언 : ");
+        String content= br.readLine();
 
-            wiseSayingService.modifyWiseSaying(id,content,writer);
+        System.out.println("작가(기존) : " + modifyWiseSaying.getWriter());
+        System.out.print("작가 : ");
+        String writer= br.readLine();
 
-            System.out.println(id+"번 명언이 수정되었습니다.");
-            //수정된 내용 db반영
+        wiseSayingService.modifyWiseSaying(id,content,writer);
 
-        } catch (IllegalArgumentException | IOException e) {
-            System.out.println(e.getMessage());
-        }
+        System.out.println(id+"번 명언이 수정되었습니다.");
+        //수정된 내용 db반영
 
     }
 

@@ -10,28 +10,34 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Arrays;
 
-import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+import com.llwiseSaying.Config.Config;
 
 public class LoadWiseSayingList {
+
+    private  Config config;
+    public LoadWiseSayingList(Config config) {
+        this.config=config;
+    }
 
     public Map<Integer, WiseSaying> loadWiseSayings() {
 
 
-        File directory = new File(DBdirectoryPath);
+        File directory = new File(config.getDBPath());
+
         Map<Integer,WiseSaying> wiseSayings=new LinkedHashMap<>();
 
         File[] files = directory.listFiles();
 
         //lastId.txt파일 필터링
         File[] jsonFiles = Arrays.stream(files)
-                .filter(file -> file.getName().endsWith(".json")) // .json으로 끝나는 파일만 포함
+                .filter(file -> file.getName().endsWith(config.getDBExtension())) // .json으로 끝나는 파일만 포함
                 .toArray(File[]::new);
 
         File[] sortFiles=sortFileData(jsonFiles);
 
         if (files != null) {
             for (File file : sortFiles) {
-                if(file.getPath().endsWith(".txt")) { continue;}
+                if(file.getPath().endsWith(config.getLastIdExtension())) { continue;}
                 WiseSaying wiseSaying=parseJsonData(file);
                 wiseSayings.put(wiseSaying.getId(),wiseSaying);
             }
@@ -46,8 +52,8 @@ public class LoadWiseSayingList {
             String name1 = f1.getName();
             String name2 = f2.getName();
             // 숫자를 기준으로 정렬
-            int num1 = Integer.parseInt(name1.replace(".json", ""));
-            int num2 = Integer.parseInt(name2.replace(".json", ""));
+            int num1 = Integer.parseInt(name1.replace(config.getDBExtension(), ""));
+            int num2 = Integer.parseInt(name2.replace(config.getDBExtension(), ""));
             return Integer.compare(num1, num2);
         });
 

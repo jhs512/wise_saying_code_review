@@ -1,14 +1,21 @@
 package com.llwiseSaying.Repository;
 
-import java.io.*;
 
-import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+
+import java.io.*;
+import com.llwiseSaying.Config.Config;
+
 
 
 public class IdGenerator {
 
+    private  Config config;
+    public IdGenerator(Config config) {
+        this.config=config;
+    }
+
     public void makeFile(int id) {
-        String filePath = DBdirectoryPath + "/lastId.txt";
+        String filePath = config.getDBPath() + "/" + config.getLastIdFile();
         String content = String.valueOf(id);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -22,10 +29,10 @@ public class IdGenerator {
 
     public int loadFile() {
 
-        String fileName="lastId.txt";
-        File file = new File(DBdirectoryPath, fileName);
+
+        File file = new File(config.getDBPath(), config.getLastIdFile());
         if (file.exists() && file.isFile()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(DBdirectoryPath+"/"+fileName))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(config.getDBPath() +"/"+config.getLastIdFile()))) {
                 String line;
                 line = reader.readLine();
                 //마지막 일련번호 다음 부터 등록해야함
