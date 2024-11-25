@@ -53,8 +53,6 @@ public class AppTest {
 
         int quoteCount = 0;
 
-
-
         List<WiseSaying> list = new ArrayList<>();
         WiseSaying wiseSaying1 = new WiseSaying(1, "현재를 사랑하라.", "작자미상");
         WiseSaying wiseSaying2 = new WiseSaying(2, "과거에 집착하지 마라.", "작자미상");
