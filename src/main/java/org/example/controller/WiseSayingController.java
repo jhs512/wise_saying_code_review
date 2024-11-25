@@ -96,7 +96,7 @@ public class WiseSayingController extends Controller {
                 sb.append("/");
             }
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
 
@@ -151,7 +151,6 @@ public class WiseSayingController extends Controller {
                 }
             }catch (IllegalArgumentException e){
                 System.out.println(WRONG_COMMAND_MESSAGE);
-                continue;
             }
         }
         scanner.close();
