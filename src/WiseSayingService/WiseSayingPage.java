@@ -1,43 +1,14 @@
 package WiseSayingService;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class WiseSayingPage {
-    private int page;
-    private int totalPage;
-    private List<String> output = new ArrayList<>();
+import static EnumCollect.wiseSayingEnum.*;
 
-    public WiseSayingPage() {
-        page = 1;
-        totalPage = 1;
-        output = new ArrayList<>();
-    }
-
-    public void setPage(String str) {
-        String s = WiseSayingQuery.getQueryContent(str, "page");
-        if (Objects.equals(s, "")) page = 1;
-        else page = Integer.parseInt(s);
-    }
-
-    public void setTotalPage(int n) {
-        totalPage = calPage(n);
-    }
-
-    public int calPage(int num) {
-        float n = num;
-        return (int) Math.max(Math.ceil(n / 5), 1);
-
-    }
-
-    public void checkPage() {
-        page = Math.min(totalPage, page);
-    }
-
+public class WiseSayingPage extends  Page{
     public List<String[]> calNullType(List<String[]> list, String str) {
-        setPage(str);
+        setPage(str,"page");
         setTotalPage(list.size());
         checkPage();
         return list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).skip((page - 1) * 5L).limit((page) * 5L).toList();
@@ -48,7 +19,7 @@ public class WiseSayingPage {
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[2].contains(keyword)).toList();
         else if (type.equals("author"))
             list = list.stream().sorted(Comparator.comparing((String[] arrs) -> arrs[0]).reversed()).filter(arr -> arr[1].contains(keyword)).toList();
-        setPage(str);
+        setPage(str,ID.getString());
         setTotalPage(list.size());
         checkPage();
         return list.stream().skip((page - 1) * 5).limit((page) * 5).toList();
@@ -78,6 +49,4 @@ public class WiseSayingPage {
         }
         return arr;
     }
-
-
 }

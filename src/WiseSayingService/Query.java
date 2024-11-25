@@ -1,6 +1,6 @@
 package WiseSayingService;
 
-public class WiseSayingQuery {
+public class Query {
 
     public static String calQueryContent(String strOri, String type){
         String[] strs = separateString(strOri);
