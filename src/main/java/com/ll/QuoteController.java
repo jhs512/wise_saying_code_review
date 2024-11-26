@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class QuoteController {
 
     QuoteService quoteService;
-    int OFFSET = 5;
 
     public QuoteController(QuoteService quoteService) {
         this.quoteService = quoteService;
@@ -85,18 +84,12 @@ public class QuoteController {
         System.out.println("----------------------");
 
         int page = (queryMap.containsKey("page") ? Integer.parseInt(queryMap.get("page")) : 1);
+        int offset = 5;
 
         List<Quote> list = quoteService.findAllQuotes(queryMap);
-        int pages = (int) Math.ceil((double) list.size()/OFFSET);
+        list = paginate(list, offset, page);
+        int pages = computePages(list, offset);
 
-        if (page > pages || page <= 0) {
-            System.out.println("페이지 번호 초과");
-            return;
-        }
-
-        int begin = (page-1) * OFFSET;
-        int end = Math.min(begin+OFFSET, list.size());
-        list = list.subList(begin, end);
 
         for (Quote quote : list) {
             System.out.println(
@@ -118,6 +111,22 @@ public class QuoteController {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    private List<Quote> paginate(List<Quote> list, int offset, int page) {
+        int pages = computePages(list, offset);
+
+        if (page > pages || page <= 0) {
+            throw new IndexOutOfBoundsException("페이지 번호 초과");
+        }
+
+        int begin = (page-1) * offset;
+        int end = Math.min(begin+offset, list.size());
+        return list.subList(begin, end);
+    }
+
+    private int computePages(List<Quote> list, int offset) {
+        return (int) Math.ceil((double) list.size()/offset);
     }
 
 }
