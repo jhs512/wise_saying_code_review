@@ -1,16 +1,16 @@
-package org.example.mvc;
+package org.example.entity;
 
 public class WiseSaying {
     private int id;
     private String content;
     private String author;
 
-    WiseSaying(String content, String author) {
+    public WiseSaying(String content, String author) {
         this.content = content;
         this.author = author;
     }
 
-    WiseSaying(int id, String content, String author) {
+    public WiseSaying(int id, String content, String author) {
         this.id = id;
         this.content = content;
         this.author = author;
@@ -32,11 +32,7 @@ public class WiseSaying {
         this.content = content;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public void setAuthor(String author) { this.author = author; }
 }

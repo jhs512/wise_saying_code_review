@@ -1,15 +1,12 @@
-package org.example.mvc;
+package org.example.mvc.testutil;
 
 import java.io.*;
-import java.util.Scanner;
 
 public class TestUtil {
     // gen == generate 생성하다.
     // 테스트용 스캐너 생성
-    public static Scanner genScanner(final String input) {
-        final InputStream in = new ByteArrayInputStream(input.getBytes());
-
-        return new Scanner(in);
+    public static BufferedReader genBufferedReader(final String input) {
+        return new BufferedReader(new StringReader(input));
     }
 
     // System.out의 출력을 스트림으로 받기
