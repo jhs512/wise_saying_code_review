@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.mvc.controller.WiseSayingController;
-import org.example.mvc.controller.WiseSayingControllerImpl;
 import org.example.mvc.repository.WiseSayingRepository;
 import org.example.mvc.repository.WiseSayingRepositoryImpl;
 import org.example.mvc.service.WiseSayingService;
@@ -22,14 +21,14 @@ public class App {
         bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         wiseSayingRepository = new WiseSayingRepositoryImpl();
         wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
-        wiseSayingController = new WiseSayingControllerImpl(wiseSayingService, bufferedReader);
+        wiseSayingController = new WiseSayingController(wiseSayingService, bufferedReader);
     }
 
     public App(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
         wiseSayingRepository = new WiseSayingRepositoryImpl();
         wiseSayingService = new WiseSayingServiceImpl(wiseSayingRepository);
-        wiseSayingController = new WiseSayingControllerImpl(wiseSayingService, this.bufferedReader);
+        wiseSayingController = new WiseSayingController(wiseSayingService, this.bufferedReader);
     }
 
     public void run() {

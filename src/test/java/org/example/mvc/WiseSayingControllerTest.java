@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class WiseSayingControllerImplTest {
+class WiseSayingControllerTest {
     @Test
     @DisplayName("종료 테스트")
     public void t1() {
@@ -184,7 +184,8 @@ class WiseSayingControllerImplTest {
         System.out.println(output);
 
         assertThat(output)
-                .contains("2 / 작자미상2 / 명언2");
+                .contains("2 / 작자미상2 / 명언2")
+                .doesNotContain("1 / 작가1 / 명언1");
     }
 
     @Test

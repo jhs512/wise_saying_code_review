@@ -1,13 +1,14 @@
 package org.example.mvc.service;
 
 import org.example.constants.GlobalConstants;
-import org.example.utils.Parser;
 import org.example.entity.WiseSaying;
 import org.example.mvc.repository.WiseSayingRepository;
+import org.example.utils.Parser;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class WiseSayingServiceImpl implements WiseSayingService {
     WiseSayingRepository wiseSayingRepository;
@@ -50,11 +51,6 @@ public class WiseSayingServiceImpl implements WiseSayingService {
 
         // repository에서 삭제
         wiseSayingRepository.deleteById(id);
-
-        // json 파일 삭제
-        String path = GlobalConstants.PATH + id + GlobalConstants.JSON_EXTENSION;
-        File file = new File(path);
-        file.delete();
 
         return true;
     }
