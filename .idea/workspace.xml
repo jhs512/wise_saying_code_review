@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b0400b97-42c1-4754-8c5b-01bcfbf5d5db" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/1.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/10.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/3.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/4.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/5.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/6.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/8.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/9.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/wiseSaying/lastId.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ll/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ll/WiseSaying.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ll/WiseSayingController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ll/WiseSayingRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ll/WiseSayingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/ll/AppTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/ll/TestUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/ll/WiseSayingControllerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2p3ZcgMV1gpKIjcN91xVKB4Vbnl" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.wise-saying-app [:Main.main()].executor": "Run",
+    "Gradle.wise-saying-app [test].executor": "Run",
+    "Gradle.wise-saying-app.executor": "Run",
+    "JUnit.AppTest.executor": "Run",
+    "JUnit.WiseSayingAppTest.executor": "Run",
+    "JUnit.WiseSayingControllerTest.addTest.executor": "Run",
+    "JUnit.WiseSayingControllerTest.executor": "Run",
+    "JUnit.WiseSayingControllerTest.t2.executor": "Run",
+    "JUnit.WiseSayingControllerTest.t3.executor": "Run",
+    "JUnit.WiseSayingControllerTest.t4.executor": "Run",
+    "JUnit.WiseSayingControllerTest.t5.executor": "Run",
+    "JUnit.WiseSayingControllerTest.등록_테스트.executor": "Run",
+    "JUnit.WiseSayingControllerTest.삭제_테스트.executor": "Coverage",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "review",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "onboarding.tips.debug.path": "C:/Users/zxc86/Desktop/gittest/wise-saying-app/src/main/java/com/ll/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "editing.templates"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ll.Main" />
+      <module name="wise-saying-app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b0400b97-42c1-4754-8c5b-01bcfbf5d5db" name="Changes" comment="" />
+      <created>1731996801067</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731996801067</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/wise_saying_app$WiseSayingControllerTest__.ic" NAME="WiseSayingControllerTest.삭제_테스트 Coverage Results" MODIFIED="1732247217924" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.ll.*</FILTER>
+    </SUITE>
+  </component>
+</project>
