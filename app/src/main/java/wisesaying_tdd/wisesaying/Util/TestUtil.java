@@ -1,11 +1,9 @@
-package wisesaying_tdd.wisesaying.esset;
+package wisesaying_tdd.wisesaying.Util;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -13,9 +11,8 @@ public class TestUtil {
     // gen == generate 생성하다.
     // 테스트용 스캐너 생성
     public static Scanner genScanner(final String input) {
-        final InputStream in = new ByteArrayInputStream(input.getBytes());
-
-        return new Scanner(in);
+        //final InputStream in = new ByteArrayInputStream(input.getBytes());
+        return new Scanner(input);
     }
 
     // System.out의 출력을 스트림으로 받기

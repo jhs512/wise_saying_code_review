@@ -1,0 +1,27 @@
+[
+    {    
+        "id" : 1,
+        "content" : "명언1",
+        "authur" : "작가1"
+    },
+    {    
+        "id" : 2,
+        "content" : "ㅈㅈ",
+        "authur" : "ㄴㄴ"
+    },
+    {    
+        "id" : 3,
+        "content" : "명언 1",
+        "authur" : "작가 1"
+    },
+    {    
+        "id" : 4,
+        "content" : "명언 1",
+        "authur" : "작가 1"
+    },
+    {    
+        "id" : 5,
+        "content" : "null",
+        "authur" : "null"
+    }
+]
