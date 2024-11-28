@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ll.wiseSaying.WiseControllerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2024-11-28T00:31:37" hostname="DESKTOP-OEROB9D" time="0.101">
+  <properties/>
+  <testcase name="등록 기능 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.06"/>
+  <testcase name="목록 기능 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.004"/>
+  <testcase name="삭제 기능 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.004"/>
+  <testcase name="수정 기능 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.007"/>
+  <testcase name="존재하지 않는 명언 삭제에 대한 예외처리 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.002"/>
+  <testcase name="존재하지 않는 명언 수정에 대한 예외처리 테스트" classname="com.ll.wiseSaying.WiseControllerTest" time="0.001"/>
+  <testcase name="명언 내용으로 검색" classname="com.ll.wiseSaying.WiseControllerTest" time="0.004"/>
+  <testcase name="작가로 검색" classname="com.ll.wiseSaying.WiseControllerTest" time="0.004"/>
+  <testcase name="검색 결과가 없는 경우" classname="com.ll.wiseSaying.WiseControllerTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
