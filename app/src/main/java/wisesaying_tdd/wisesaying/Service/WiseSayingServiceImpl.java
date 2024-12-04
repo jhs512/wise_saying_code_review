@@ -10,6 +10,7 @@ import wisesaying_tdd.wisesaying.Util.FileUtil;
 public class WiseSayingServiceImpl implements WiseSayingService{
     public static List<WiseSaying> servicelist = new ArrayList<>();
     public static WiseSayingRepository repository = new WiseSayingRepository();
+    String msg = "";
     
     public int GetId(String cmd) {
         int id = FileUtil.GetId(cmd);
@@ -18,10 +19,9 @@ public class WiseSayingServiceImpl implements WiseSayingService{
     }
 
     public String AddWiseSaying(String cmd, int id, String wiseSaying, String authur) {
-        String addResultMsg = "";
-        addResultMsg = repository.AddWiseSaying(cmd, id, wiseSaying, authur);        
+        msg = repository.AddWiseSaying(cmd, id, wiseSaying, authur);        
         
-        return addResultMsg;
+        return msg;
     }
     
     public List<WiseSaying> ShowWiseSayingList(String cmd) {;
@@ -30,15 +30,27 @@ public class WiseSayingServiceImpl implements WiseSayingService{
     }
 
     public String DeleteWiseSaying(String cmd,int id) {
-        String delResultMsg = "";
-        delResultMsg = repository.DeleteWiseSaying(cmd,id);
+        msg = repository.DeleteWiseSaying(cmd,id);
 
-        return delResultMsg;
+        return msg;
     }
 
     public String BuildWiseSaying(String cmd) {
-        String buildResultMsg = repository.BuildWiseSaying(cmd);
+        msg = repository.BuildWiseSaying(cmd);
 
-        return buildResultMsg;
+        return msg;
+    }
+
+    public List<WiseSaying> TargetRead(String cmd,int id) {
+        servicelist = repository.ReadTargetFile(cmd, id);
+
+        return servicelist;
+    }
+    
+
+    public String EditWiseSaying(String cmd,int targerId,String wiseSaying, String authur) {
+        msg = repository.EditWiseSaying(cmd,targerId,wiseSaying,authur);
+
+        return msg;
     }
 }

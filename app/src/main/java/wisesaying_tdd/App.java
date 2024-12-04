@@ -72,7 +72,29 @@ public class App {
                 if (buildResult.equals("buildSuccess")) {
                     System.out.println("data.json 파일의 내용이 갱신되었습니다.");
                 }
-            }
+            } else if (cmd.trim().equals("수정")) {
+                System.out.print("수정?id=");
+                int targerId = Integer.parseInt(sc.nextLine());
+                appList = controller.TargetRead(cmd, targerId);
+                if( appList != null ) {
+                    System.out.println("명언(기존) : " + appList.get(0).getWiseSaying());
+                    System.out.print("명언 : ");
+                    String wiseSaying = sc.nextLine();
+                    System.out.println("작가(기존) : " + appList.get(0).getAuthor());
+                    System.out.print("작가 : ");
+                    String authur = sc.nextLine();
+                    String editMsg = controller.EditWiseSaying(cmd, targerId,wiseSaying,authur);
+
+                    if(editMsg.equals("editSuccess")){
+                        System.out.println(targerId + "번 명언의 수정이 완료되었습니다.");
+    
+                    } else {
+                        System.out.println(targerId + "번 명언이 존재하지 않습니다. ");
+                    }
+                } else {
+                    System.out.println(targerId + "번 명언이 존재하지 않습니다. ");
+                }
+            } //
         }
     }
 }

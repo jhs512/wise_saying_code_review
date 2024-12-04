@@ -19,8 +19,7 @@ public class WiseSayingController {
     }
 
     public int GetId(String cmd) {
-        int id = 0; 
-        id = wiseSayingService.GetId(cmd);
+        int id = wiseSayingService.GetId(cmd); 
 
         return id;
     }
@@ -36,7 +35,6 @@ public class WiseSayingController {
         controllerList = new ArrayList<>();
         controllerList = wiseSayingService.ShowWiseSayingList(cmd);
         return controllerList;
-
     }
 
     public String DeleteWiseSaying(String cmd,int targerId) {
@@ -47,6 +45,18 @@ public class WiseSayingController {
 
     public String BuildWiseSaying(String cmd) {
         msg = wiseSayingService.BuildWiseSaying(cmd);
+
+        return msg;
+    }
+
+    public List<WiseSaying> TargetRead(String cmd,int id) {
+        controllerList = new ArrayList<>();
+        controllerList = wiseSayingService.TargetRead(cmd,id);
+        return controllerList;
+    }
+
+    public String EditWiseSaying(String cmd,int targerId,String wiseSaying, String authur) {
+        msg = wiseSayingService.EditWiseSaying(cmd,targerId,wiseSaying,authur);
 
         return msg;
     }

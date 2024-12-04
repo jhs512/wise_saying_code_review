@@ -29,4 +29,13 @@ public interface WiseSayingService {
     public static String BuildWiseSaying(String cmd) {
         return null;
     }
+    
+    public static List<WiseSaying> TargetRead(String cmd,int id) {
+        return null;
+    }
+
+    public static String EditWiseSaying(String cmd,int targerId,String wiseSaying, String authur) {
+        return null;
+    }
+
 }
