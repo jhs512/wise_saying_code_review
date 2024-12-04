@@ -1,0 +1,52 @@
+[
+    {    
+        "id" : null,
+        "content" : "작가1",
+        "authur" : "명언1"
+    },
+    {    
+        "id" : null,
+        "content" : "123124124",
+        "authur" : "나나나나난"
+    },
+    {    
+        "id" : null,
+        "content" : "ㄷㄷㅇㄴㅇㅁㄴㅇㅁㄴ",
+        "authur" : "목록"
+    },
+    {    
+        "id" : null,
+        "content" : "기존1",
+        "authur" : "기존2"
+    },
+    {    
+        "id" : null,
+        "content" : "명언 1",
+        "authur" : "작가 1"
+    },
+    {    
+        "id" : null,
+        "content" : "명언 1",
+        "authur" : "작가 1"
+    },
+    {    
+        "id" : null,
+        "content" : "명언 1",
+        "authur" : "작가 1"
+    },
+    {    
+        "id" : null,
+        "content" : "ㅇㅇㅇ나나나나아아앙",
+        "authur" : "나아안아낭낭나안"
+    },
+    {    
+        "id" : null,
+        "content" : "명언 2",
+        "authur" : "작가 2"
+    },
+    {    
+        "id" : null,
+        "content" : "명언 3",
+        "authur" : "작가 3"
+    }
+]
