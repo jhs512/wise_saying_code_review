@@ -11,6 +11,10 @@ public class WiseSaying {
         this.content = content;
     }
 
+    public String toString() {
+        return id + " / " + author + " / " + content;
+    }
+
     public long getId() {
         return id;
     }
