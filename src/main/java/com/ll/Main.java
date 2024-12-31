@@ -19,7 +19,7 @@ public class Main {
                     System.out.print("작가 : ");
                     String author = scanner.nextLine();
                     WiseSaying wiseSaying = new WiseSaying(num, author, content);
-                    System.out.println(num + "번 명언이 등록되었습니다.");
+                    System.out.println(num++ + "번 명언이 등록되었습니다.");
                     break;
                 case "종료":
                     return;
