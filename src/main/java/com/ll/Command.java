@@ -10,8 +10,8 @@ public class Command {
             this.command = commands[0];
             this.id = this.splitCommand(commands);
         } else {
-            if (input.startsWith("삭제")) {
-                throw new NotFoundIdException("삭제?id= 형식으로 id 값을 입력해주세요.");
+            if (input.equals("삭제") || input.equals("수정")) {
+                throw new NotFoundIdException(input + "?id= 형식으로 id 값을 입력해주세요.");
             }
             this.command = input;
         }
@@ -19,7 +19,7 @@ public class Command {
 
     public long splitCommand(String[] commands) {
         if (!isValid(commands)) {
-            throw new NotFoundIdException("삭제?id= 형식으로 id 값을 입력해주세요.");
+            throw new NotFoundIdException(commands[0] + "?id= 형식으로 id 값을 입력해주세요.");
         }
 
         String[] restCommands;

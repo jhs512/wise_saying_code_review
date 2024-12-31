@@ -2,6 +2,7 @@ package com.ll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -40,8 +41,30 @@ public class Main {
                             System.out.println(id + "번 명언이 삭제되었습니다.");
                         }
                         break;
+                    case "수정":
+                        id = command.getId();
+                        Optional<WiseSaying> opWs = wiseSayings.stream().filter(ws -> ws.getId() == id).findFirst();
+
+                        if (opWs.isEmpty()) {
+                            System.out.println(id + "번 명언은 존재하지 않습니다.");
+                            break;
+                        }
+
+                        wiseSaying = opWs.get();
+                        System.out.println("명언(기존) : " + wiseSaying.getContent());
+                        System.out.print("명언 : ");
+                        content = scanner.nextLine();
+                        System.out.println("작가(기존) : " + wiseSaying.getAuthor());
+                        System.out.print("작가 : ");
+                        author = scanner.nextLine();
+                        wiseSaying.setContent(content);
+                        wiseSaying.setAuthor(author);
+
+                        break;
                     case "종료":
                         return;
+                    default:
+                        throw new InvalidCommandInputException("명령어를 제대로 입력해주세요.");
                 }
             } catch (GlobalException e) {
                 System.out.println(e.getMessage());
