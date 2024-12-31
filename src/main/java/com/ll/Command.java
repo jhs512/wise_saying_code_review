@@ -10,18 +10,26 @@ public class Command {
             this.command = commands[0];
             this.id = this.splitCommand(commands);
         } else {
+            if (input.startsWith("삭제")) {
+                throw new NotFoundIdException("삭제?id= 형식으로 id 값을 입력해주세요.");
+            }
             this.command = input;
-            this.id = 0;
         }
     }
 
     public long splitCommand(String[] commands) {
         if (!isValid(commands)) {
-            return 0;
+            throw new NotFoundIdException("삭제?id= 형식으로 id 값을 입력해주세요.");
         }
 
-        String[] restCommands = commands[1].split("=", 2);
-        return restCommands[1].isEmpty() ? 0 : Integer.parseInt(restCommands[1]);
+        String[] restCommands;
+
+        try {
+            restCommands = commands[1].split("=", 2);
+            return Integer.parseInt(restCommands[1]);
+        } catch (NumberFormatException e) {
+            throw new NotFoundIdException("id 값을 제대로 입력해주세요");
+        }
     }
 
     public boolean isValid(String[] commands) {
