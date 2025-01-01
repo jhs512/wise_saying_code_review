@@ -5,6 +5,7 @@ import com.ll.global.util.Util.File;
 import com.ll.global.util.Util.Json;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class WiseSayingFile {
@@ -50,6 +51,17 @@ public class WiseSayingFile {
         return Optional.of(new WiseSaying(json));
     }
 
+    public static void build() {
+        List<Map<String, Object>> list = findAll().reversed().stream()
+                .map(WiseSaying::toMap)
+                .map(Json::toJson)
+                .map(Json::toMap)
+                .toList();
+
+        String json = Util.Json.build(list);
+        Util.File.set(getBuildPath(), json);
+    }
+
     public static void setLastId(long id) {
         Util.File.set(getLastIdPath(), String.valueOf(id));
     }
@@ -69,5 +81,9 @@ public class WiseSayingFile {
 
     public static String getLastIdPath() {
         return getDirPath() + "lastId.txt";
+    }
+
+    public static String getBuildPath() {
+        return getDirPath() + "data.json";
     }
 }

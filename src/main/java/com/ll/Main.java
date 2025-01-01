@@ -68,6 +68,10 @@ public class Main {
                         WiseSayingFile.saveFile(wiseSaying);
 
                         break;
+                    case "빌드":
+                        WiseSayingFile.build();
+                        System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+                        break;
                     case "종료":
                         return;
                     default:

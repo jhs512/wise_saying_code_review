@@ -13,6 +13,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -125,6 +126,27 @@ public class Util {
                 sb.append("\n}");
             } else {
                 sb.append("}");
+            }
+
+            return sb.toString();
+        }
+
+        public static String build(List<Map<String, Object>> list) {
+            StringBuilder sb = new StringBuilder();
+            String indent = "  ";
+            sb.append("[\n");
+
+            list.forEach(map -> {
+                sb.append(indent);
+                sb.append(toJson(map).replaceAll("\n", "\n" + indent))
+                        .append(",\n");
+            });
+
+            if (!list.isEmpty()) {
+                sb.delete(sb.length() - 2, sb.length());
+                sb.append("\n]");
+            } else {
+                sb.append("]");
             }
 
             return sb.toString();
