@@ -1,5 +1,7 @@
 package com.ll;
 
+import com.ll.global.exception.IdNotFoundException;
+
 public class Command {
     String command;
     long id;
@@ -11,7 +13,7 @@ public class Command {
             this.id = this.splitCommand(commands);
         } else {
             if (input.equals("삭제") || input.equals("수정")) {
-                throw new NotFoundIdException(input + "?id= 형식으로 id 값을 입력해주세요.");
+                throw new IdNotFoundException(input + "?id= 형식으로 id 값을 입력해주세요.");
             }
             this.command = input;
         }
@@ -19,7 +21,7 @@ public class Command {
 
     public long splitCommand(String[] commands) {
         if (!isValid(commands)) {
-            throw new NotFoundIdException(commands[0] + "?id= 형식으로 id 값을 입력해주세요.");
+            throw new IdNotFoundException(commands[0] + "?id= 형식으로 id 값을 입력해주세요.");
         }
 
         String[] restCommands;
@@ -28,7 +30,7 @@ public class Command {
             restCommands = commands[1].split("=", 2);
             return Integer.parseInt(restCommands[1]);
         } catch (NumberFormatException e) {
-            throw new NotFoundIdException("id 값을 제대로 입력해주세요");
+            throw new IdNotFoundException("id 값을 제대로 입력해주세요");
         }
     }
 
