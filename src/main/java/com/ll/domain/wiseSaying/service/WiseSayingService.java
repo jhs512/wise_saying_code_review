@@ -13,7 +13,7 @@ public class WiseSayingService {
     }
 
     public WiseSaying register(String content, String author) {
-        return this.wiseSayingRepository.saveFile(new WiseSaying(0, content, author));
+        return this.wiseSayingRepository.saveFile(new WiseSaying(0, author, content));
     }
 
     public List<WiseSaying> getWiseSayings() {

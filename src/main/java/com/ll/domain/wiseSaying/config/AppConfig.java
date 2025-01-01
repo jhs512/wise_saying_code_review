@@ -15,4 +15,8 @@ public class AppConfig {
     public static String getDir() {
         return BASIC_PATH + mode + "wiseSaying/";
     }
+
+    public static String getTestDir() {
+        return BASIC_PATH + mode;
+    }
 }
