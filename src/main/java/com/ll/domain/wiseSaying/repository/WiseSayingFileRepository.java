@@ -1,7 +1,7 @@
 package com.ll.domain.wiseSaying.repository;
 
-import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.domain.wiseSaying.config.AppConfig;
+import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.global.util.Util;
 import com.ll.global.util.Util.File;
 import com.ll.global.util.Util.Json;
@@ -53,6 +53,21 @@ public class WiseSayingFileRepository {
         String json = File.get(path);
 
         return Optional.of(new WiseSaying(json));
+    }
+
+    public List<WiseSaying> findBySearch(String keywordType, String keyword) {
+        return findAll().stream()
+                .filter(ws -> {
+                    if (keywordType.equals("author")) {
+                        return ws.getAuthor().contains(keyword);
+                    } else if (keywordType.equals("content")) {
+                        return ws.getContent().contains(keyword);
+                    } else if (!keywordType.isEmpty()) {
+                        return false;
+                    }
+
+                    return ws.getAuthor().contains(keyword) || ws.getContent().contains(keyword);
+                }).toList();
     }
 
     public void build() {

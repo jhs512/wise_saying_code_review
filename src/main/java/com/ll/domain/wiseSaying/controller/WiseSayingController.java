@@ -1,5 +1,6 @@
 package com.ll.domain.wiseSaying.controller;
 
+import com.ll.domain.wiseSaying.dto.Command;
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.domain.wiseSaying.service.WiseSayingService;
 import java.util.List;
@@ -26,8 +27,35 @@ public class WiseSayingController {
         System.out.println(wiseSaying.getId() + "번 명언이 등록되었습니다.");
     }
 
-    public void getWiseSayings() {
-        List<WiseSaying> list = this.wiseSayingService.getWiseSayings();
+    public void getWiseSayings(Command command) {
+        String keywordType = command.getKeywordType();
+        String keyword = command.getKeyword();
+
+        boolean hasKeyword = false;
+        boolean hasKeywordType = false;
+
+        if (!keyword.isEmpty()) {
+            hasKeyword = true;
+        }
+
+        if (!keywordType.isEmpty()) {
+            hasKeywordType = true;
+        }
+
+        List<WiseSaying> list = this.wiseSayingService.getWiseSayings(keywordType, keyword);
+
+        if (hasKeywordType || hasKeyword) {
+            System.out.println("----------------------");
+            if (hasKeywordType && hasKeyword) {
+                System.out.println("검색타입 : " + keywordType);
+                System.out.println("검색어 : " + keyword);
+            } else if (hasKeywordType) {
+                System.out.println("검색타입 : " + keywordType);
+            } else {
+                System.out.println("검색어 : " + keyword);
+            }
+            System.out.println("----------------------");
+        }
 
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
@@ -54,7 +82,7 @@ public class WiseSayingController {
         System.out.print("작가 : ");
         String author = scanner.nextLine();
 
-        this.wiseSayingService.modify(ws,content,author);
+        this.wiseSayingService.modify(ws, content, author);
     }
 
     public void delete(long id) {

@@ -1,16 +1,24 @@
 package com.ll.domain.wiseSaying.dto;
 
 import com.ll.global.exception.IdNotFoundException;
+import com.ll.global.exception.InvalidCommandInputException;
 
 public class Command {
     private final String command;
     private long id;
+    private String keywordType = "";
+    private String keyword = "";
 
     public Command(String input) {
         if (input.contains("?")) {
             String[] commands = input.split("\\?", 2);
             this.command = commands[0];
-            this.id = this.splitCommand(commands);
+
+            if (this.command.equals("목록")) {
+                this.splitSearch(commands[1]);
+            } else {
+                this.id = this.splitCommand(commands);
+            }
         } else {
             if (input.equals("삭제") || input.equals("수정")) {
                 throw new IdNotFoundException(input + "?id= 형식으로 id 값을 입력해주세요.");
@@ -34,6 +42,60 @@ public class Command {
         }
     }
 
+    public void splitSearch(String commands) {
+        String[] splits = commands.split("&");
+
+        if (!isSearchLengthValid(splits)) {
+            throw new InvalidCommandInputException("keywordType= & keyword= 형식으로 입력해주세요.");
+        }
+
+        String[] split = splits[0].split("=", 2);
+
+        if (splits.length == 1) {
+            if (!isSearchKeyValid(split)) {
+                throw new InvalidCommandInputException("keywordType= & keyword= 형식으로 입력해주세요.");
+            }
+
+            String key = split[0];
+            if (key.equals("keywordType")) {
+                this.keywordType = split[1];
+            } else {
+                this.keyword = split[1];
+            }
+        } else {
+            String key = split[0];
+            if (!key.equals("keywordType")) {
+                throw new InvalidCommandInputException("keywordType= & keyword= 형식으로 입력해주세요.");
+            }
+            this.keywordType = split[1];
+
+            split = splits[1].split("=", 2);
+            key = split[0];
+            if (!key.equals("keyword")) {
+                throw new InvalidCommandInputException("keywordType= & keyword= 형식으로 입력해주세요.");
+            }
+            this.keyword = split[1];
+        }
+    }
+
+    public boolean isSearchKeyValid(String[] inputs) {
+        String input = inputs[0];
+        if (!input.equals("keyword") && !input.equals("keywordType")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isSearchLengthValid(String[] inputs) {
+        String input = inputs[0];
+        if (inputs.length > 2 || (!input.startsWith("keyword=") && !input.startsWith("keywordType="))) {
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean isValid(String[] commands) {
         if (!commands[1].startsWith("id=")) {
             return false;
@@ -48,5 +110,13 @@ public class Command {
 
     public long getId() {
         return this.id;
+    }
+
+    public String getKeywordType() {
+        return this.keywordType;
+    }
+
+    public String getKeyword() {
+        return this.keyword;
     }
 }

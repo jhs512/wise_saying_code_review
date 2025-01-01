@@ -16,8 +16,8 @@ public class WiseSayingService {
         return this.wiseSayingRepository.saveFile(new WiseSaying(0, author, content));
     }
 
-    public List<WiseSaying> getWiseSayings() {
-        return this.wiseSayingRepository.findAll();
+    public List<WiseSaying> getWiseSayings(String keywordType, String keyword) {
+        return this.wiseSayingRepository.findBySearch(keywordType, keyword);
     }
 
     public WiseSaying modify(WiseSaying wiseSaying, String content, String author) {

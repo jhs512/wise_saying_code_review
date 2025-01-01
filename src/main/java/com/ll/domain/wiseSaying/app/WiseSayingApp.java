@@ -27,7 +27,7 @@ public class WiseSayingApp {
                         this.wiseSayingController.register();
                         break;
                     case "목록":
-                        this.wiseSayingController.getWiseSayings();
+                        this.wiseSayingController.getWiseSayings(command);
                         break;
                     case "삭제":
                         long id = command.getId();

@@ -195,4 +195,29 @@ class WiseSayingControllerTest {
         assertThat(output)
                 .contains("data.json 파일의 내용이 갱신되었습니다.");
     }
+
+    @Test
+    @DisplayName("목록(검색)")
+    public void search() {
+        String output = AppTest.run("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                과거에 집착하지 마라.
+                작자미상
+                목록?keywordType=content&keyword=과거
+                """).stripIndent().trim();
+
+        assertThat(output)
+                .contains("""
+                        ----------------------
+                        검색타입 : content
+                        검색어 : 과거
+                        """.stripIndent().trim());
+
+        assertThat(output)
+                .doesNotContain("1 / 작자미상 / 현재를 사랑하라.")
+                .contains("2 / 작자미상 / 과거에 집착하지 마라.");
+    }
 }
