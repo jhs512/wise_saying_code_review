@@ -1,5 +1,8 @@
 package com.ll.domain.wiseSaying.app;
 
+import com.ll.domain.wiseSaying.config.AppConfig;
+import com.ll.domain.wiseSaying.entity.WiseSaying;
+import com.ll.domain.wiseSaying.repository.WiseSayingFileRepository;
 import com.ll.util.TestUtil;
 import java.io.ByteArrayOutputStream;
 import java.util.Scanner;
@@ -20,5 +23,14 @@ public class AppTest {
         scanner.close();
 
         return output;
+    }
+
+    public static void makeSampleData(int items) {
+        WiseSayingFileRepository repository = new WiseSayingFileRepository();
+        AppConfig.setTestMode();
+
+        for (int i = 1; i <= items; i++) {
+            repository.saveFile(new WiseSaying(0, "작가" + i, "명언" + i));
+        }
     }
 }

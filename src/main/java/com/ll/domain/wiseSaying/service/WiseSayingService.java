@@ -2,6 +2,7 @@ package com.ll.domain.wiseSaying.service;
 
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.domain.wiseSaying.repository.WiseSayingFileRepository;
+import com.ll.global.util.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +38,13 @@ public class WiseSayingService {
 
     public Optional<WiseSaying> getWiseSaying(long id) {
         return this.wiseSayingRepository.findById(id);
+    }
+
+    public Pageable<WiseSaying> pageableAll(int itemsPerPage, int page) {
+        return this.wiseSayingRepository.pageableAll(itemsPerPage, page);
+    }
+
+    public Pageable<WiseSaying> pageable(String keywordType, String keyword, int itemsPerPage, int page) {
+        return this.wiseSayingRepository.pageable(keywordType, keyword, itemsPerPage, page);
     }
 }

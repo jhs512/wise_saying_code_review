@@ -2,6 +2,7 @@ package com.ll.domain.wiseSaying.repository;
 
 import com.ll.domain.wiseSaying.config.AppConfig;
 import com.ll.domain.wiseSaying.entity.WiseSaying;
+import com.ll.global.util.Pageable;
 import com.ll.global.util.Util;
 import com.ll.global.util.Util.File;
 import com.ll.global.util.Util.Json;
@@ -79,6 +80,48 @@ public class WiseSayingFileRepository {
 
         String json = Util.Json.build(list);
         Util.File.set(getBuildPath(), json);
+    }
+
+    public int count() {
+        return findAll().size();
+    }
+
+    public int count(String keywordType, String keyword) {
+        return this.findBySearch(keywordType,keyword).size();
+    }
+
+    public Pageable<WiseSaying> pageableAll(int itemsPerPage, int page) {
+        int totalElements = count();
+
+        List<WiseSaying> content = findAll()
+                .stream()
+                .skip((long) itemsPerPage * (page - 1))
+                .limit(itemsPerPage)
+                .toList();
+
+        return new Pageable<>(totalElements, itemsPerPage, page, content);
+    }
+
+    public Pageable<WiseSaying> pageable(String keywordType, String keyword, int itemsPerPage, int page) {
+        int totalElements = count(keywordType, keyword);
+
+        List<WiseSaying> content = findAll().stream()
+                .filter(ws -> {
+                    if (keywordType.equals("author")) {
+                        return ws.getAuthor().contains(keyword);
+                    } else if (keywordType.equals("content")) {
+                        return ws.getContent().contains(keyword);
+                    } else if (!keywordType.isEmpty()) {
+                        return false;
+                    }
+
+                    return ws.getAuthor().contains(keyword) || ws.getContent().contains(keyword);
+                })
+                .skip((long) itemsPerPage * (page - 1))
+                .limit(itemsPerPage)
+                .toList();
+
+        return new Pageable<>(totalElements, itemsPerPage, page, keywordType, keyword, content);
     }
 
     public void setLastId(long id) {

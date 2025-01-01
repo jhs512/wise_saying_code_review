@@ -3,9 +3,11 @@ package com.ll.domain.wiseSaying.controller;
 import com.ll.domain.wiseSaying.dto.Command;
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.domain.wiseSaying.service.WiseSayingService;
-import java.util.List;
+import com.ll.global.util.Pageable;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class WiseSayingController {
     private final Scanner scanner;
@@ -30,6 +32,8 @@ public class WiseSayingController {
     public void getWiseSayings(Command command) {
         String keywordType = command.getKeywordType();
         String keyword = command.getKeyword();
+        int itemsPerPage = 5;
+        int page = command.getPage();
 
         boolean hasKeyword = false;
         boolean hasKeywordType = false;
@@ -42,7 +46,9 @@ public class WiseSayingController {
             hasKeywordType = true;
         }
 
-        List<WiseSaying> list = this.wiseSayingService.getWiseSayings(keywordType, keyword);
+        Pageable<WiseSaying> pageable = hasKeyword || hasKeywordType
+                ? wiseSayingService.pageable(keywordType, keyword, itemsPerPage, page)
+                : wiseSayingService.pageableAll(itemsPerPage, page);
 
         if (hasKeywordType || hasKeyword) {
             System.out.println("----------------------");
@@ -60,9 +66,15 @@ public class WiseSayingController {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
-        for (WiseSaying ws : list) {
+        for (WiseSaying ws : pageable.getContent()) {
             System.out.println(ws.toString());
         }
+
+        System.out.println("----------------------");
+        System.out.print("페이지 : ");
+        System.out.println(IntStream.rangeClosed(1, pageable.getTotalPages())
+                .mapToObj(i -> i == page ? "[" + i + "]" : String.valueOf(i))
+                .collect(Collectors.joining(" / ")));
     }
 
     public void modify(long id) {

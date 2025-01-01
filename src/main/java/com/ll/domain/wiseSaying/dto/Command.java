@@ -8,6 +8,7 @@ public class Command {
     private long id;
     private String keywordType = "";
     private String keyword = "";
+    private int page = 1;
 
     public Command(String input) {
         if (input.contains("?")) {
@@ -15,7 +16,32 @@ public class Command {
             this.command = commands[0];
 
             if (this.command.equals("목록")) {
-                this.splitSearch(commands[1]);
+                if (commands[1].startsWith("page=")) {
+                    String[] splits = commands[1].split("&");
+                    String pageStr = splits[0];
+                    String temp = pageStr.split("=", 2)[1];
+                    try {
+                        if (!temp.isEmpty()) {
+                            this.page = Integer.parseInt(temp);
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new InvalidCommandInputException("page 값을 제대로 입력해주세요");
+                    }
+                    if (splits.length > 1) {
+                        StringBuilder sb = new StringBuilder();
+                        int n = splits.length - 1;
+                        for (int i = 1; i < splits.length; i++) {
+                            sb.append(splits[i]);
+                            if (i != n) {
+                                sb.append("&");
+                            }
+                        }
+
+                        this.splitSearch(sb.toString());
+                    }
+                } else {
+                    this.splitSearch(commands[1]);
+                }
             } else {
                 this.id = this.splitCommand(commands);
             }
@@ -46,7 +72,7 @@ public class Command {
         String[] splits = commands.split("&");
 
         if (!isSearchLengthValid(splits)) {
-            throw new InvalidCommandInputException("keywordType= & keyword= 형식으로 입력해주세요.");
+            throw new InvalidCommandInputException("(page= &)keywordType= & keyword= 형식으로 입력해주세요.");
         }
 
         String[] split = splits[0].split("=", 2);
@@ -118,5 +144,9 @@ public class Command {
 
     public String getKeyword() {
         return this.keyword;
+    }
+
+    public int getPage() {
+        return this.page;
     }
 }
