@@ -1,4 +1,4 @@
-package com.ll;
+package com.ll.domain.wiseSaying.entity;
 
 import com.ll.global.util.Util;
 import java.util.LinkedHashMap;

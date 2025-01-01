@@ -1,5 +1,7 @@
-package com.ll;
+package com.ll.domain.wiseSaying.repository;
 
+import com.ll.domain.wiseSaying.entity.WiseSaying;
+import com.ll.domain.wiseSaying.config.AppConfig;
 import com.ll.global.util.Util;
 import com.ll.global.util.Util.File;
 import com.ll.global.util.Util.Json;
@@ -8,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class WiseSayingFile {
+public class WiseSayingFileRepository {
     private static final String DIR_PATH = "db/wiseSaying/";
 
-    public static void saveFile(WiseSaying wiseSaying) {
+    public WiseSaying saveFile(WiseSaying wiseSaying) {
         boolean isNew = wiseSaying.isNew();
 
         if (isNew) {
@@ -24,13 +26,15 @@ public class WiseSayingFile {
         if (isNew) {
             setLastId(wiseSaying.getId());
         }
+
+        return wiseSaying;
     }
 
-    public static boolean delete(long id) {
+    public boolean delete(long id) {
         return Util.File.delete(getFilePath(id));
     }
 
-    public static List<WiseSaying> findAll() {
+    public List<WiseSaying> findAll() {
         return Util.File.fileRegStream(getDirPath(), "\\d+\\.json")
                 .map(path -> Util.File.get(path.toString()))
                 .map(Json::toMap)
@@ -39,7 +43,7 @@ public class WiseSayingFile {
                 .toList();
     }
 
-    public static Optional<WiseSaying> findById(long id) {
+    public Optional<WiseSaying> findById(long id) {
         String path = getFilePath(id);
 
         if (!Util.File.exists(path)) {
@@ -51,7 +55,7 @@ public class WiseSayingFile {
         return Optional.of(new WiseSaying(json));
     }
 
-    public static void build() {
+    public void build() {
         List<Map<String, Object>> list = findAll().reversed().stream()
                 .map(WiseSaying::toMap)
                 .map(Json::toJson)
@@ -62,28 +66,28 @@ public class WiseSayingFile {
         Util.File.set(getBuildPath(), json);
     }
 
-    public static void setLastId(long id) {
+    public void setLastId(long id) {
         Util.File.set(getLastIdPath(), String.valueOf(id));
     }
 
-    public static long getLastId() {
+    public long getLastId() {
         String content = Util.File.get(getLastIdPath());
         return content.isEmpty() ? 0 : Long.parseLong(content);
     }
 
-    public static String getDirPath() {
-        return DIR_PATH;
+    public String getDirPath() {
+        return AppConfig.getDir();
     }
 
-    public static String getFilePath(long i) {
+    public String getFilePath(long i) {
         return getDirPath() + i + ".json";
     }
 
-    public static String getLastIdPath() {
+    public String getLastIdPath() {
         return getDirPath() + "lastId.txt";
     }
 
-    public static String getBuildPath() {
+    public String getBuildPath() {
         return getDirPath() + "data.json";
     }
 }

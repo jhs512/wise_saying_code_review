@@ -1,10 +1,10 @@
-package com.ll;
+package com.ll.domain.wiseSaying.dto;
 
 import com.ll.global.exception.IdNotFoundException;
 
 public class Command {
-    String command;
-    long id;
+    private final String command;
+    private long id;
 
     public Command(String input) {
         if (input.contains("?")) {
@@ -40,6 +40,10 @@ public class Command {
         }
 
         return true;
+    }
+
+    public String getCommand() {
+        return this.command;
     }
 
     public long getId() {
